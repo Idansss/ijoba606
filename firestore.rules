@@ -1,0 +1,138 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+    
+    function hasRole(role) {
+      return isSignedIn() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    function isModerator() {
+      return hasRole('moderator') || hasRole('admin');
+    }
+    
+    function isAdmin() {
+      return hasRole('admin');
+    }
+    
+    // Users collection
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isSelf(uid);
+      allow update: if isSelf(uid) || isAdmin();
+    }
+    
+    // Profiles collection
+    match /profiles/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isSelf(uid);
+      // Updates normally done via Functions, but allow self for basic fields
+      allow update: if isSelf(uid) || isAdmin();
+    }
+    
+    // Questions collection
+    match /questions/{qid} {
+      allow read: if true; // Public read
+      allow write: if isAdmin();
+    }
+    
+    // Rounds collection
+    match /rounds/{rid} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      // Final scoring done via Functions
+      allow update: if false;
+    }
+    
+    // Leaderboards
+    match /leaderboards/{scope}/entries/{uid} {
+      allow read: if true; // Public read
+      allow write: if false; // Only Functions
+    }
+    
+    // Forum Threads
+    match /forumThreads/{tid} {
+      allow read: if true; // Public read
+      allow create: if isSignedIn() && 
+                       request.resource.data.uid == request.auth.uid &&
+                       request.resource.data.title.size() >= 10 &&
+                       request.resource.data.title.size() <= 200 &&
+                       request.resource.data.bodyMD.size() >= 20 &&
+                       request.resource.data.bodyMD.size() <= 5000 &&
+                       request.resource.data.tags.size() >= 1 &&
+                       request.resource.data.tags.size() <= 3;
+      allow update: if isSelf(resource.data.uid) || isModerator();
+      allow delete: if isAdmin();
+    }
+    
+    // Forum Posts
+    match /forumPosts/{pid} {
+      allow read: if true; // Public read (hidden posts filtered client-side or via Functions)
+      allow create: if isSignedIn() && 
+                       request.resource.data.uid == request.auth.uid &&
+                       request.resource.data.bodyMD.size() >= 10 &&
+                       request.resource.data.bodyMD.size() <= 3000;
+      allow update: if isSelf(resource.data.uid) || isModerator();
+      allow delete: if isAdmin();
+    }
+    
+    // Forum Votes
+    match /forumVotes/{kind}/{targetId}/userVotes/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isSelf(uid); // Users can manage their own votes
+    }
+    
+    // Forum Reports
+    match /forumReports/{rid} {
+      allow read: if isModerator();
+      allow create: if isSignedIn() && request.resource.data.reporterUid == request.auth.uid;
+      allow update: if isModerator();
+    }
+    
+    // Forum Tags
+    match /forumTags/{tag} {
+      allow read: if true;
+      allow write: if false; // Only Functions update usage counts
+    }
+    
+    // Forum Subscriptions
+    match /forumSubscriptions/{tid}/subscribers/{uid} {
+      allow read: if isSelf(uid);
+      allow write: if isSelf(uid);
+    }
+    
+    // Notifications
+    match /notifications/{uid}/items/{nid} {
+      allow read: if isSelf(uid);
+      allow write: if false; // Only Functions create notifications
+    }
+    
+    // Calculator Runs
+    match /calcRuns/{rid} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if false; // Only via Functions (for validation)
+      allow update, delete: if false;
+    }
+    
+    // Configs (PAYE Rules)
+    match /configs/{docId} {
+      allow read: if true; // Public read
+      allow write: if isAdmin();
+    }
+    
+    // Rate Limits
+    match /rateLimits/{uid} {
+      allow read, write: if false; // Only Functions
+    }
+  }
+}
+
