@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -22,16 +22,7 @@ export default function MyForumActivityPage() {
   const [subscribedThreads, setSubscribedThreads] = useState<ForumThread[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!firebaseUser) {
-      router.push('/');
-      return;
-    }
-
-    fetchMyActivity();
-  }, [firebaseUser, router]);
-
-  const fetchMyActivity = async () => {
+  const fetchMyActivity = useCallback(async () => {
     if (!firebaseUser) return;
 
     setLoading(true);
@@ -72,7 +63,16 @@ export default function MyForumActivityPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [firebaseUser]);
+
+  useEffect(() => {
+    if (!firebaseUser) {
+      router.push('/');
+      return;
+    }
+
+    fetchMyActivity();
+  }, [firebaseUser, router, fetchMyActivity]);
 
   if (!firebaseUser) {
     return null;

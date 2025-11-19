@@ -13,7 +13,7 @@ import { useToastStore } from '@/lib/store/toast';
 export default function RoundPage() {
   const router = useRouter();
   const { firebaseUser } = useAuthStore();
-  const { questions, currentQuestionIndex, setCurrentQuestionIndex, submitAnswer, answers } = useQuizStore();
+  const { questions, currentQuestionIndex, setCurrentQuestionIndex, submitAnswer } = useQuizStore();
   const { addToast } = useToastStore();
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [isRevealed, setIsRevealed] = useState(false);

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeTax, DEFAULT_PAYE_RULES } from '../calculator';
+import { computeTax } from '../calculator';
 import { CalcInputs, PayeRules } from '@/lib/types';
 
 describe('Calculator Engine', () => {

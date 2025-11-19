@@ -1,18 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { PayeRules, CalcInputs } from '@/lib/types';
+import { PayeRules, CalcInputs, CalcOutputs } from '@/lib/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { payeRulesSchema, PayeRulesFormData } from '@/lib/validation/schemas';
 import { computeTax, DEFAULT_PAYE_RULES, formatCurrency } from '@/lib/utils/calculator';
-import { adminSetPayeRules } from '@/lib/firebase/functions';
 
 export default function AdminRulesPage() {
   const router = useRouter();
@@ -29,7 +27,7 @@ export default function AdminRulesPage() {
     pensionPct: 8,
     nhfEnabled: true,
   });
-  const [testResults, setTestResults] = useState<any>(null);
+  const [testResults, setTestResults] = useState<CalcOutputs | null>(null);
 
   const {
     register,
@@ -49,13 +47,7 @@ export default function AdminRulesPage() {
     }
   }, [user, authLoading, router, addToast]);
 
-  useEffect(() => {
-    if (user?.role === 'admin') {
-      fetchRules();
-    }
-  }, [user]);
-
-  const fetchRules = async () => {
+  const fetchRules = useCallback(async () => {
     try {
       const rulesRef = doc(db, 'configs', 'payeRules');
       const rulesSnap = await getDoc(rulesRef);
@@ -77,7 +69,13 @@ export default function AdminRulesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [addToast, reset]);
+
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      fetchRules();
+    }
+  }, [user, fetchRules]);
 
   const onSubmit = async (data: PayeRulesFormData) => {
     try {
@@ -215,7 +213,7 @@ export default function AdminRulesPage() {
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Tax Brackets</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Define progressive tax rates. For the last bracket, use 9999999999 for "Infinity"
+                  Define progressive tax rates. For the last bracket, use 9999999999 for &quot;Infinity&quot;
                 </p>
                 <div className="space-y-3">
                   {[0, 1, 2, 3, 4, 5].map((idx) => (

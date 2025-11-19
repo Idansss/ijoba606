@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -15,11 +15,7 @@ export default function TagPage() {
   const [threads, setThreads] = useState<ForumThread[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchThreadsByTag();
-  }, [tag]);
-
-  const fetchThreadsByTag = async () => {
+  const fetchThreadsByTag = useCallback(async () => {
     setLoading(true);
     try {
       const threadsRef = collection(db, 'forumThreads');
@@ -41,7 +37,11 @@ export default function TagPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tag]);
+
+  useEffect(() => {
+    fetchThreadsByTag();
+  }, [fetchThreadsByTag]);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -87,7 +87,7 @@ export default function TagPage() {
               No threads found
             </h3>
             <p className="text-gray-600 mb-6">
-              No discussions with the "{tag}" tag yet
+              No discussions with the &quot;{tag}&quot; tag yet
             </p>
             <Link
               href="/forum/new"

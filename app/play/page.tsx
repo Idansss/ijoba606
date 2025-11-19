@@ -10,7 +10,7 @@ import { StreakPill } from '@/components/quiz/StreakPill';
 import { BadgeStrip } from '@/components/quiz/BadgeStrip';
 import { signInAnon } from '@/lib/firebase/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { QuizLevel } from '@/lib/types';
+import { QuizLevel, Question } from '@/lib/types';
 import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
@@ -49,6 +49,7 @@ export default function PlayPage() {
       await signInAnon();
       addToast({ type: 'success', message: 'Welcome! Let\'s play 🎮' });
     } catch (error) {
+      console.error('Anonymous sign-in failed:', error);
       addToast({ type: 'error', message: 'Failed to sign in. Try again.' });
     }
   };
@@ -85,7 +86,7 @@ export default function PlayPage() {
 
       // Set in store
       setCurrentLevel(selectedLevel);
-      useQuizStore.getState().setQuestions(selectedQuestions as any);
+      useQuizStore.getState().setQuestions(selectedQuestions as Question[]);
       useQuizStore.getState().startRound();
 
       // Navigate to round

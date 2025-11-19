@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -27,13 +27,7 @@ export default function AdminModerationPage() {
     }
   }, [user, authLoading, router, addToast]);
 
-  useEffect(() => {
-    if (user?.role === 'moderator' || user?.role === 'admin') {
-      fetchReports();
-    }
-  }, [user, filter]);
-
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     setLoading(true);
     try {
       const reportsRef = collection(db, 'forumReports');
@@ -52,7 +46,13 @@ export default function AdminModerationPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, addToast]);
+
+  useEffect(() => {
+    if (user?.role === 'moderator' || user?.role === 'admin') {
+      fetchReports();
+    }
+  }, [user, filter, fetchReports]);
 
   const handleModerateAction = async (
     report: ForumReport,

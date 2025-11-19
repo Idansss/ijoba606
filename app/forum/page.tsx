@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+export const dynamic = 'force-dynamic';
+
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ThreadCard } from '@/components/forum/ThreadCard';
@@ -17,6 +19,22 @@ type TabType = 'trending' | 'new' | 'unanswered';
 const POPULAR_TAGS = ['Pension', 'Reliefs', 'Beginners', 'Calculations', 'Self-Employed'];
 
 export default function ForumPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        </div>
+      }
+    >
+      <ForumPageContent />
+    </Suspense>
+  );
+}
+
+function ForumPageContent() {
   const { firebaseUser } = useAuthStore();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('new');
@@ -24,11 +42,7 @@ export default function ForumPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
-  useEffect(() => {
-    fetchThreads();
-  }, [activeTab, searchQuery]);
-
-  const fetchThreads = async () => {
+  const fetchThreads = useCallback(async () => {
     setLoading(true);
     try {
       const threadsRef = collection(db, 'forumThreads');
@@ -73,7 +87,11 @@ export default function ForumPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, searchQuery]);
+
+  useEffect(() => {
+    fetchThreads();
+  }, [fetchThreads]);
 
   return (
     <div className="container mx-auto px-4 py-12">

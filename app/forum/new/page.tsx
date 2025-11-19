@@ -7,7 +7,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createThreadSchema, CreateThreadFormData } from '@/lib/validation/schemas';
 import { MarkdownEditor } from '@/components/forum/MarkdownEditor';
-import { TagChip } from '@/components/forum/TagChip';
 import { createThread } from '@/lib/firebase/functions';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';

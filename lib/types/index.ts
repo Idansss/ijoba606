@@ -92,6 +92,7 @@ export interface ForumThread {
   updatedAt: Timestamp;
   votes: number;
   replyCount: number;
+  isHidden: boolean;
   isLocked: boolean;
   isPinned: boolean;
   acceptedPostId?: string;

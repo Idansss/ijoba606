@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { Question, QuizLevel } from '@/lib/types';
-import { useForm, Controller } from 'react-hook-form';
+import { Question } from '@/lib/types';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { questionSchema, QuestionFormData } from '@/lib/validation/schemas';
 
@@ -23,7 +23,6 @@ export default function AdminQuestionsPage() {
 
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -40,20 +39,7 @@ export default function AdminQuestionsPage() {
     },
   });
 
-  useEffect(() => {
-    if (!authLoading && user?.role !== 'admin') {
-      addToast({ type: 'error', message: 'Admin access required' });
-      router.push('/');
-    }
-  }, [user, authLoading, router, addToast]);
-
-  useEffect(() => {
-    if (user?.role === 'admin') {
-      fetchQuestions();
-    }
-  }, [user]);
-
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     try {
       const questionsRef = collection(db, 'questions');
       const snapshot = await getDocs(questionsRef);
@@ -68,7 +54,20 @@ export default function AdminQuestionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [addToast]);
+
+  useEffect(() => {
+    if (!authLoading && user?.role !== 'admin') {
+      addToast({ type: 'error', message: 'Admin access required' });
+      router.push('/');
+    }
+  }, [user, authLoading, router, addToast]);
+
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      fetchQuestions();
+    }
+  }, [user, fetchQuestions]);
 
   const handleOpenModal = (question?: Question) => {
     if (question) {
@@ -325,7 +324,7 @@ export default function AdminQuestionsPage() {
                         {[0, 1, 2, 3].map((idx) => (
                           <input
                             key={idx}
-                            {...register(`options.${idx}`)}
+                            {...register(`options.${idx}` as 'options.0' | 'options.1' | 'options.2' | 'options.3')}
                             placeholder={`Option ${String.fromCharCode(65 + idx)}`}
                             className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
                           />

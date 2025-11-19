@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 
 const LAGOS_TZ = 'Africa/Lagos';

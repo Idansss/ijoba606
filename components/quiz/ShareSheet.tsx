@@ -45,6 +45,7 @@ export function ShareSheet({ isOpen, onClose, shareData }: ShareSheetProps) {
         onClose();
       }, 1500);
     } catch (error) {
+      console.error('Copy to clipboard failed:', error);
       addToast({ type: 'error', message: 'Failed to copy' });
     }
   };
@@ -83,7 +84,7 @@ export function ShareSheet({ isOpen, onClose, shareData }: ShareSheetProps) {
             </div>
 
             <div className="flex flex-col gap-3">
-              {navigator.share && (
+              {typeof navigator !== 'undefined' && 'share' in navigator && (
                 <button
                   onClick={handleShare}
                   className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"

@@ -34,6 +34,7 @@ export function Header() {
       await signInAnon();
       addToast({ type: 'success', message: 'Welcome! You dey inside now 👋' });
     } catch (error) {
+      console.error('Anonymous sign-in failed:', error);
       addToast({ type: 'error', message: 'Sign in failed. Try again.' });
     }
   };
@@ -43,6 +44,7 @@ export function Header() {
       await signInWithGoogle();
       addToast({ type: 'success', message: 'Welcome back! 🎉' });
     } catch (error) {
+      console.error('Google sign-in failed:', error);
       addToast({ type: 'error', message: 'Sign in failed. Try again.' });
     }
   };
@@ -53,6 +55,7 @@ export function Header() {
       addToast({ type: 'info', message: 'Signed out. See you soon!' });
       setShowMenu(false);
     } catch (error) {
+      console.error('Sign out failed:', error);
       addToast({ type: 'error', message: 'Sign out failed. Try again.' });
     }
   };

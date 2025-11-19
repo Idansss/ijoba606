@@ -9,7 +9,7 @@ export default function TermsPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">1. Acceptance of Terms</h2>
             <p className="text-gray-700 mb-4">
-              By accessing and using IJBoba 606 ("the Service"), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
+              By accessing and using IJBoba 606 (&quot;the Service&quot;), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
             </p>
           </section>
 
@@ -153,7 +153,7 @@ export default function TermsPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">12. Changes to Terms</h2>
             <p className="text-gray-700 mb-4">
-              We reserve the right to modify these Terms at any time. We will notify users of any material changes by posting the new Terms on this page and updating the "Last updated" date. Your continued use after changes constitutes acceptance of the new Terms.
+              We reserve the right to modify these Terms at any time. We will notify users of any material changes by posting the new Terms on this page and updating the &quot;Last updated&quot; date. Your continued use after changes constitutes acceptance of the new Terms.
             </p>
           </section>
 

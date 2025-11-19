@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+export const dynamic = 'force-dynamic';
+
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -18,6 +20,22 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
 export default function ResultPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        </div>
+      }
+    >
+      <ResultPageContent />
+    </Suspense>
+  );
+}
+
+function ResultPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { firebaseUser } = useAuthStore();
@@ -117,7 +135,7 @@ export default function ResultPage() {
             Your Tax Calculation
           </h1>
           <p className="text-gray-600">
-            Here's your estimated PAYE breakdown
+            Here&apos;s your estimated PAYE breakdown
           </p>
         </div>
 
@@ -236,5 +254,3 @@ export default function ResultPage() {
     </div>
   );
 }
-
-

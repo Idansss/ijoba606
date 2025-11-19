@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+export const dynamic = 'force-dynamic';
+
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -24,18 +26,7 @@ export default function ResultsPage() {
   const [streakCount, setStreakCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
 
-  useEffect(() => {
-    // Redirect if no data
-    if (questions.length === 0 || answers.length === 0) {
-      router.push('/play');
-      return;
-    }
-
-    // Auto-submit results
-    handleSubmitResults();
-  }, []);
-
-  const handleSubmitResults = async () => {
+  const handleSubmitResults = useCallback(async () => {
     if (submitting || submitted || !firebaseUser) return;
 
     setSubmitting(true);
@@ -67,7 +58,26 @@ export default function ResultsPage() {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [
+    submitting,
+    submitted,
+    firebaseUser,
+    questions,
+    answers,
+    currentLevel,
+    addToast,
+  ]);
+
+  useEffect(() => {
+    // Redirect if no data
+    if (questions.length === 0 || answers.length === 0) {
+      router.push('/play');
+      return;
+    }
+
+    // Auto-submit results
+    handleSubmitResults();
+  }, [questions.length, answers.length, router, handleSubmitResults]);
 
   const handlePlayAgain = () => {
     resetRound();
