@@ -1,23 +1,53 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useAuthStore } from '@/lib/store/auth';
-import { signInAnon, signInWithGoogle, signOut } from '@/lib/firebase/auth';
-import { useToastStore } from '@/lib/store/toast';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import {
+  Bell,
+  Calculator,
+  Gamepad2,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Sparkles,
+  Trophy,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { useAuthStore } from '@/lib/store/auth';
 import { db } from '@/lib/firebase/config';
+import {
+  signInAnon,
+  signInWithGoogle,
+  signOut,
+} from '@/lib/firebase/auth';
+import { useToastStore } from '@/lib/store/toast';
+import { cn } from '@/lib/utils/cn';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+
+const navLinks = [
+  { href: '/play', label: 'Learn & Play', icon: Gamepad2 },
+  { href: '/forum', label: 'Forum', icon: MessageCircle },
+  { href: '/calculator', label: 'Calculator', icon: Calculator },
+  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+];
 
 export function Header() {
+  const pathname = usePathname();
   const { firebaseUser, user, profile } = useAuthStore();
   const { addToast } = useToastStore();
-  const [showMenu, setShowMenu] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Subscribe to notifications
   useEffect(() => {
-    if (!firebaseUser) return;
+    if (!firebaseUser) {
+      setUnreadCount(0);
+      return;
+    }
 
     const notifRef = collection(db, `notifications/${firebaseUser.uid}/items`);
     const q = query(notifRef, where('isRead', '==', false));
@@ -29,10 +59,15 @@ export function Header() {
     return () => unsubscribe();
   }, [firebaseUser]);
 
+  useEffect(() => {
+    setNavOpen(false);
+    setProfileOpen(false);
+  }, [pathname, firebaseUser]);
+
   const handleSignInAnon = async () => {
     try {
       await signInAnon();
-      addToast({ type: 'success', message: 'Welcome! You dey inside now 👋' });
+      addToast({ type: 'success', message: 'Welcome! Jump right in.' });
     } catch (error) {
       console.error('Anonymous sign-in failed:', error);
       addToast({ type: 'error', message: 'Sign in failed. Try again.' });
@@ -42,7 +77,7 @@ export function Header() {
   const handleSignInGoogle = async () => {
     try {
       await signInWithGoogle();
-      addToast({ type: 'success', message: 'Welcome back! 🎉' });
+      addToast({ type: 'success', message: 'Welcome back!' });
     } catch (error) {
       console.error('Google sign-in failed:', error);
       addToast({ type: 'error', message: 'Sign in failed. Try again.' });
@@ -53,153 +88,141 @@ export function Header() {
     try {
       await signOut();
       addToast({ type: 'info', message: 'Signed out. See you soon!' });
-      setShowMenu(false);
     } catch (error) {
       console.error('Sign out failed:', error);
       addToast({ type: 'error', message: 'Sign out failed. Try again.' });
     }
   };
 
+  const initials = user?.handle?.[0]?.toUpperCase() ?? '?';
+
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+    <header className="sticky top-0 z-40 border-b border-[var(--border-soft)] bg-[color-mix(in_srgb,var(--surface)_92%,#ffffff_8%)] backdrop-blur">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              IJBoba 606
-            </span>
+        <div className="flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-[var(--foreground)]">
+                IJBoba 606
+              </p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Learn · Play · Calculate
+              </p>
+            </div>
           </Link>
 
-          {/* Nav */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/play"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              Learn & Play
-            </Link>
-            <Link
-              href="/forum"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              Forum
-            </Link>
-            <Link
-              href="/calculator"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              Calculator
-            </Link>
-            <Link
-              href="/leaderboard"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              Leaderboard
-            </Link>
+          <nav className="hidden items-center gap-1 rounded-full border border-white/70 bg-white/70 px-1 py-1 shadow-inner shadow-white/40 md:flex">
+            {navLinks.map(({ href, label, icon: Icon }) => {
+              const isActive =
+                pathname === href || pathname.startsWith(`${href}/`);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-lg'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* Auth & Profile */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             {!firebaseUser ? (
               <>
                 <button
                   onClick={handleSignInAnon}
-                  className="hidden md:block px-4 py-2 text-sm text-gray-700 hover:text-purple-600 transition-colors font-medium"
+                  className="hidden rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:border-purple-400 hover:text-slate-900 md:block"
                 >
-                  Try as Guest
+                  Try Demo
                 </button>
                 <button
                   onClick={handleSignInGoogle}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-sm"
+                  className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:brightness-110"
                 >
-                  Sign In
+                  Sign in
                 </button>
               </>
             ) : (
               <>
-                {/* Notifications Bell */}
                 <Link
                   href="/profile"
-                  className="relative p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                  className="relative hidden rounded-full border border-slate-200 px-3 py-2 text-slate-500 transition hover:border-purple-400 hover:text-purple-700 md:flex md:items-center"
+                  aria-label="Notifications"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
+                  <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1 text-xs font-semibold text-white">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
                 </Link>
 
-                {/* Profile Menu */}
                 <div className="relative">
                   <button
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    onClick={() => setProfileOpen((prev) => !prev)}
+                    className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 pr-1 text-left shadow-sm transition hover:border-purple-400"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                      {user?.handle?.[0]?.toUpperCase() || '?'}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-blue-500 text-lg font-bold text-white shadow-md">
+                      {initials}
                     </div>
-                    <div className="hidden md:block text-left">
-                      <div className="text-sm font-medium">{user?.handle}</div>
-                      <div className="text-xs text-gray-500">
-                        {profile?.totalPoints || 0} pts
-                      </div>
+                    <div className="hidden text-sm md:block">
+                      <p className="font-semibold text-slate-900">
+                        {user?.handle}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {profile?.totalPoints?.toLocaleString() ?? 0} pts
+                      </p>
                     </div>
                   </button>
 
                   <AnimatePresence>
-                    {showMenu && (
+                    {profileOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
+                        exit={{ opacity: 0, y: -8 }}
+                        className="absolute right-0 mt-3 w-60 rounded-2xl border border-slate-100 bg-white p-3 shadow-2xl"
                       >
                         <Link
                           href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setShowMenu(false)}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                          Profile
+                          <UserRound className="h-4 w-4 text-purple-600" />
+                          Profile & Stats
                         </Link>
                         <Link
                           href="/forum/me"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setShowMenu(false)}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                          My Forum Activity
+                          <MessageCircle className="h-4 w-4 text-blue-600" />
+                          Forum Activity
                         </Link>
                         {user?.role === 'admin' && (
-                          <>
-                            <hr className="my-2" />
-                            <Link
-                              href="/admin/questions"
-                              className="block px-4 py-2 text-sm text-purple-600 hover:bg-gray-100"
-                              onClick={() => setShowMenu(false)}
-                            >
-                              Admin Panel
-                            </Link>
-                          </>
+                          <Link
+                            href="/admin/questions"
+                            className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                          >
+                            <Sparkles className="h-4 w-4" />
+                            Admin Panel
+                          </Link>
                         )}
-                        <hr className="my-2" />
                         <button
                           onClick={handleSignOut}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                          className="mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
                         >
-                          Sign Out
+                          <LogOut className="h-4 w-4" />
+                          Sign out
                         </button>
                       </motion.div>
                     )}
@@ -208,67 +231,70 @@ export function Header() {
               </>
             )}
 
-            {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-gray-700"
-              onClick={() => setShowMenu(!showMenu)}
+              onClick={() => setNavOpen((prev) => !prev)}
+              className="rounded-full border border-slate-200 p-2 text-slate-600 transition hover:border-purple-400 hover:text-slate-900 md:hidden"
+              aria-label="Toggle menu"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              {navOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
-          {showMenu && (
+          {navOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden mt-4 pt-4 border-t border-gray-200"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="mt-4 space-y-4 rounded-3xl border border-white/60 bg-white/95 p-5 shadow-2xl md:hidden"
             >
-              <nav className="flex flex-col gap-3">
-                <Link
-                  href="/play"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-                  onClick={() => setShowMenu(false)}
+              <div className="space-y-2">
+                {navLinks.map(({ href, label, icon: Icon }) => {
+                  const isActive =
+                    pathname === href || pathname.startsWith(`${href}/`);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={cn(
+                        'flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-semibold',
+                        isActive
+                          ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-lg'
+                          : 'text-slate-600 hover:bg-slate-50'
+                      )}
+                      onClick={() => setNavOpen(false)}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {!firebaseUser ? (
+                <button
+                  onClick={handleSignInGoogle}
+                  className="w-full rounded-2xl bg-gradient-to-r from-purple-600 to-blue-500 px-4 py-3 text-center text-base font-semibold text-white"
                 >
-                  Learn & Play
-                </Link>
-                <Link
-                  href="/forum"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-                  onClick={() => setShowMenu(false)}
-                >
-                  Forum
-                </Link>
-                <Link
-                  href="/calculator"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-                  onClick={() => setShowMenu(false)}
-                >
-                  Calculator
-                </Link>
-                <Link
-                  href="/leaderboard"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-                  onClick={() => setShowMenu(false)}
-                >
-                  Leaderboard
-                </Link>
-              </nav>
+                  Sign in with Google
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <Link
+                    href="/profile"
+                    className="block rounded-2xl border border-slate-200 px-4 py-3 text-center font-semibold text-slate-700"
+                  >
+                    View profile
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full rounded-2xl border border-rose-200 px-4 py-3 text-center font-semibold text-rose-600"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -276,4 +302,3 @@ export function Header() {
     </header>
   );
 }
-

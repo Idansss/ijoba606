@@ -2,96 +2,121 @@
 
 import Link from 'next/link';
 
+const productLinks = [
+  { href: '/play', label: 'Learn & Play' },
+  { href: '/round', label: 'Quiz Round' },
+  { href: '/calculator', label: 'Tax Calculator' },
+  { href: '/leaderboard', label: 'Leaderboard' },
+];
+
+const communityLinks = [
+  { href: '/forum', label: 'Community Forum' },
+  { href: '/forum/new', label: 'Start a Thread' },
+  { href: '/profile', label: 'Profile' },
+  { href: '/results', label: 'Results History' },
+];
+
+const legalLinks = [
+  { href: '/legal/privacy', label: 'Privacy Policy' },
+  { href: '/legal/terms', label: 'Terms of Service' },
+];
+
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-white/80 backdrop-blur-lg border-t border-gray-200 mt-auto">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* About */}
-          <div>
-            <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+    <footer
+      className="mt-auto border-t border-[var(--border-soft)] text-[var(--foreground)]"
+      style={{
+        // Use theme tokens so light + dark stay in the same green family
+        background:
+          'linear-gradient(135deg, var(--background) 0%, var(--surface) 40%, var(--background) 100%)',
+      }}
+    >
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid gap-10 lg:grid-cols-4">
+          <div className="lg:col-span-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] opacity-70">
               IJBoba 606
+            </p>
+            <h3 className="mt-4 text-3xl font-semibold">
+              Make PAYE literacy hard to ignore.
             </h3>
-            <p className="text-sm text-gray-600">
-              Make PAYE literacy engaging. Learn through play, discuss in the
-              community, and calculate your tax with confidence.
+            <p className="mt-3 text-sm opacity-85">
+              Micro-quizzes, a kind community, and a Nigeria-ready PAYE calculator
+              built so everyone can see their tax clearly.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/play"
+                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-slate-900 shadow-lg shadow-indigo-500/30"
+              >
+                Start a round
+              </Link>
+              <Link
+                href="/calculator"
+                className="rounded-full border border-white/40 px-5 py-2 text-sm font-semibold text-[var(--foreground)]/90 hover:text-[var(--foreground)]"
+              >
+                Estimate PAYE
+              </Link>
+            </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-lg mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/play"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Learn & Play
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/forum"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Community Forum
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/calculator"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Tax Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/leaderboard"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Leaderboard
-                </Link>
-              </li>
+            <h4 className="text-sm font-semibold uppercase tracking-widest opacity-70">
+              Product
+            </h4>
+            <ul className="mt-4 space-y-2 text-sm opacity-85">
+              {productLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
-            <h3 className="font-bold text-lg mb-3">Legal</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/legal/privacy"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/legal/terms"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
+            <h4 className="text-sm font-semibold uppercase tracking-widest opacity-70">
+              Community
+            </h4>
+            <ul className="mt-4 space-y-2 text-sm opacity-85">
+              {communityLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
-            <p className="text-xs text-gray-500 mt-4">
-              Educational purposes only. Not legal or tax advice.
-            </p>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-          <p>
-            © {new Date().getFullYear()} IJBoba 606. All rights reserved. Made
-            with 💜 for Nigeria.
+        <div className="mt-8 grid gap-6 border-t border-white/10 pt-6 text-sm opacity-75 md:grid-cols-2">
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <p className="text-right md:text-left">
+            © {year} IJBoba 606. Educational purposes only — not legal or tax
+            advice.
           </p>
         </div>
       </div>
     </footer>
   );
 }
-

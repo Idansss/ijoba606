@@ -30,6 +30,11 @@ export default function AdminModerationPage() {
   const fetchReports = useCallback(async () => {
     setLoading(true);
     try {
+      if (!db) {
+        // Firebase is not configured; skip fetching and treat as no reports.
+        setReports([]);
+        return;
+      }
       const reportsRef = collection(db, 'forumReports');
       const q = query(reportsRef, where('status', '==', filter));
       
@@ -59,6 +64,13 @@ export default function AdminModerationPage() {
     action: 'hide' | 'unhide' | 'lock' | 'unlock' | 'pin' | 'unpin'
   ) => {
     try {
+      if (!db) {
+        addToast({
+          type: 'error',
+          message: 'Moderation tools are disabled in this local demo (no Firebase configuration).',
+        });
+        return;
+      }
       await moderateContent({
         targetKind: report.targetKind,
         targetId: report.targetId,
@@ -79,6 +91,13 @@ export default function AdminModerationPage() {
 
   const handleDismissReport = async (reportId: string) => {
     try {
+      if (!db) {
+        addToast({
+          type: 'error',
+          message: 'Moderation tools are disabled in this local demo (no Firebase configuration).',
+        });
+        return;
+      }
       const reportRef = doc(db, 'forumReports', reportId);
       await updateDoc(reportRef, { status: 'actioned' });
       addToast({ type: 'info', message: 'Report dismissed' });

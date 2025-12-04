@@ -49,6 +49,10 @@ export default function AdminRulesPage() {
 
   const fetchRules = useCallback(async () => {
     try {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       const rulesRef = doc(db, 'configs', 'payeRules');
       const rulesSnap = await getDoc(rulesRef);
       
@@ -79,6 +83,13 @@ export default function AdminRulesPage() {
 
   const onSubmit = async (data: PayeRulesFormData) => {
     try {
+      if (!db) {
+        addToast({
+          type: 'error',
+          message: 'Admin rules editing is disabled in this local demo (no Firebase configuration).',
+        });
+        return;
+      }
       // Convert Infinity to a large number for Firestore
       const brackets = data.brackets.map(b => ({
         ...b,
