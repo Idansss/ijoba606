@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -18,18 +19,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="antialiased">
-        <ThemeProvider>
-          <AuthProvider>
-            <div className="flex min-h-screen flex-col bg-background text-foreground">
-              <Header />
-              <main className="flex-1 pb-16 pt-6">{children}</main>
-              <Footer />
-            </div>
-            <ToastContainer />
-          </AuthProvider>
-        </ThemeProvider>
+    <html lang="en">
+      <body className="antialiased bg-gradient-to-br from-purple-50 via-blue-50 to-green-50 min-h-screen">
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-KZZCMZDJTE"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-KZZCMZDJTE');
+          `}
+        </Script>
+        <AuthProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <ToastContainer />
+        </AuthProvider>
       </body>
     </html>
   );
