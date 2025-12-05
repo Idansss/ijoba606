@@ -183,3 +183,4 @@ export const DEFAULT_PAYE_RULES: PayeRules = {
     'Educational purposes only. Not legal or tax advice. Based on Nigeria PAYE 2025 estimates. Consult a tax professional for your specific situation.',
 };
 
+

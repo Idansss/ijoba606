@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Shield } from 'lucide-react';
 
 interface AssumptionNoteProps {
   note: string;
@@ -9,19 +10,19 @@ interface AssumptionNoteProps {
 export function AssumptionNote({ note }: AssumptionNoteProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0.8 }}
       animate={{ opacity: 1 }}
-      className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4"
+      className="rounded-3xl border border-yellow-100 bg-yellow-50 p-5 text-sm text-yellow-900"
     >
       <div className="flex items-start gap-3">
-        <span className="text-2xl">⚠️</span>
+        <Shield className="h-5 w-5" />
         <div>
-          <h4 className="font-bold text-yellow-900 mb-1">Important Note</h4>
-          <p className="text-sm text-yellow-800">{note}</p>
+          <p className="font-semibold uppercase tracking-[0.3em] text-yellow-600">
+            Important assumption
+          </p>
+          <p className="mt-1">{note}</p>
         </div>
       </div>
     </motion.div>
   );
 }
-
-

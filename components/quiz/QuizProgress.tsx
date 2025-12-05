@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils/cn';
 
 interface QuizProgressProps {
   currentQuestion: number;
@@ -12,29 +11,26 @@ export function QuizProgress({
   currentQuestion,
   totalQuestions,
 }: QuizProgressProps) {
+  const percentage = Math.round(
+    ((currentQuestion + 1) / totalQuestions) * 100
+  );
+
   return (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-gray-700">
+    <div className="rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm">
+      <div className="flex items-center justify-between text-sm text-slate-500">
+        <span className="font-semibold text-slate-700">
           Question {currentQuestion + 1} of {totalQuestions}
         </span>
-        <span className="text-xs text-gray-500">
-          {Math.round(((currentQuestion + 1) / totalQuestions) * 100)}% complete
-        </span>
+        <span>{percentage}% complete</span>
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-100">
         <motion.div
           initial={{ width: 0 }}
-          animate={{
-            width: `${((currentQuestion + 1) / totalQuestions) * 100}%`,
-          }}
+          animate={{ width: `${percentage}%` }}
           transition={{ duration: 0.3 }}
-          className={cn(
-            'h-full rounded-full bg-gradient-to-r from-purple-500 to-blue-500'
-          )}
+          className="h-full rounded-full bg-gradient-to-r from-purple-600 via-blue-500 to-emerald-400"
         />
       </div>
     </div>
   );
 }
-

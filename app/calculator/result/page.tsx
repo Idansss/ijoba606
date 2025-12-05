@@ -25,7 +25,7 @@ export default function ResultPage() {
       fallback={
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
           </div>
         </div>
       }
@@ -50,8 +50,11 @@ function ResultPageContent() {
       const runId = searchParams.get('id');
 
       if (runId) {
-        // Load from Firestore
         try {
+          if (!db) {
+            router.push('/calculator');
+            return;
+          }
           const runRef = doc(db, 'calcRuns', runId);
           const runSnap = await getDoc(runRef);
           if (runSnap.exists()) {
@@ -66,7 +69,6 @@ function ResultPageContent() {
           router.push('/calculator');
         }
       } else {
-        // Load from session storage
         const stored = sessionStorage.getItem('calcResult');
         if (stored) {
           const data = JSON.parse(stored);
@@ -110,7 +112,7 @@ function ResultPageContent() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
         </div>
       </div>
     );
@@ -118,134 +120,125 @@ function ResultPageContent() {
 
   const shareData = {
     title: 'IJBoba 606 Tax Calculator',
-    text: `My PAYE estimate be ₦${outputs.monthlyTax.toLocaleString()}/month on IJBoba 606 — check yours.`,
-    url: typeof window !== 'undefined' ? window.location.origin + '/calculator' : '',
+    text: `My PAYE estimate is ${formatCurrency(outputs.monthlyTax)}/month on IJBoba 606 — check yours.`,
+    url:
+      typeof window !== 'undefined'
+        ? window.location.origin + '/calculator'
+        : '',
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto"
+        className="mx-auto max-w-5xl"
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Your Tax Calculation
-          </h1>
-          <p className="text-gray-600">
-            Here&apos;s your estimated PAYE breakdown
-          </p>
-        </div>
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+          <div className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+              PAYE summary
+            </p>
+            <h1 className="mt-3 text-4xl font-semibold text-slate-900">
+              Here&apos;s your estimated tax footprint.
+            </h1>
+            <p className="mt-2 text-sm text-slate-500">
+              Print or save this snapshot for your payroll conversations.
+            </p>
+          </div>
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <SummaryStat
-            label="Annual Tax"
-            value={formatCurrency(outputs.annualTax)}
-            icon="📅"
-            color="purple"
-            delay={0.1}
-          />
-          <SummaryStat
-            label="Monthly Tax"
-            value={formatCurrency(outputs.monthlyTax)}
-            icon="💰"
-            color="blue"
-            delay={0.2}
-          />
-          <SummaryStat
-            label="Effective Rate"
-            value={`${(outputs.effectiveRate * 100).toFixed(2)}%`}
-            icon="📊"
-            color="green"
-            delay={0.3}
-          />
-        </div>
-
-        {/* Breakdown */}
-        <div className="mb-8">
-          <BreakdownCard lineItems={outputs.lineItems} />
-        </div>
-
-        {/* Key Results */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200 mb-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Key Results</h3>
-          <div className="space-y-3">
-            <ResultRow
-              label="Taxable Income"
-              value={formatCurrency(outputs.taxableIncome)}
-              delay={0.4}
-            />
-            <ResultRow
-              label="Annual Tax"
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            <SummaryStat
+              label="Annual tax"
               value={formatCurrency(outputs.annualTax)}
-              highlight
-              delay={0.5}
+              icon="₦"
+              color="purple"
+              delay={0.1}
             />
-            <ResultRow
-              label="Monthly Tax"
+            <SummaryStat
+              label="Monthly tax"
               value={formatCurrency(outputs.monthlyTax)}
-              highlight
-              delay={0.6}
+              icon="🗓️"
+              color="blue"
+              delay={0.2}
+            />
+            <SummaryStat
+              label="Effective rate"
+              value={`${(outputs.effectiveRate * 100).toFixed(2)}%`}
+              icon="%"
+              color="green"
+              delay={0.3}
             />
           </div>
-        </div>
 
-        {/* Assumption Note */}
-        <div className="mb-8">
-          <AssumptionNote note={outputs.assumptionsNote} />
-        </div>
+          <div className="mt-8">
+            <BreakdownCard lineItems={outputs.lineItems} />
+          </div>
 
-        {/* Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <Link
-            href="/calculator"
-            className="block text-center py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all"
-          >
-            New Calculation
-          </Link>
-          {firebaseUser && !searchParams.get('id') && (
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="py-4 bg-white border-2 border-purple-600 text-purple-600 rounded-xl font-bold hover:bg-purple-50 transition-all disabled:opacity-50"
+          <div className="mt-8 grid gap-3">
+            <ResultRow
+              label="Taxable income"
+              value={formatCurrency(outputs.taxableIncome)}
+              delay={0.1}
+            />
+            <ResultRow
+              label="Annual tax"
+              value={formatCurrency(outputs.annualTax)}
+              highlight
+              delay={0.2}
+            />
+            <ResultRow
+              label="Monthly tax"
+              value={formatCurrency(outputs.monthlyTax)}
+              highlight
+              delay={0.3}
+            />
+          </div>
+
+          <div className="mt-6">
+            <AssumptionNote note={outputs.assumptionsNote} />
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            <Link
+              href="/calculator"
+              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
             >
-              {saving ? 'Saving...' : 'Save to Profile'}
+              New calculation
+            </Link>
+            {firebaseUser && !searchParams.get('id') && (
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900 disabled:opacity-50"
+              >
+                {saving ? 'Saving...' : 'Save to profile'}
+              </button>
+            )}
+            <button
+              onClick={() => setShareOpen(true)}
+              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+            >
+              Share result
             </button>
-          )}
-          <button
-            onClick={() => setShareOpen(true)}
-            className="py-4 bg-gray-100 text-gray-800 rounded-xl font-bold hover:bg-gray-200 transition-all"
-          >
-            Share Result
-          </button>
-        </div>
+          </div>
 
-        {/* Print */}
-        <div className="text-center">
-          <button
-            onClick={() => window.print()}
-            className="text-sm text-gray-600 hover:text-gray-800 underline"
-          >
-            Print or Save as PDF
-          </button>
-        </div>
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => window.print()}
+              className="text-xs text-slate-500 underline"
+            >
+              Print or save as PDF
+            </button>
+          </div>
 
-        {/* Disclaimer */}
-        <div className="mt-8 text-center text-xs text-gray-500">
-          <p>
-            This calculator provides estimates for educational purposes only.
-          </p>
-          <p>
-            Consult with a qualified tax professional for advice specific to
-            your situation.
-          </p>
+          <div className="mt-6 rounded-2xl border border-yellow-100 bg-yellow-50 p-4 text-xs text-yellow-800">
+            Educational purposes only. Please consult a licensed tax professional
+            before filing.
+          </div>
         </div>
       </motion.div>
 
-      {/* Share Sheet */}
       <ShareSheet
         isOpen={shareOpen}
         onClose={() => setShareOpen(false)}

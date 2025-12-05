@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { QuizLevel } from '@/lib/types';
 import { cn } from '@/lib/utils/cn';
+import { BadgeCheck, Lock } from 'lucide-react';
 
 interface LevelCardProps {
   level: QuizLevel;
@@ -13,25 +14,30 @@ interface LevelCardProps {
 
 const LEVEL_INFO: Record<
   QuizLevel,
-  { name: string; description: string; color: string; emoji: string }
+  {
+    title: string;
+    description: string;
+    accent: string;
+    emoji: string;
+  }
 > = {
   1: {
-    name: 'Level 1: Basics',
-    description: 'Understanding PAYE fundamentals',
-    color: 'from-green-400 to-green-600',
+    title: 'Level 1 · Foundations',
+    description: 'PAYE basics, allowances & thresholds',
+    accent: 'from-emerald-400 via-emerald-500 to-emerald-600',
     emoji: '🌱',
   },
   2: {
-    name: 'Level 2: Calculations',
-    description: 'Computing tax and reliefs',
-    color: 'from-blue-400 to-blue-600',
+    title: 'Level 2 · Calculations',
+    description: 'Accurate maths for reliefs & NHF',
+    accent: 'from-sky-400 via-blue-500 to-indigo-500',
     emoji: '🧮',
   },
   3: {
-    name: 'Level 3: Scenarios',
-    description: 'Real-world tax situations',
-    color: 'from-purple-400 to-purple-600',
-    emoji: '👑',
+    title: 'Level 3 · Scenarios',
+    description: 'Advanced real-life payroll edge cases',
+    accent: 'from-purple-500 via-fuchsia-500 to-rose-500',
+    emoji: '🚀',
   },
 };
 
@@ -45,88 +51,53 @@ export function LevelCard({
 
   return (
     <motion.button
-      whileHover={isUnlocked ? { scale: 1.05 } : {}}
-      whileTap={isUnlocked ? { scale: 0.95 } : {}}
+      whileHover={isUnlocked ? { scale: 1.02 } : {}}
+      whileTap={isUnlocked ? { scale: 0.98 } : {}}
       onClick={isUnlocked ? onSelect : undefined}
       disabled={!isUnlocked}
       className={cn(
-        'relative w-full p-6 rounded-2xl border-2 transition-all',
-        {
-          'bg-white/80 backdrop-blur-sm border-gray-300 opacity-50 cursor-not-allowed':
-            !isUnlocked,
-          'bg-white/80 backdrop-blur-sm border-gray-300 hover:border-gray-400 hover:shadow-lg':
-            isUnlocked && !isSelected,
-          'bg-gradient-to-br shadow-xl border-transparent':
-            isUnlocked && isSelected,
-        }
+        'relative w-full rounded-3xl border px-6 py-6 text-left transition-all',
+        isUnlocked
+          ? 'border-slate-100 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.08)]'
+          : 'border-dashed border-slate-200 bg-white/60 opacity-60'
       )}
     >
-      {!isUnlocked && (
-        <div className="absolute top-4 right-4">
-          <svg
-            className="w-6 h-6 text-gray-400"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-      )}
-
-      <div className="flex items-center gap-4 mb-3">
-        <span className="text-4xl">{info.emoji}</span>
-        <div className="text-left flex-1">
-          <h3
-            className={cn('text-xl font-bold', {
-              'text-gray-800': !isSelected || !isUnlocked,
-              'text-white': isSelected && isUnlocked,
-            })}
-          >
-            {info.name}
-          </h3>
-          <p
-            className={cn('text-sm', {
-              'text-gray-600': !isSelected || !isUnlocked,
-              'text-white/90': isSelected && isUnlocked,
-            })}
-          >
-            {info.description}
-          </p>
-        </div>
-      </div>
-
-      {isSelected && isUnlocked && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute top-4 right-4"
+      <div
+        className={cn(
+          'absolute inset-x-6 top-0 h-1 rounded-full bg-gradient-to-r',
+          info.accent
+        )}
+      />
+      <div className="flex items-start gap-4">
+        <div
+          className={cn(
+            'flex h-12 w-12 items-center justify-center rounded-2xl text-2xl text-white shadow-lg',
+            'bg-gradient-to-br',
+            info.accent
+          )}
         >
-          <svg
-            className="w-6 h-6 text-white"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </motion.div>
-      )}
-
-      {!isUnlocked && (
-        <p className="text-xs text-gray-500 mt-2">
-          {level === 2
-            ? 'Unlock: Avg 18+ in last 2 rounds'
-            : 'Unlock: Avg 22+ in last 3 rounds'}
-        </p>
-      )}
+          {info.emoji}
+        </div>
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-slate-900">
+            {info.title}
+          </h3>
+          <p className="text-sm text-slate-500">{info.description}</p>
+          {isUnlocked ? (
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+              {isSelected ? 'Selected' : 'Tap to focus on this level'}
+            </p>
+          ) : (
+            <p className="mt-3 text-xs uppercase tracking-[0.3em] text-slate-400">
+              Unlock by boosting your average
+            </p>
+          )}
+        </div>
+        {isSelected && isUnlocked && (
+          <BadgeCheck className="h-5 w-5 text-emerald-500" />
+        )}
+        {!isUnlocked && <Lock className="h-5 w-5 text-slate-400" />}
+      </div>
     </motion.button>
   );
 }
-
