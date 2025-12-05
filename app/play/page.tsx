@@ -34,6 +34,7 @@ export default function PlayPage() {
   useEffect(() => {
     if (!firebaseUser || !db) return;
     const fetchLastScore = async () => {
+      if (!db) return;
       const roundsRef = collection(db, 'rounds');
       const q = query(
         roundsRef,
