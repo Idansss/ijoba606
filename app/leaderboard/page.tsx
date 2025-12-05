@@ -194,7 +194,7 @@ export default function LeaderboardPage() {
                                   )}
                                 </p>
                                 <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
-                                  Level {entry.levelUnlocked || '--'}
+                                  Streak: {entry.bestStreak}
                                 </p>
                               </div>
                             </div>
