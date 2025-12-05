@@ -71,7 +71,8 @@ export function Header() {
       addToast({ type: 'success', message: 'Welcome! Jump right in.' });
     } catch (error) {
       console.error('Anonymous sign-in failed:', error);
-      addToast({ type: 'error', message: 'Sign in failed. Try again.' });
+      const message = error instanceof Error ? error.message : 'Sign in failed. Please check your Firebase configuration.';
+      addToast({ type: 'error', message });
     }
   };
 
@@ -81,7 +82,12 @@ export function Header() {
       addToast({ type: 'success', message: 'Welcome back!' });
     } catch (error) {
       console.error('Google sign-in failed:', error);
-      addToast({ type: 'error', message: 'Sign in failed. Try again.' });
+      if (error instanceof Error && error.message === 'Sign-in cancelled') {
+        // Don't show error for user cancellation
+        return;
+      }
+      const message = error instanceof Error ? error.message : 'Sign in failed. Please check your Firebase configuration.';
+      addToast({ type: 'error', message });
     }
   };
 
@@ -106,7 +112,7 @@ export function Header() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-lg font-semibold text-[var(--foreground)]">
+              <p className="text-lg font-semibold text-[var(--foreground)] uppercase">
                 ijoba 606
               </p>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">

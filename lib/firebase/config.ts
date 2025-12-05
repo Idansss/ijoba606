@@ -28,27 +28,23 @@ if (hasRuntimeConfig) {
   try {
     auth = getAuth(app);
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn(
-        'Firebase Auth could not be initialised. Check NEXT_PUBLIC_FIREBASE_* values.',
-        error
-      );
-    } else {
-      throw error;
-    }
+    console.error(
+      'Firebase Auth could not be initialised. Check NEXT_PUBLIC_FIREBASE_* values.',
+      error
+    );
+    // Don't throw in production to prevent build failures
+    // Auth will be null and UI should handle gracefully
   }
 
   try {
     db = getFirestore(app);
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn(
-        'Firestore could not be initialised. Check NEXT_PUBLIC_FIREBASE_* values.',
-        error
-      );
-    } else {
-      throw error;
-    }
+    console.error(
+      'Firestore could not be initialised. Check NEXT_PUBLIC_FIREBASE_* values.',
+      error
+    );
+    // Don't throw in production to prevent build failures
+    // DB will be null and UI should handle gracefully
   }
 } else if (process.env.NODE_ENV !== 'production') {
   console.info(

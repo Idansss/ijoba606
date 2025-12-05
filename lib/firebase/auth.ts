@@ -14,9 +14,11 @@ const googleProvider = new GoogleAuthProvider();
 
 function requireFirebase() {
   if (!firebaseAuth || !firestoreDb) {
-    throw new Error(
+    const error = new Error(
       'Firebase auth is disabled. Add NEXT_PUBLIC_FIREBASE_* env vars to enable authentication.'
     );
+    console.error(error.message);
+    throw error;
   }
 
   return {
@@ -29,20 +31,43 @@ function requireFirebase() {
  * Sign in anonymously
  */
 export async function signInAnon() {
-  const { auth } = requireFirebase();
-  const result = await signInAnonymously(auth);
-  await ensureUserDoc(result.user, true);
-  return result.user;
+  try {
+    const { auth } = requireFirebase();
+    const result = await signInAnonymously(auth);
+    await ensureUserDoc(result.user, true);
+    return result.user;
+  } catch (error) {
+    console.error('Anonymous sign-in error:', error);
+    if (error instanceof Error && error.message.includes('Firebase auth is disabled')) {
+      throw new Error('Authentication is not configured. Please check your Firebase settings.');
+    }
+    throw error;
+  }
 }
 
 /**
  * Sign in with Google
  */
 export async function signInWithGoogle() {
-  const { auth } = requireFirebase();
-  const result = await signInWithPopup(auth, googleProvider);
-  await ensureUserDoc(result.user, false);
-  return result.user;
+  try {
+    const { auth } = requireFirebase();
+    const result = await signInWithPopup(auth, googleProvider);
+    await ensureUserDoc(result.user, false);
+    return result.user;
+  } catch (error) {
+    console.error('Google sign-in error:', error);
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-closed-by-user') {
+      // User closed the popup, don't show error
+      throw new Error('Sign-in cancelled');
+    }
+    if (error instanceof Error && error.message.includes('Firebase auth is disabled')) {
+      throw new Error('Authentication is not configured. Please check your Firebase settings.');
+    }
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-blocked') {
+      throw new Error('Popup was blocked. Please allow popups for this site.');
+    }
+    throw error;
+  }
 }
 
 /**

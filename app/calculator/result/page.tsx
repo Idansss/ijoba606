@@ -141,39 +141,39 @@ function ResultPageContent() {
             </p>
             <h1 className="mt-3 text-4xl font-semibold text-slate-900">
               Here&apos;s your estimated tax footprint.
-            </h1>
+          </h1>
             <p className="mt-2 text-sm text-slate-500">
               Print or save this snapshot for your payroll conversations.
-            </p>
-          </div>
+          </p>
+        </div>
 
           <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <SummaryStat
+          <SummaryStat
               label="Annual tax"
-              value={formatCurrency(outputs.annualTax)}
+            value={formatCurrency(outputs.annualTax)}
               icon="₦"
-              color="purple"
-              delay={0.1}
-            />
-            <SummaryStat
+            color="purple"
+            delay={0.1}
+          />
+          <SummaryStat
               label="Monthly tax"
-              value={formatCurrency(outputs.monthlyTax)}
+            value={formatCurrency(outputs.monthlyTax)}
               icon="🗓️"
-              color="blue"
-              delay={0.2}
-            />
-            <SummaryStat
+            color="blue"
+            delay={0.2}
+          />
+          <SummaryStat
               label="Effective rate"
-              value={`${(outputs.effectiveRate * 100).toFixed(2)}%`}
+            value={`${(outputs.effectiveRate * 100).toFixed(2)}%`}
               icon="%"
-              color="green"
-              delay={0.3}
-            />
-          </div>
+            color="green"
+            delay={0.3}
+          />
+        </div>
 
           <div className="mt-8">
-            <BreakdownCard lineItems={outputs.lineItems} />
-          </div>
+          <BreakdownCard lineItems={outputs.lineItems} />
+        </div>
 
           <div className="mt-8 grid gap-3">
             <ResultRow
@@ -193,44 +193,44 @@ function ResultPageContent() {
               highlight
               delay={0.3}
             />
-          </div>
+        </div>
 
           <div className="mt-6">
-            <AssumptionNote note={outputs.assumptionsNote} />
-          </div>
+          <AssumptionNote note={outputs.assumptionsNote} />
+        </div>
 
           <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <Link
-              href="/calculator"
+          <Link
+            href="/calculator"
               className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
-            >
+          >
               New calculation
-            </Link>
-            {firebaseUser && !searchParams.get('id') && (
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900 disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save to profile'}
-              </button>
-            )}
+          </Link>
+          {firebaseUser && !searchParams.get('id') && (
             <button
-              onClick={() => setShareOpen(true)}
-              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+              onClick={handleSave}
+              disabled={saving}
+                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900 disabled:opacity-50"
             >
-              Share result
+                {saving ? 'Saving...' : 'Save to profile'}
             </button>
-          </div>
+          )}
+          <button
+            onClick={() => setShareOpen(true)}
+              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+          >
+              Share result
+          </button>
+        </div>
 
           <div className="mt-6 text-center">
-            <button
-              onClick={() => window.print()}
+          <button
+            onClick={() => window.print()}
               className="text-xs text-slate-500 underline"
-            >
+          >
               Print or save as PDF
-            </button>
-          </div>
+          </button>
+        </div>
 
           <div className="mt-6 rounded-2xl border border-yellow-100 bg-yellow-50 p-4 text-xs text-yellow-800">
             Educational purposes only. Please consult a licensed tax professional
