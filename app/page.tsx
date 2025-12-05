@@ -16,7 +16,7 @@ export default function Home() {
         className="text-center mb-16"
       >
         <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-green-600 bg-clip-text text-transparent">
-          IJBoba 606
+          ijoba 606
         </h1>
         <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto">
           Learn PAYE • Play Quizzes • Join Forum • Calculate Tax

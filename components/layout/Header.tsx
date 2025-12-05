@@ -107,7 +107,7 @@ export function Header() {
             </div>
             <div>
               <p className="text-lg font-semibold text-[var(--foreground)]">
-                IJBoba 606
+                ijoba 606
               </p>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Learn · Play · Calculate

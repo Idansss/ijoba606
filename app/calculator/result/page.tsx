@@ -119,8 +119,8 @@ function ResultPageContent() {
   }
 
   const shareData = {
-    title: 'IJBoba 606 Tax Calculator',
-    text: `My PAYE estimate is ${formatCurrency(outputs.monthlyTax)}/month on IJBoba 606 — check yours.`,
+    title: 'ijoba 606 Tax Calculator',
+    text: `My PAYE estimate is ${formatCurrency(outputs.monthlyTax)}/month on ijoba 606 — check yours.`,
     url:
       typeof window !== 'undefined'
         ? window.location.origin + '/calculator'

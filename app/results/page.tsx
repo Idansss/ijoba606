@@ -89,8 +89,8 @@ export default function ResultsPage() {
   const maxScore = 30;
 
   const shareData = {
-    title: 'IJBoba 606 Quiz Results',
-    text: `I just scored ${totalScore}/30 on IJBoba 606. Think you can top it?`,
+    title: 'ijoba 606 Quiz Results',
+    text: `I just scored ${totalScore}/30 on ijoba 606. Think you can top it?`,
     url: typeof window !== 'undefined' ? window.location.origin : '',
   };
 

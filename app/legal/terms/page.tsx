@@ -9,14 +9,14 @@ export default function TermsPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">1. Acceptance of Terms</h2>
             <p className="text-gray-700 mb-4">
-              By accessing and using IJBoba 606 (&quot;the Service&quot;), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
+              By accessing and using ijoba 606 (&quot;the Service&quot;), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">2. Description of Service</h2>
             <p className="text-gray-700 mb-4">
-              IJBoba 606 is an educational web application that provides:
+              ijoba 606 is an educational web application that provides:
             </p>
             <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
               <li>Interactive quizzes about PAYE (Pay As You Earn) taxation</li>
@@ -103,14 +103,14 @@ export default function TermsPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">7. Intellectual Property</h2>
             <p className="text-gray-700 mb-4">
-              The Service and its original content (excluding user-generated content) are owned by IJBoba 606 and are protected by copyright, trademark, and other laws.
+              The Service and its original content (excluding user-generated content) are owned by ijoba 606 and are protected by copyright, trademark, and other laws.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">8. Limitation of Liability</h2>
             <p className="text-gray-700 mb-4">
-              To the maximum extent permitted by law, IJBoba 606 shall not be liable for:
+              To the maximum extent permitted by law, ijoba 606 shall not be liable for:
             </p>
             <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
               <li>Any indirect, incidental, or consequential damages</li>
@@ -165,7 +165,7 @@ export default function TermsPage() {
           </section>
 
           <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mt-8">
-            <p className="text-blue-900 font-semibold mb-2">By using IJBoba 606, you acknowledge that:</p>
+            <p className="text-blue-900 font-semibold mb-2">By using ijoba 606, you acknowledge that:</p>
             <ul className="list-disc list-inside text-blue-800 space-y-1 ml-4">
               <li>You have read and understood these Terms</li>
               <li>You agree to be bound by these Terms</li>

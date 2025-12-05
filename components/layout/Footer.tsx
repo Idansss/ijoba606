@@ -37,7 +37,7 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] opacity-70">
-              IJBoba 606
+              ijoba 606
             </p>
             <h3 className="mt-4 text-3xl font-semibold">
               Make PAYE literacy hard to ignore.
@@ -112,7 +112,7 @@ export function Footer() {
             ))}
           </div>
           <p className="text-right md:text-left">
-            © {year} IJBoba 606. Educational purposes only — not legal or tax
+            © {year} ijoba 606. Educational purposes only — not legal or tax
             advice.
           </p>
         </div>

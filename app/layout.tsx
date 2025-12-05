@@ -8,7 +8,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "IJBoba 606 · Learn PAYE, Play Quizzes & Calculate Tax",
+  title: "ijoba 606 · Learn PAYE, Play Quizzes & Calculate Tax",
   description:
     "Make PAYE literacy engaging with quick quizzes, a warm community forum, and a practical PAYE calculator built for Nigeria.",
 };
