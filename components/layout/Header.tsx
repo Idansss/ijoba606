@@ -49,6 +49,7 @@ export function Header() {
       return;
     }
 
+    if (!db) return;
     const notifRef = collection(db, `notifications/${firebaseUser.uid}/items`);
     const q = query(notifRef, where('isRead', '==', false));
 

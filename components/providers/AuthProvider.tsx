@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (firebaseUser) {
         // Subscribe to user doc
+        if (!db) return;
         const userRef = doc(db, 'users', firebaseUser.uid);
         const unsubUser = onSnapshot(userRef, (snap) => {
           if (snap.exists()) {

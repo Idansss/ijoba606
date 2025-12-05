@@ -35,6 +35,7 @@ export default function ProfilePage() {
     }
 
     const fetchCalcRuns = async () => {
+      if (!db) return;
       const runsRef = collection(db, 'calcRuns');
       const q = query(
         runsRef,
