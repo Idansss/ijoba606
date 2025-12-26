@@ -11,14 +11,14 @@ interface BadgeStripProps {
 export function BadgeStrip({ badges }: BadgeStripProps) {
   if (badges.length === 0) {
     return (
-      <div className="text-center py-4 text-gray-500 text-sm">
-        No badges yet. Keep playing to earn them! 🎯
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white/70 px-4 py-6 text-center text-sm text-slate-500">
+        No badges yet. Finish more rounds to unlock your very first sticker.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap gap-3 justify-center">
+    <div className="flex flex-wrap justify-center gap-3">
       {badges.map((badgeId, index) => {
         const badge = BADGES[badgeId as BadgeType];
         if (!badge) return null;
@@ -26,22 +26,19 @@ export function BadgeStrip({ badges }: BadgeStripProps) {
         return (
           <motion.div
             key={badgeId}
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.05 }}
             className="group relative"
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 border-2 border-purple-200 flex items-center gap-2 hover:border-purple-400 transition-all cursor-help">
+            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/85 px-4 py-2 pr-6 shadow-sm transition hover:border-purple-300">
               <span className="text-2xl">{badge.emoji}</span>
-              <span className="text-sm font-semibold text-gray-800">
-                {badge.name}
-              </span>
-            </div>
-            
-            {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-              {badge.description}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+              <div>
+                <p className="text-sm font-semibold text-slate-900">
+                  {badge.name}
+                </p>
+                <p className="text-xs text-slate-500">{badge.description}</p>
+              </div>
             </div>
           </motion.div>
         );
@@ -49,4 +46,3 @@ export function BadgeStrip({ badges }: BadgeStripProps) {
     </div>
   );
 }
-

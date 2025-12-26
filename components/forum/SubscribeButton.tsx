@@ -22,6 +22,7 @@ export function SubscribeButton({ threadId }: SubscribeButtonProps) {
     if (!firebaseUser) return;
 
     const checkSubscription = async () => {
+      if (!db) return;
       try {
         const subRef = doc(
           db,
@@ -40,6 +41,11 @@ export function SubscribeButton({ threadId }: SubscribeButtonProps) {
   const handleToggle = async () => {
     if (!firebaseUser) {
       addToast({ type: 'error', message: 'Sign in to subscribe' });
+      return;
+    }
+
+    if (!db) {
+      addToast({ type: 'error', message: 'Database not available' });
       return;
     }
 

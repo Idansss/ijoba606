@@ -2,7 +2,34 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from './config';
 import type { Round, RoundAnswer, CalcInputs, CalcOutputs, PayeRules } from '@/lib/types';
 
-const functions = getFunctions(app);
+type FirebaseFunctions = ReturnType<typeof getFunctions>;
+
+let functions: FirebaseFunctions | null = null;
+
+if (app) {
+  try {
+    functions = getFunctions(app);
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        'Firebase Functions are disabled – set NEXT_PUBLIC_FIREBASE_* env vars to enable them.',
+        error
+      );
+    } else {
+      throw error;
+    }
+  }
+}
+
+function requireFunctions(): FirebaseFunctions {
+  if (!functions) {
+    throw new Error(
+      'Cloud Functions are disabled. Add NEXT_PUBLIC_FIREBASE_* env vars to enable backend features.'
+    );
+  }
+
+  return functions;
+}
 
 // ==================== Quiz Functions ====================
 
@@ -19,7 +46,8 @@ export interface SubmitRoundResponse {
 }
 
 export async function submitRound(data: SubmitRoundRequest): Promise<SubmitRoundResponse> {
-  const fn = httpsCallable<SubmitRoundRequest, SubmitRoundResponse>(functions, 'submitRound');
+  const fns = requireFunctions();
+  const fn = httpsCallable<SubmitRoundRequest, SubmitRoundResponse>(fns, 'submitRound');
   const result = await fn(data);
   return result.data;
 }
@@ -37,7 +65,8 @@ export interface CreateThreadResponse {
 }
 
 export async function createThread(data: CreateThreadRequest): Promise<CreateThreadResponse> {
-  const fn = httpsCallable<CreateThreadRequest, CreateThreadResponse>(functions, 'createThread');
+  const fns = requireFunctions();
+  const fn = httpsCallable<CreateThreadRequest, CreateThreadResponse>(fns, 'createThread');
   const result = await fn(data);
   return result.data;
 }
@@ -54,7 +83,8 @@ export interface CreatePostResponse {
 }
 
 export async function createPost(data: CreatePostRequest): Promise<CreatePostResponse> {
-  const fn = httpsCallable<CreatePostRequest, CreatePostResponse>(functions, 'createPost');
+  const fns = requireFunctions();
+  const fn = httpsCallable<CreatePostRequest, CreatePostResponse>(fns, 'createPost');
   const result = await fn(data);
   return result.data;
 }
@@ -69,13 +99,15 @@ export interface VoteResponse {
 }
 
 export async function voteThread(data: VoteRequest): Promise<VoteResponse> {
-  const fn = httpsCallable<VoteRequest, VoteResponse>(functions, 'voteThread');
+  const fns = requireFunctions();
+  const fn = httpsCallable<VoteRequest, VoteResponse>(fns, 'voteThread');
   const result = await fn(data);
   return result.data;
 }
 
 export async function votePost(data: VoteRequest): Promise<VoteResponse> {
-  const fn = httpsCallable<VoteRequest, VoteResponse>(functions, 'votePost');
+  const fns = requireFunctions();
+  const fn = httpsCallable<VoteRequest, VoteResponse>(fns, 'votePost');
   const result = await fn(data);
   return result.data;
 }
@@ -92,8 +124,9 @@ export interface ReportContentResponse {
 }
 
 export async function reportContent(data: ReportContentRequest): Promise<ReportContentResponse> {
+  const fns = requireFunctions();
   const fn = httpsCallable<ReportContentRequest, ReportContentResponse>(
-    functions,
+    fns,
     'reportContent'
   );
   const result = await fn(data);
@@ -113,8 +146,9 @@ export interface ModerateContentResponse {
 export async function moderateContent(
   data: ModerateContentRequest
 ): Promise<ModerateContentResponse> {
+  const fns = requireFunctions();
   const fn = httpsCallable<ModerateContentRequest, ModerateContentResponse>(
-    functions,
+    fns,
     'moderateContent'
   );
   const result = await fn(data);
@@ -131,7 +165,8 @@ export interface SearchForumResponse {
 }
 
 export async function searchForum(data: SearchForumRequest): Promise<SearchForumResponse> {
-  const fn = httpsCallable<SearchForumRequest, SearchForumResponse>(functions, 'searchForum');
+  const fns = requireFunctions();
+  const fn = httpsCallable<SearchForumRequest, SearchForumResponse>(fns, 'searchForum');
   const result = await fn(data);
   return result.data;
 }
@@ -148,7 +183,8 @@ export interface SaveCalcRunResponse {
 }
 
 export async function saveCalcRun(data: SaveCalcRunRequest): Promise<SaveCalcRunResponse> {
-  const fn = httpsCallable<SaveCalcRunRequest, SaveCalcRunResponse>(functions, 'saveCalcRun');
+  const fns = requireFunctions();
+  const fn = httpsCallable<SaveCalcRunRequest, SaveCalcRunResponse>(fns, 'saveCalcRun');
   const result = await fn(data);
   return result.data;
 }
@@ -162,8 +198,9 @@ export interface SetPayeRulesResponse {
 }
 
 export async function adminSetPayeRules(data: SetPayeRulesRequest): Promise<SetPayeRulesResponse> {
+  const fns = requireFunctions();
   const fn = httpsCallable<SetPayeRulesRequest, SetPayeRulesResponse>(
-    functions,
+    fns,
     'adminSetPayeRules'
   );
   const result = await fn(data);

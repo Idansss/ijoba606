@@ -18,6 +18,11 @@ export default function TagPage() {
   const fetchThreadsByTag = useCallback(async () => {
     setLoading(true);
     try {
+      if (!db) {
+        setThreads([]);
+        setLoading(false);
+        return;
+      }
       const threadsRef = collection(db, 'forumThreads');
       const q = query(
         threadsRef,

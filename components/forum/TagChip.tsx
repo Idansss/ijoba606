@@ -9,35 +9,36 @@ interface TagChipProps {
   clickable?: boolean;
 }
 
-const TAG_COLORS: Record<string, string> = {
-  pension: 'bg-blue-100 text-blue-700 border-blue-300',
-  reliefs: 'bg-green-100 text-green-700 border-green-300',
-  beginners: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-  calculations: 'bg-purple-100 text-purple-700 border-purple-300',
-  'tax-codes': 'bg-orange-100 text-orange-700 border-orange-300',
-  'self-employed': 'bg-pink-100 text-pink-700 border-pink-300',
-  default: 'bg-gray-100 text-gray-700 border-gray-300',
+const palette: Record<string, string> = {
+  pension: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+  reliefs: 'bg-purple-50 text-purple-700 border-purple-100',
+  beginners: 'bg-amber-50 text-amber-700 border-amber-100',
+  calculations: 'bg-sky-50 text-sky-700 border-sky-100',
+  'self-employed': 'bg-pink-50 text-pink-700 border-pink-100',
+  default: 'bg-slate-50 text-slate-600 border-slate-200',
 };
 
-export function TagChip({ tag, size = 'md', clickable = true }: TagChipProps) {
-  const colorClass = TAG_COLORS[tag.toLowerCase()] || TAG_COLORS.default;
-  const sizeClass = size === 'sm' ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1';
-
-  const className = cn(
-    'inline-block rounded-full font-semibold border transition-all',
-    colorClass,
-    sizeClass,
-    clickable && 'hover:scale-105 cursor-pointer'
+export function TagChip({
+  tag,
+  size = 'md',
+  clickable = true,
+}: TagChipProps) {
+  const classes = cn(
+    'inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.3em]',
+    palette[tag.toLowerCase()] || palette.default,
+    size === 'sm' ? 'px-3 py-1 text-[10px]' : 'px-4 py-1.5 text-[11px]',
+    clickable && 'transition hover:translate-y-[1px]'
   );
 
-  if (clickable) {
-    return (
-      <Link href={`/forum/tag/${encodeURIComponent(tag)}`} className={className}>
-        {tag}
-      </Link>
-    );
+  const content = <span>{tag}</span>;
+
+  if (!clickable) {
+    return <span className={classes}>{content}</span>;
   }
 
-  return <span className={className}>{tag}</span>;
+  return (
+    <Link href={`/forum/tag/${encodeURIComponent(tag)}`} className={classes}>
+      {content}
+    </Link>
+  );
 }
-

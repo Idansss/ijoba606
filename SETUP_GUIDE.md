@@ -1,4 +1,4 @@
-# Setup Guide for IJBoba 606
+# Setup Guide for ijoba 606
 
 ## Step 1: Install Node.js (if not already installed)
 

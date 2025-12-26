@@ -45,7 +45,7 @@ export default function ResultsPage() {
       if (response.newBadges.length > 0) {
         addToast({
           type: 'success',
-          message: `New badge${response.newBadges.length > 1 ? 's' : ''} unlocked! 🎉`,
+          message: `New badge${response.newBadges.length > 1 ? 's' : ''} unlocked!`,
         });
       }
     } catch (error) {
@@ -54,7 +54,7 @@ export default function ResultsPage() {
         type: 'error',
         message: 'Failed to submit results. Try again.',
       });
-      setSubmitted(true); // Prevent infinite retry
+      setSubmitted(true);
     } finally {
       setSubmitting(false);
     }
@@ -69,13 +69,10 @@ export default function ResultsPage() {
   ]);
 
   useEffect(() => {
-    // Redirect if no data
     if (questions.length === 0 || answers.length === 0) {
       router.push('/play');
       return;
     }
-
-    // Auto-submit results
     handleSubmitResults();
   }, [questions.length, answers.length, router, handleSubmitResults]);
 
@@ -89,81 +86,79 @@ export default function ResultsPage() {
   }
 
   const { correctCount, totalScore } = calculateScore(answers);
-  const maxScore = 30; // 3 questions × 10 points
+  const maxScore = 30;
 
   const shareData = {
-    title: 'IJBoba 606 Quiz Results',
-    text: `I just scored ${totalScore}/30 on IJBoba 606. Fit top am?`,
+    title: 'ijoba 606 Quiz Results',
+    text: `I just scored ${totalScore}/30 on ijoba 606. Think you can top it?`,
     url: typeof window !== 'undefined' ? window.location.origin : '',
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl mx-auto"
+        className="mx-auto max-w-4xl"
       >
-        {/* Results Card */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8">
-          <h1 className="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Round Complete!
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+          <h1 className="text-center text-4xl font-semibold text-slate-900">
+            Round complete
           </h1>
+          <p className="mt-2 text-center text-sm text-slate-500">
+            Level {currentLevel} · 3-question sprint
+          </p>
           {submitting && (
-            <p className="text-center text-gray-600 mb-8">
-              Submitting results...
+            <p className="mt-4 text-center text-sm text-slate-500">
+              Saving your progress...
             </p>
           )}
 
-          {/* Score Meter */}
-          <div className="mb-8">
+          <div className="mt-8">
             <ScoreMeter score={totalScore} maxScore={maxScore} />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="text-center p-4 bg-green-50 rounded-xl">
-              <div className="text-3xl font-bold text-green-600">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-center">
+              <p className="text-3xl font-semibold text-emerald-700">
                 {correctCount}
-              </div>
-              <div className="text-sm text-gray-600">Correct</div>
+              </p>
+              <p className="text-sm text-emerald-800">Correct answers</p>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-xl">
-              <div className="text-3xl font-bold text-blue-600">
+            <div className="rounded-2xl border border-sky-100 bg-sky-50 p-4 text-center">
+              <p className="text-3xl font-semibold text-sky-700">
                 {answers.length}
-              </div>
-              <div className="text-sm text-gray-600">Attempted</div>
+              </p>
+              <p className="text-sm text-sky-800">Attempted</p>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-xl">
-              <div className="text-3xl font-bold text-purple-600">
+            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-4 text-center">
+              <p className="text-3xl font-semibold text-purple-700">
                 {totalScore}
-              </div>
-              <div className="text-sm text-gray-600">Total Points</div>
+              </p>
+              <p className="text-sm text-purple-800">Total points</p>
             </div>
           </div>
 
-          {/* New Badges */}
           {newBadges.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 rounded-3xl border border-purple-100 bg-gradient-to-r from-purple-50 via-blue-50 to-white p-6"
             >
-              <h3 className="text-xl font-bold text-center mb-4 text-purple-900">
-                🎉 New Badge{newBadges.length > 1 ? 's' : ''} Unlocked!
-              </h3>
-              <div className="flex flex-wrap gap-3 justify-center">
+              <p className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-purple-500">
+                New badges unlocked
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-3">
                 {newBadges.map((badgeId) => {
                   const badge = BADGES[badgeId as keyof typeof BADGES];
+                  if (!badge) return null;
                   return (
                     <div
                       key={badgeId}
-                      className="bg-white rounded-full px-4 py-2 border-2 border-purple-300 flex items-center gap-2"
+                      className="flex items-center gap-3 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow"
                     >
                       <span className="text-2xl">{badge.emoji}</span>
-                      <span className="text-sm font-semibold">
-                        {badge.name}
-                      </span>
+                      {badge.name}
                     </div>
                   );
                 })}
@@ -171,95 +166,37 @@ export default function ResultsPage() {
             </motion.div>
           )}
 
-          {/* Streak Update */}
           {submitted && streakCount > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mb-8 p-4 bg-orange-50 border-2 border-orange-200 rounded-xl text-center"
-            >
-              <p className="text-orange-900">
-                🔥 Streak: <span className="font-bold">{streakCount}</span> day
-                {streakCount !== 1 ? 's' : ''}!
-              </p>
-            </motion.div>
+            <div className="mt-8 rounded-2xl border border-orange-100 bg-orange-50 p-4 text-center text-orange-900">
+              🔥 Streak updated: {streakCount} day
+              {streakCount !== 1 ? 's' : ''} strong.
+            </div>
           )}
 
-          {/* Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
             <button
               onClick={handlePlayAgain}
-              className="py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold text-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
+              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl"
             >
-              Play Again
+              Play another round
             </button>
             <button
               onClick={() => setShareOpen(true)}
-              className="py-4 bg-white border-2 border-purple-600 text-purple-600 rounded-xl font-bold text-lg hover:bg-purple-50 transition-all"
+              className="rounded-full border border-slate-200 px-6 py-4 text-lg font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
             >
-              Share Result
+              Share my score
             </button>
           </div>
-
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link
-              href="/leaderboard"
-              className="block text-center py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-all"
-            >
-              View Leaderboard
-            </Link>
-            <Link
-              href="/profile"
-              className="block text-center py-3 bg-gray-100 text-gray-800 rounded-xl font-semibold hover:bg-gray-200 transition-all"
-            >
-              View Profile
-            </Link>
-          </div>
-        </div>
-
-        {/* Question Review */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Question Review
-          </h2>
-          <div className="space-y-6">
-            {questions.map((question, index) => {
-              const answer = answers.find((a) => a.questionId === question.id);
-              return (
-                <div
-                  key={question.id}
-                  className="p-4 bg-gray-50 rounded-xl border border-gray-200"
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                        answer?.isCorrect
-                          ? 'bg-green-500 text-white'
-                          : 'bg-red-500 text-white'
-                      }`}
-                    >
-                      {index + 1}
-                    </div>
-                    <p className="flex-1 font-medium text-gray-800">
-                      {question.prompt}
-                    </p>
-                    <div className="text-2xl">
-                      {answer?.isCorrect ? '✓' : '✗'}
-                    </div>
-                  </div>
-                  {question.explanation && (
-                    <p className="text-sm text-gray-600 ml-11">
-                      💡 {question.explanation}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <p className="mt-4 text-center text-xs text-slate-400">
+            Need a breather? Jump to the{' '}
+            <Link href="/forum" className="text-purple-600 underline">
+              community forum
+            </Link>{' '}
+            for explanations.
+          </p>
         </div>
       </motion.div>
 
-      {/* Share Sheet */}
       <ShareSheet
         isOpen={shareOpen}
         onClose={() => setShareOpen(false)}
@@ -268,5 +205,3 @@ export default function ResultsPage() {
     </div>
   );
 }
-
-

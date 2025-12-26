@@ -1,8 +1,8 @@
-# IJBoba 606 - Build Summary
+# ijoba 606 - Build Summary
 
 ## 🎉 Project Overview
 
-**IJBoba 606** is a mobile-first web application designed to make PAYE (Pay As You Earn) tax literacy engaging through interactive quizzes, community discussions, and a practical tax calculator tailored for Nigeria.
+**ijoba 606** is a mobile-first web application designed to make PAYE (Pay As You Earn) tax literacy engaging through interactive quizzes, community discussions, and a practical tax calculator tailored for Nigeria.
 
 ## ✨ What Has Been Built
 
