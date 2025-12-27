@@ -11,11 +11,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setFirebaseUser, setUser, setProfile, setLoading } = useAuthStore();
 
   useEffect(() => {
+    // If auth or db failed to initialise (e.g. missing Firebase env vars),
+    // just treat the user as signed out so the UI can still render.
+    if (!auth || !db) {
+      setFirebaseUser(null);
+      setUser(null);
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setFirebaseUser(firebaseUser);
 
       if (firebaseUser) {
         // Subscribe to user doc
+        if (!db) return;
         const userRef = doc(db, 'users', firebaseUser.uid);
         const unsubUser = onSnapshot(userRef, (snap) => {
           if (snap.exists()) {

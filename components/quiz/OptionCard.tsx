@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
+import { Check, X } from 'lucide-react';
 
 interface OptionCardProps {
   option: string;
@@ -13,6 +14,8 @@ interface OptionCardProps {
   disabled: boolean;
 }
 
+const labels = ['A', 'B', 'C', 'D', 'E'];
+
 export function OptionCard({
   option,
   index,
@@ -22,75 +25,48 @@ export function OptionCard({
   onSelect,
   disabled,
 }: OptionCardProps) {
-  const labels = ['A', 'B', 'C', 'D'];
+  const isWrongSelection = isRevealed && isSelected && !isCorrect;
 
   return (
     <motion.button
-      whileHover={!disabled ? { scale: 1.02 } : {}}
-      whileTap={!disabled ? { scale: 0.98 } : {}}
+      whileHover={!disabled ? { scale: 1.01 } : {}}
+      whileTap={!disabled ? { scale: 0.99 } : {}}
       onClick={!disabled ? onSelect : undefined}
       disabled={disabled}
       className={cn(
-        'w-full p-4 rounded-xl border-2 transition-all text-left',
-        {
-          'bg-white/80 backdrop-blur-sm border-gray-300 hover:border-purple-400 hover:shadow-md':
-            !isSelected && !isRevealed,
-          'bg-purple-100 border-purple-500': isSelected && !isRevealed,
-          'bg-green-100 border-green-500': isRevealed && isCorrect,
-          'bg-red-100 border-red-500': isRevealed && isSelected && !isCorrect,
-          'opacity-50': disabled && !isSelected && !isCorrect,
-        }
+        'w-full rounded-2xl border px-4 py-4 text-left transition-all',
+        'bg-white/85',
+        isSelected && !isRevealed && 'border-purple-400 shadow-lg shadow-purple-200',
+        !isSelected && !isRevealed && 'border-slate-100 hover:border-purple-200',
+        isRevealed && isCorrect && 'border-emerald-200 bg-emerald-50',
+        isWrongSelection && 'border-rose-200 bg-rose-50',
+        disabled && !isSelected && !isCorrect && 'opacity-70'
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-4">
         <div
           className={cn(
-            'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0',
-            {
-              'bg-gray-200 text-gray-700': !isSelected && !isRevealed,
-              'bg-purple-500 text-white': isSelected && !isRevealed,
-              'bg-green-500 text-white': isRevealed && isCorrect,
-              'bg-red-500 text-white': isRevealed && isSelected && !isCorrect,
-            }
+            'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl text-sm font-semibold',
+            'border',
+            isSelected && !isRevealed && 'border-purple-200 bg-purple-50 text-purple-700',
+            !isSelected && !isRevealed && 'border-slate-200 text-slate-500 bg-white',
+            isRevealed && isCorrect && 'border-emerald-200 bg-emerald-100 text-emerald-700',
+            isWrongSelection && 'border-rose-200 bg-rose-100 text-rose-700'
           )}
         >
-          {labels[index]}
+          {labels[index] ?? '?'}
         </div>
-        <div className="flex-1 pt-1">
-          <p className="text-gray-800">{option}</p>
-        </div>
-        {isRevealed && isCorrect && (
-          <div className="flex-shrink-0">
-            <svg
-              className="w-6 h-6 text-green-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        )}
-        {isRevealed && isSelected && !isCorrect && (
-          <div className="flex-shrink-0">
-            <svg
-              className="w-6 h-6 text-red-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
+        <div className="flex-1 text-slate-800">{option}</div>
+        {isRevealed && (
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
+            {isCorrect ? (
+              <Check className="h-5 w-5 text-emerald-500" />
+            ) : isWrongSelection ? (
+              <X className="h-5 w-5 text-rose-500" />
+            ) : null}
           </div>
         )}
       </div>
     </motion.button>
   );
 }
-

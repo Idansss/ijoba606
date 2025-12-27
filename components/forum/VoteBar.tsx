@@ -33,6 +33,7 @@ export function VoteBar({
     if (!firebaseUser) return;
 
     const fetchUserVote = async () => {
+      if (!db) return;
       try {
         const voteRef = doc(
           db,

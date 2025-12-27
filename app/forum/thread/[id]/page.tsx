@@ -36,10 +36,18 @@ export default function ThreadDetailPage() {
 
   useEffect(() => {
     if (!threadId) return;
+    if (!db) {
+      setLoading(false);
+      return;
+    }
 
     // Fetch thread
     const fetchThread = async () => {
       try {
+        if (!db) {
+          setLoading(false);
+          return;
+        }
         const threadRef = doc(db, 'forumThreads', threadId);
         const threadSnap = await getDoc(threadRef);
         

@@ -41,6 +41,11 @@ export default function AdminQuestionsPage() {
 
   const fetchQuestions = useCallback(async () => {
     try {
+      if (!db) {
+        setQuestions([]);
+        setLoading(false);
+        return;
+      }
       const questionsRef = collection(db, 'questions');
       const snapshot = await getDocs(questionsRef);
       const questionsData = snapshot.docs.map((doc) => ({
@@ -90,6 +95,13 @@ export default function AdminQuestionsPage() {
 
   const onSubmit = async (data: QuestionFormData) => {
     try {
+      if (!db) {
+        addToast({
+          type: 'error',
+          message: 'Question management is disabled in this local demo (no Firebase configuration).',
+        });
+        return;
+      }
       if (editingQuestion) {
         // Update existing
         const questionRef = doc(db, 'questions', editingQuestion.id);
@@ -113,6 +125,13 @@ export default function AdminQuestionsPage() {
     if (!confirm('Are you sure you want to delete this question?')) return;
 
     try {
+      if (!db) {
+        addToast({
+          type: 'error',
+          message: 'Question management is disabled in this local demo (no Firebase configuration).',
+        });
+        return;
+      }
       await deleteDoc(doc(db, 'questions', id));
       addToast({ type: 'success', message: 'Question deleted' });
       fetchQuestions();

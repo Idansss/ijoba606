@@ -3,36 +3,78 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   linkWithPopup,
+  type Auth,
   type User as FirebaseUser,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
-import { auth, db } from './config';
+import { doc, getDoc, setDoc, Timestamp, type Firestore } from 'firebase/firestore';
+import { auth as firebaseAuth, db as firestoreDb } from './config';
 import { User } from '@/lib/types';
 
 const googleProvider = new GoogleAuthProvider();
+
+function requireFirebase() {
+  if (!firebaseAuth || !firestoreDb) {
+    const error = new Error(
+      'Firebase auth is disabled. Add NEXT_PUBLIC_FIREBASE_* env vars to enable authentication.'
+    );
+    console.error(error.message);
+    throw error;
+  }
+
+  return {
+    auth: firebaseAuth as Auth,
+    db: firestoreDb as Firestore,
+  };
+}
 
 /**
  * Sign in anonymously
  */
 export async function signInAnon() {
-  const result = await signInAnonymously(auth);
-  await ensureUserDoc(result.user, true);
-  return result.user;
+  try {
+    const { auth } = requireFirebase();
+    const result = await signInAnonymously(auth);
+    await ensureUserDoc(result.user, true);
+    return result.user;
+  } catch (error) {
+    console.error('Anonymous sign-in error:', error);
+    if (error instanceof Error && error.message.includes('Firebase auth is disabled')) {
+      throw new Error('Authentication is not configured. Please check your Firebase settings.');
+    }
+    throw error;
+  }
 }
 
 /**
  * Sign in with Google
  */
 export async function signInWithGoogle() {
-  const result = await signInWithPopup(auth, googleProvider);
-  await ensureUserDoc(result.user, false);
-  return result.user;
+  try {
+    const { auth } = requireFirebase();
+    const result = await signInWithPopup(auth, googleProvider);
+    await ensureUserDoc(result.user, false);
+    return result.user;
+  } catch (error) {
+    console.error('Google sign-in error:', error);
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-closed-by-user') {
+      // User closed the popup, don't show error
+      throw new Error('Sign-in cancelled');
+    }
+    if (error instanceof Error && error.message.includes('Firebase auth is disabled')) {
+      throw new Error('Authentication is not configured. Please check your Firebase settings.');
+    }
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-blocked') {
+      throw new Error('Popup was blocked. Please allow popups for this site.');
+    }
+    throw error;
+  }
 }
 
 /**
  * Upgrade anonymous account to Google account
  */
 export async function upgradeAnonymousToGoogle() {
+  const { auth, db } = requireFirebase();
   const currentUser = auth.currentUser;
   if (!currentUser || !currentUser.isAnonymous) {
     throw new Error('Not an anonymous user');
@@ -58,6 +100,7 @@ export async function upgradeAnonymousToGoogle() {
  * Sign out
  */
 export async function signOut() {
+  const { auth } = requireFirebase();
   await auth.signOut();
 }
 
@@ -65,6 +108,7 @@ export async function signOut() {
  * Ensure user document exists in Firestore
  */
 async function ensureUserDoc(user: FirebaseUser, isAnon: boolean) {
+  const { db } = requireFirebase();
   const userRef = doc(db, 'users', user.uid);
   const userSnap = await getDoc(userRef);
 
@@ -111,13 +155,13 @@ function generateHandle(user: FirebaseUser): string {
  * Get current user
  */
 export function getCurrentUser(): FirebaseUser | null {
-  return auth.currentUser;
+  return firebaseAuth?.currentUser ?? null;
 }
 
 /**
  * Check if user is authenticated
  */
 export function isAuthenticated(): boolean {
-  return !!auth.currentUser;
+  return !!firebaseAuth?.currentUser;
 }
 

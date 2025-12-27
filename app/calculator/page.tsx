@@ -21,6 +21,10 @@ export default function CalculatorPage() {
     // Fetch PAYE rules from Firestore
     const fetchRules = async () => {
       try {
+        if (!db) {
+          // No Firebase configuration in local dev; keep default rules.
+          return;
+        }
         const rulesRef = doc(db, 'configs', 'payeRules');
         const rulesSnap = await getDoc(rulesRef);
         if (rulesSnap.exists()) {
@@ -99,5 +103,3 @@ export default function CalculatorPage() {
     </div>
   );
 }
-
-

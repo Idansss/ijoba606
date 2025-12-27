@@ -10,26 +10,26 @@ interface BreakdownCardProps {
 
 export function BreakdownCard({ lineItems }: BreakdownCardProps) {
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">Tax Breakdown</h3>
-      <div className="space-y-3">
+    <div className="rounded-3xl border border-slate-100 bg-white/95 p-6 shadow-inner">
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+        Breakdown
+      </p>
+      <div className="mt-4 space-y-3">
         {lineItems.map((item, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={`flex justify-between items-center py-2 ${
-              item.isDeduction
-                ? 'text-red-600'
-                : index === lineItems.length - 1
-                ? 'font-bold text-gray-900 border-t-2 border-gray-300 pt-3'
-                : 'text-gray-700'
-            }`}
+            transition={{ delay: index * 0.04 }}
+            className="flex items-center justify-between text-sm"
           >
-            <span className="text-sm">{item.label}</span>
-            <span className={item.isDeduction ? 'text-sm' : 'text-sm font-semibold'}>
-              {item.isDeduction && '- '}
+            <span className="text-slate-600">{item.label}</span>
+            <span
+              className={`font-semibold ${
+                item.isDeduction ? 'text-rose-500' : 'text-slate-900'
+              }`}
+            >
+              {item.isDeduction ? '− ' : ''}
               {formatCurrency(item.amount)}
             </span>
           </motion.div>
@@ -38,5 +38,3 @@ export function BreakdownCard({ lineItems }: BreakdownCardProps) {
     </div>
   );
 }
-
-

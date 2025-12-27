@@ -30,6 +30,7 @@ export interface Question {
   level: QuizLevel;
   type: QuestionType;
   prompt: string;
+  topic?: string;
   options: [string, string, string, string];
   correct: number[]; // indices of correct options
   explanation?: string;

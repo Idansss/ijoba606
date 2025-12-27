@@ -9,9 +9,17 @@ import { BadgeStrip } from '@/components/quiz/BadgeStrip';
 import { StreakPill } from '@/components/quiz/StreakPill';
 import { upgradeAnonymousToGoogle } from '@/lib/firebase/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { CalcRun } from '@/lib/types';
+import { formatCurrency } from '@/lib/utils/calculator';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -26,8 +34,8 @@ export default function ProfilePage() {
       return;
     }
 
-    // Fetch saved calculator runs
     const fetchCalcRuns = async () => {
+      if (!db) return;
       const runsRef = collection(db, 'calcRuns');
       const q = query(
         runsRef,
@@ -54,7 +62,7 @@ export default function ProfilePage() {
       await upgradeAnonymousToGoogle();
       addToast({
         type: 'success',
-        message: 'Account upgraded! Your progress is now saved. 🎉',
+        message: 'Account upgraded! Your progress is now saved.',
       });
     } catch (error) {
       console.error('Upgrade error:', error);
@@ -72,150 +80,128 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto"
+        className="mx-auto max-w-5xl"
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
-            {user.handle[0]?.toUpperCase() || '?'}
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+          <div className="text-center">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-600 to-blue-500 text-3xl font-semibold text-white shadow-lg">
+              {user.handle[0]?.toUpperCase() || '?'}
+            </div>
+            <h1 className="mt-4 text-3xl font-semibold text-slate-900">
+              {user.handle}
+            </h1>
+            {user.anon && (
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-400">
+                Guest account
+              </p>
+            )}
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            {user.handle}
-          </h1>
+
           {user.anon && (
-            <p className="text-sm text-gray-500 mb-4">Guest Account</p>
+            <div className="mt-6 rounded-3xl border border-slate-100 bg-white/95 p-6 text-center shadow-inner">
+              <p className="text-lg font-semibold text-slate-900">
+                Upgrade to keep your streak forever
+              </p>
+              <p className="mt-2 text-sm text-slate-500">
+                Link your Google account to sync stats and calculator history.
+              </p>
+              <button
+                onClick={handleUpgrade}
+                disabled={upgrading}
+                className="mt-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg disabled:opacity-50"
+              >
+                {upgrading ? 'Upgrading...' : 'Upgrade to Google'}
+              </button>
+            </div>
           )}
-        </div>
 
-        {/* Upgrade Banner */}
-        {user.anon && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl"
-          >
-            <h3 className="text-xl font-bold text-purple-900 mb-2">
-              Upgrade Your Account
-            </h3>
-            <p className="text-purple-800 mb-4">
-              Link your Google account to save your progress permanently and
-              never lose your data!
-            </p>
-            <button
-              onClick={handleUpgrade}
-              disabled={upgrading}
-              className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-all disabled:opacity-50"
-            >
-              {upgrading ? 'Upgrading...' : 'Upgrade to Google'}
-            </button>
-          </motion.div>
-        )}
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              {profile.totalPoints}
-            </div>
-            <div className="text-sm text-gray-600">Total Points</div>
+          <div className="mt-8 grid gap-4 md:grid-cols-4">
+            {[
+              { label: 'Total points', value: profile.totalPoints },
+              { label: 'Level unlocked', value: profile.levelUnlocked },
+              { label: 'Badges earned', value: profile.badges.length },
+              { label: 'Best streak', value: profile.bestStreak },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-3xl border border-slate-100 bg-white/90 p-4 text-center shadow-sm"
+              >
+                <p className="text-3xl font-semibold text-slate-900">
+                  {stat.value}
+                </p>
+                <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
-              {profile.levelUnlocked}
-            </div>
-            <div className="text-sm text-gray-600">Level Unlocked</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              {profile.badges.length}
-            </div>
-            <div className="text-sm text-gray-600">Badges Earned</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
-              {profile.bestStreak}
-            </div>
-            <div className="text-sm text-gray-600">Best Streak</div>
-          </div>
-        </div>
 
-        {/* Streak */}
-        <div className="mb-8">
-          <StreakPill
-            streakCount={profile.streakCount}
-            bestStreak={profile.bestStreak}
-          />
-        </div>
+          <div className="mt-8">
+            <StreakPill
+              streakCount={profile.streakCount}
+              bestStreak={profile.bestStreak}
+            />
+          </div>
 
-        {/* Badges */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Your Badges
-          </h2>
-          <BadgeStrip badges={profile.badges} />
-        </div>
-
-        {/* Saved Calculator Runs */}
-        {calcRuns.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Saved Tax Calculations
+          <div className="mt-8 rounded-3xl border border-slate-100 bg-white/90 p-8">
+            <h2 className="text-center text-2xl font-semibold text-slate-900">
+              Badge shelf
             </h2>
-            <div className="space-y-4">
-              {calcRuns.map((run) => (
-                <Link
-                  key={run.id}
-                  href={`/calculator/result?id=${run.id}`}
-                  className="block p-4 bg-gray-50 rounded-xl border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all"
-                >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-semibold text-gray-800">
-                        {run.inputs.period === 'monthly'
-                          ? 'Monthly'
-                          : 'Annual'}{' '}
-                        Calculation
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Tax: ₦
-                        {run.outputs.monthlyTax.toLocaleString()}/month
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {run.createdAt &&
-                        new Date(
-                          run.createdAt.seconds * 1000
-                        ).toLocaleDateString()}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="mt-4">
+              <BadgeStrip badges={profile.badges} />
             </div>
           </div>
-        )}
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link
-            href="/play"
-            className="block text-center py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all"
-          >
-            Play Quiz
-          </Link>
-          <Link
-            href="/calculator"
-            className="block text-center py-4 bg-white border-2 border-purple-600 text-purple-600 rounded-xl font-bold hover:bg-purple-50 transition-all"
-          >
-            Calculate Tax
-          </Link>
+          {calcRuns.length > 0 && (
+            <div className="mt-8 rounded-3xl border border-slate-100 bg-white/90 p-6">
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Saved tax calculations
+              </h2>
+              <div className="mt-4 space-y-3">
+                {calcRuns.map((run) => (
+                  <Link
+                    key={run.id}
+                    href={`/calculator/result?id=${run.id}`}
+                    className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm text-slate-600 transition hover:border-purple-200 hover:text-slate-900"
+                  >
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        {run.inputs.period === 'monthly' ? 'Monthly' : 'Annual'} run
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        Tax: {formatCurrency(run.outputs.monthlyTax)}/month
+                      </p>
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      {run.createdAt &&
+                        new Date(run.createdAt.seconds * 1000).toLocaleDateString()}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <Link
+              href="/play"
+              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
+            >
+              Play quiz
+            </Link>
+            <Link
+              href="/calculator"
+              className="rounded-full border border-slate-200 px-6 py-4 text-center text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+            >
+              Calculate PAYE
+            </Link>
+          </div>
         </div>
       </motion.div>
     </div>
   );
 }
-
-

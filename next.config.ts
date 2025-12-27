@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Force Next.js to treat this directory as the workspace root.
+  outputFileTracingRoot: process.cwd(),
 };
 
 export default nextConfig;

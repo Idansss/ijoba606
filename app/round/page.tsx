@@ -13,20 +13,23 @@ import { useToastStore } from '@/lib/store/toast';
 export default function RoundPage() {
   const router = useRouter();
   const { firebaseUser } = useAuthStore();
-  const { questions, currentQuestionIndex, setCurrentQuestionIndex, submitAnswer } = useQuizStore();
+  const {
+    questions,
+    currentQuestionIndex,
+    setCurrentQuestionIndex,
+    submitAnswer,
+  } = useQuizStore();
   const { addToast } = useToastStore();
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
-    // Redirect if no questions
     if (questions.length === 0) {
       router.push('/play');
     }
   }, [questions, router]);
 
   useEffect(() => {
-    // Reset state when question changes
     setSelectedOptions([]);
     setIsRevealed(false);
   }, [currentQuestionIndex]);
@@ -43,98 +46,85 @@ export default function RoundPage() {
     if (isRevealed) return;
 
     if (isMultiSelect) {
-      // Toggle selection for multi-select
       setSelectedOptions((prev) =>
         prev.includes(index)
           ? prev.filter((i) => i !== index)
           : [...prev, index]
       );
     } else {
-      // Single select
       setSelectedOptions([index]);
     }
   };
 
   const handleSubmit = () => {
     if (selectedOptions.length === 0) {
-      addToast({ type: 'warning', message: 'Please select an answer!' });
+      addToast({ type: 'warning', message: 'Please select an answer first.' });
       return;
     }
 
-    // Check if correct
     const isCorrect = arraysEqual(
-      selectedOptions.sort(),
-      currentQuestion.correct.sort()
+      [...selectedOptions].sort(),
+      [...currentQuestion.correct].sort()
     );
 
-    // Submit answer
     submitAnswer(currentQuestion.id, selectedOptions, isCorrect);
-
-    // Reveal answer
     setIsRevealed(true);
 
-    // Show feedback
     if (isCorrect) {
       addToast({
         type: 'success',
-        message: 'Correct! +10 points. You dey burst my brain 👏',
+        message: 'Correct! +10 points.',
       });
     } else {
       addToast({
         type: 'info',
-        message: 'No wahala — attempt don add +2. Push again!',
+        message: 'Attempt recorded. +2 points for trying.',
       });
     }
   };
 
   const handleNext = () => {
     if (isLastQuestion) {
-      // Navigate to results
       router.push('/results');
-    } else {
-      // Next question
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      return;
     }
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl mx-auto"
+        className="mx-auto max-w-3xl"
       >
-        {/* Progress */}
-        <div className="mb-8">
-          <QuizProgress
-            currentQuestion={currentQuestionIndex}
-            totalQuestions={questions.length}
-          />
-        </div>
+        <QuizProgress
+          currentQuestion={currentQuestionIndex}
+          totalQuestions={questions.length}
+        />
 
-        {/* Question Card */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestionIndex}
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8"
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.25 }}
+            className="mt-8 rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-[0_35px_110px_rgba(15,23,42,0.12)]"
           >
-            {/* Question Type Badge */}
             {isMultiSelect && (
-              <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-4">
-                Select All That Apply
-              </div>
+              <span className="inline-flex items-center rounded-full border border-purple-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-purple-600">
+                Multi select
+              </span>
             )}
-
-            {/* Question */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
               {currentQuestion.prompt}
             </h2>
+            <p className="mt-2 text-sm text-slate-500">
+              {currentQuestion.topic}
+            </p>
 
-            {/* Options */}
-            <div className="space-y-3 mb-6">
+            <div className="mt-6 space-y-3">
               {currentQuestion.options.map((option, index) => (
                 <OptionCard
                   key={index}
@@ -149,60 +139,44 @@ export default function RoundPage() {
               ))}
             </div>
 
-            {/* Explanation */}
             {isRevealed && currentQuestion.explanation && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mt-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 rounded-2xl border border-blue-100 bg-blue-50 p-4"
               >
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">💡</div>
-                  <div>
-                    <h3 className="font-bold text-blue-900 mb-1">
-                      Explanation
-                    </h3>
-                    <p className="text-blue-800 text-sm">
-                      {currentQuestion.explanation}
-                    </p>
-                  </div>
-                </div>
+                <p className="text-sm text-blue-900">
+                  {currentQuestion.explanation}
+                </p>
               </motion.div>
             )}
 
-            {/* Action Button */}
             <div className="mt-8">
               {!isRevealed ? (
                 <button
                   onClick={handleSubmit}
                   disabled={selectedOptions.length === 0}
-                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold text-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Submit Answer
+                  Submit answer
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  className="w-full py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all shadow-lg"
+                  className="w-full rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl"
                 >
-                  {isLastQuestion ? 'View Results' : 'Next Question'}
+                  {isLastQuestion ? 'View results' : 'Next question'}
                 </button>
               )}
+              <p className="mt-3 text-center text-xs text-slate-400">
+                {isMultiSelect
+                  ? 'Multiple answers may be correct.'
+                  : 'Only one answer is correct.'}
+              </p>
             </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Helper Text */}
-        <div className="text-center text-sm text-gray-500">
-          <p>
-            {isMultiSelect
-              ? '🎯 Multiple answers may be correct'
-              : '🎯 Select one answer'}
-          </p>
-        </div>
       </motion.div>
     </div>
   );
 }
-
-

@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
               margin: '0 0 20px 0',
             }}
           >
-            IJBoba 606
+            ijoba 606
           </h1>
           
           <div style={{ fontSize: '48px', margin: '20px 0' }}>
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
               textAlign: 'center',
             }}
           >
-            Calculate yours at IJBoba606.com
+            Calculate yours at ijoba606.com
           </div>
         </div>
       </div>

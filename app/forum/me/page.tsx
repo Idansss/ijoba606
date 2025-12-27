@@ -27,6 +27,10 @@ export default function MyForumActivityPage() {
 
     setLoading(true);
     try {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       // Fetch my threads
       const threadsRef = collection(db, 'forumThreads');
       const threadsQuery = query(

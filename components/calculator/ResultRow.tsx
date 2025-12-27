@@ -10,37 +10,26 @@ interface ResultRowProps {
   delay?: number;
 }
 
-export function ResultRow({ label, value, highlight, delay = 0 }: ResultRowProps) {
+export function ResultRow({
+  label,
+  value,
+  highlight,
+  delay = 0,
+}: ResultRowProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       className={cn(
-        'flex justify-between items-center py-4 px-6 rounded-xl',
+        'flex items-center justify-between rounded-2xl border px-4 py-3 text-sm',
         highlight
-          ? 'bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200'
-          : 'bg-gray-50'
+          ? 'border-purple-200 bg-purple-50 text-purple-800'
+          : 'border-slate-100 bg-white text-slate-700'
       )}
     >
-      <span
-        className={cn(
-          'font-medium',
-          highlight ? 'text-purple-900' : 'text-gray-700'
-        )}
-      >
-        {label}
-      </span>
-      <span
-        className={cn(
-          'font-bold text-lg',
-          highlight ? 'text-purple-600' : 'text-gray-900'
-        )}
-      >
-        {value}
-      </span>
+      <span className="font-semibold">{label}</span>
+      <span className="text-base font-bold text-slate-900">{value}</span>
     </motion.div>
   );
 }
-
-
