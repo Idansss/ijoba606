@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase/config';
+import { handleGoogleRedirect } from '@/lib/firebase/auth';
 import { useAuthStore } from '@/lib/store/auth';
 import { User, Profile } from '@/lib/types';
 
@@ -20,6 +21,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       return;
     }
+
+    // Handle Google redirect result if user was redirected
+    handleGoogleRedirect().catch((error) => {
+      console.error('Error handling Google redirect:', error);
+    });
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setFirebaseUser(firebaseUser);

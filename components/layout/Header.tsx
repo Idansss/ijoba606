@@ -86,6 +86,10 @@ export function Header() {
         // Don't show error for user cancellation
         return;
       }
+      if (error instanceof Error && error.message === 'Redirecting to sign in...') {
+        // Don't show error for redirect
+        return;
+      }
       const message = error instanceof Error ? error.message : 'Sign in failed. Please check your Firebase configuration.';
       addToast({ type: 'error', message });
     }
