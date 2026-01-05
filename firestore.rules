@@ -12,8 +12,11 @@ service cloud.firestore {
     }
     
     function hasRole(role) {
-      return isSignedIn() && 
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+      if (!isSignedIn()) {
+        return false;
+      }
+      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return userDoc != null && userDoc.data.role == role;
     }
     
     function isModerator() {
