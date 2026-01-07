@@ -70,14 +70,28 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
     const fn = httpsCallable<CreateThreadRequest, CreateThreadResponse>(fns, 'createThread');
     const result = await fn(data);
     return result.data;
-  } catch (error) {
+  } catch (error: unknown) {
     // Fallback to direct Firestore write if Cloud Functions are not available
     // This is a temporary workaround until functions are deployed
-    if (error && typeof error === 'object' && 'code' in error && 
-        (error.code === 'functions/not-found' || 
-         error.code === 'functions/unavailable' ||
-         (error as any).message?.includes('CORS') ||
-         (error as any).message?.includes('Failed to fetch'))) {
+    const errorObj = error as any;
+    const errorCode = errorObj?.code || '';
+    const errorMessage = errorObj?.message || '';
+    const errorString = String(error);
+    
+    // Check for various error conditions that indicate functions aren't available
+    const isFunctionUnavailable = 
+      errorCode === 'functions/not-found' ||
+      errorCode === 'functions/unavailable' ||
+      errorCode === 'internal' ||
+      errorCode === 'unavailable' ||
+      errorMessage.includes('CORS') ||
+      errorMessage.includes('Failed to fetch') ||
+      errorMessage.includes('network') ||
+      errorString.includes('CORS') ||
+      errorString.includes('Failed to fetch') ||
+      errorString.includes('ERR_FAILED');
+    
+    if (isFunctionUnavailable) {
       
       // Import Firestore functions dynamically to avoid circular dependencies
       const { collection, addDoc, Timestamp, doc, setDoc } = await import('firebase/firestore');
