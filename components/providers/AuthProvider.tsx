@@ -34,19 +34,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Subscribe to user doc
         if (!db) return;
         const userRef = doc(db, 'users', firebaseUser.uid);
-        const unsubUser = onSnapshot(userRef, (snap) => {
-          if (snap.exists()) {
-            setUser(snap.data() as User);
+        const unsubUser = onSnapshot(
+          userRef,
+          (snap) => {
+            if (snap.exists()) {
+              setUser(snap.data() as User);
+            }
+          },
+          (error) => {
+            // Handle permission errors gracefully
+            console.error('Error reading user document:', error);
+            // Don't set user if permission denied - rules might not be deployed yet
+            if (error.code !== 'permission-denied') {
+              setUser(null);
+            }
           }
-        });
+        );
 
         // Subscribe to profile doc
         const profileRef = doc(db, 'profiles', firebaseUser.uid);
-        const unsubProfile = onSnapshot(profileRef, (snap) => {
-          if (snap.exists()) {
-            setProfile(snap.data() as Profile);
+        const unsubProfile = onSnapshot(
+          profileRef,
+          (snap) => {
+            if (snap.exists()) {
+              setProfile(snap.data() as Profile);
+            }
+          },
+          (error) => {
+            // Handle permission errors gracefully
+            console.error('Error reading profile document:', error);
+            // Don't set profile if permission denied - rules might not be deployed yet
+            if (error.code !== 'permission-denied') {
+              setProfile(null);
+            }
           }
-        });
+        );
 
         setLoading(false);
 

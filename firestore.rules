@@ -15,8 +15,9 @@ service cloud.firestore {
       if (!isSignedIn()) {
         return false;
       }
+      // Use exists() to check if document exists before accessing data
       let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
-      return userDoc != null && userDoc.data.role == role;
+      return userDoc != null && userDoc.data != null && userDoc.data.role == role;
     }
     
     function isModerator() {
