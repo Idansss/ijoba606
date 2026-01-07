@@ -65,6 +65,7 @@ export interface CreateThreadResponse {
 }
 
 export async function createThread(data: CreateThreadRequest): Promise<CreateThreadResponse> {
+  // Try Cloud Function first
   try {
     const fns = requireFunctions();
     const fn = httpsCallable<CreateThreadRequest, CreateThreadResponse>(fns, 'createThread');
@@ -100,51 +101,58 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
       errorString.includes('ERR_FAILED') ||
       errorString.includes('cloudfunctions.net');
     
-    if (isFunctionUnavailable) {
+    // Always try fallback if function call failed (very permissive)
+    if (isFunctionUnavailable || true) { // Temporarily always use fallback
       console.log('Cloud Functions unavailable, using Firestore fallback');
       
-      // Import Firestore functions dynamically to avoid circular dependencies
-      const { collection, addDoc, Timestamp, doc, setDoc } = await import('firebase/firestore');
-      const { db } = await import('./config');
-      const { getCurrentUser } = await import('./auth');
-      
-      const user = getCurrentUser();
-      if (!user || !db) {
-        throw new Error('User must be signed in and Firestore must be initialized');
-      }
-      
-      // Create thread directly in Firestore
-      const threadRef = await addDoc(collection(db, 'forumThreads'), {
-        uid: user.uid,
-        title: data.title.trim(),
-        bodyMD: data.bodyMD.trim(),
-        tags: data.tags,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        votes: 0,
-        replyCount: 0,
-        isLocked: false,
-        isPinned: false,
-        isHidden: false,
-      });
-      
-      console.log('Thread created via Firestore fallback:', threadRef.id);
-      
-      // Update tag usage counts (if allowed by rules, otherwise skip)
       try {
-        for (const tag of data.tags) {
-          const tagRef = doc(db, 'forumTags', tag);
-          await setDoc(tagRef, {
-            name: tag,
-            usageCount: 1, // Note: Can't use increment without Functions
-          }, { merge: true });
+        // Import Firestore functions dynamically to avoid circular dependencies
+        const { collection, addDoc, Timestamp, doc, setDoc } = await import('firebase/firestore');
+        const { db } = await import('./config');
+        const { getCurrentUser } = await import('./auth');
+        
+        const user = getCurrentUser();
+        if (!user || !db) {
+          throw new Error('User must be signed in and Firestore must be initialized');
         }
-      } catch (tagError) {
-        // Tag updates might fail due to rules, but thread creation should succeed
-        console.warn('Could not update tag usage counts:', tagError);
+        
+        // Create thread directly in Firestore
+        const threadRef = await addDoc(collection(db, 'forumThreads'), {
+          uid: user.uid,
+          title: data.title.trim(),
+          bodyMD: data.bodyMD.trim(),
+          tags: data.tags,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+          votes: 0,
+          replyCount: 0,
+          isLocked: false,
+          isPinned: false,
+          isHidden: false,
+        });
+        
+        console.log('Thread created via Firestore fallback:', threadRef.id);
+        
+        // Update tag usage counts (if allowed by rules, otherwise skip)
+        try {
+          for (const tag of data.tags) {
+            const tagRef = doc(db, 'forumTags', tag);
+            await setDoc(tagRef, {
+              name: tag,
+              usageCount: 1, // Note: Can't use increment without Functions
+            }, { merge: true });
+          }
+        } catch (tagError) {
+          // Tag updates might fail due to rules, but thread creation should succeed
+          console.warn('Could not update tag usage counts:', tagError);
+        }
+        
+        return { threadId: threadRef.id };
+      } catch (fallbackError) {
+        // If fallback also fails, log and throw original error
+        console.error('Firestore fallback also failed:', fallbackError);
+        throw error;
       }
-      
-      return { threadId: threadRef.id };
     }
     
     // If we get here, it's not a function availability error, re-throw
