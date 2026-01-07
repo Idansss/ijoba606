@@ -12,12 +12,9 @@ service cloud.firestore {
     }
     
     function hasRole(role) {
-      if (!isSignedIn()) {
-        return false;
-      }
-      // Check if user document exists before accessing data
-      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
-      return userDoc != null && userDoc.exists && userDoc.data.role == role;
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
     }
     
     function isModerator() {
