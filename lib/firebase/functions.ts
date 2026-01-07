@@ -76,22 +76,32 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
     const errorObj = error as any;
     const errorCode = errorObj?.code || '';
     const errorMessage = errorObj?.message || '';
-    const errorString = String(error);
+    const errorString = JSON.stringify(error);
+    const errorName = errorObj?.name || '';
+    
+    // Log error for debugging
+    console.log('createThread error:', { errorCode, errorMessage, errorName, error: errorObj });
     
     // Check for various error conditions that indicate functions aren't available
+    // Be very permissive - catch almost any error and try fallback
     const isFunctionUnavailable = 
       errorCode === 'functions/not-found' ||
       errorCode === 'functions/unavailable' ||
       errorCode === 'internal' ||
       errorCode === 'unavailable' ||
+      errorCode === 'cancelled' ||
+      errorName === 'FirebaseError' ||
       errorMessage.includes('CORS') ||
       errorMessage.includes('Failed to fetch') ||
       errorMessage.includes('network') ||
+      errorMessage.includes('ERR_FAILED') ||
       errorString.includes('CORS') ||
       errorString.includes('Failed to fetch') ||
-      errorString.includes('ERR_FAILED');
+      errorString.includes('ERR_FAILED') ||
+      errorString.includes('cloudfunctions.net');
     
     if (isFunctionUnavailable) {
+      console.log('Cloud Functions unavailable, using Firestore fallback');
       
       // Import Firestore functions dynamically to avoid circular dependencies
       const { collection, addDoc, Timestamp, doc, setDoc } = await import('firebase/firestore');
@@ -118,6 +128,8 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
         isHidden: false,
       });
       
+      console.log('Thread created via Firestore fallback:', threadRef.id);
+      
       // Update tag usage counts (if allowed by rules, otherwise skip)
       try {
         for (const tag of data.tags) {
@@ -134,6 +146,9 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
       
       return { threadId: threadRef.id };
     }
+    
+    // If we get here, it's not a function availability error, re-throw
+    console.error('createThread error (not caught by fallback):', error);
     throw error;
   }
 }
