@@ -2,6 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // TEMPORARY PERMISSIVE RULES FOR TESTING
+    // Replace with proper rules after testing
+    
     // Helper functions
     function isSignedIn() {
       return request.auth != null;
@@ -11,61 +14,42 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
     
-    function hasRole(role) {
-      if (!isSignedIn()) {
-        return false;
-      }
-      // Check if user document exists before accessing data
-      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
-      return userDoc != null && userDoc.exists && userDoc.data.role == role;
-    }
-    
-    function isModerator() {
-      return hasRole('moderator') || hasRole('admin');
-    }
-    
-    function isAdmin() {
-      return hasRole('admin');
-    }
-    
-    // Users collection
+    // Users collection - allow read if signed in, create/update if self
     match /users/{uid} {
       allow read: if isSignedIn();
       allow create: if isSelf(uid);
-      allow update: if isSelf(uid) || isAdmin();
+      allow update: if isSelf(uid);
     }
     
     // Profiles collection
     match /profiles/{uid} {
       allow read: if isSignedIn();
       allow create: if isSelf(uid);
-      // Updates normally done via Functions, but allow self for basic fields
-      allow update: if isSelf(uid) || isAdmin();
+      allow update: if isSelf(uid);
     }
     
-    // Questions collection
+    // Questions collection - PUBLIC READ
     match /questions/{qid} {
-      allow read: if true; // Public read
-      allow write: if isAdmin();
+      allow read: if true;
+      allow write: if false; // Admin only via Functions
     }
     
     // Rounds collection
     match /rounds/{rid} {
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
       allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
-      // Final scoring done via Functions
       allow update: if false;
     }
     
-    // Leaderboards
+    // Leaderboards - PUBLIC READ
     match /leaderboards/{scope}/entries/{uid} {
-      allow read: if true; // Public read
-      allow write: if false; // Only Functions
+      allow read: if true;
+      allow write: if false;
     }
     
-    // Forum Threads
+    // Forum Threads - PUBLIC READ
     match /forumThreads/{tid} {
-      allow read: if true; // Public read
+      allow read: if true;
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.title.size() >= 10 &&
@@ -74,38 +58,38 @@ service cloud.firestore {
                        request.resource.data.bodyMD.size() <= 5000 &&
                        request.resource.data.tags.size() >= 1 &&
                        request.resource.data.tags.size() <= 3;
-      allow update: if isSelf(resource.data.uid) || isModerator();
-      allow delete: if isAdmin();
+      allow update: if isSelf(resource.data.uid);
+      allow delete: if false;
     }
     
-    // Forum Posts
+    // Forum Posts - PUBLIC READ
     match /forumPosts/{pid} {
-      allow read: if true; // Public read (hidden posts filtered client-side or via Functions)
+      allow read: if true;
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.bodyMD.size() >= 10 &&
                        request.resource.data.bodyMD.size() <= 3000;
-      allow update: if isSelf(resource.data.uid) || isModerator();
-      allow delete: if isAdmin();
+      allow update: if isSelf(resource.data.uid);
+      allow delete: if false;
     }
     
     // Forum Votes
     match /forumVotes/{kind}/{targetId}/userVotes/{uid} {
       allow read: if isSignedIn();
-      allow write: if isSelf(uid); // Users can manage their own votes
+      allow write: if isSelf(uid);
     }
     
     // Forum Reports
     match /forumReports/{rid} {
-      allow read: if isModerator();
+      allow read: if false;
       allow create: if isSignedIn() && request.resource.data.reporterUid == request.auth.uid;
-      allow update: if isModerator();
+      allow update: if false;
     }
     
-    // Forum Tags
+    // Forum Tags - PUBLIC READ
     match /forumTags/{tag} {
       allow read: if true;
-      allow write: if false; // Only Functions update usage counts
+      allow write: if false;
     }
     
     // Forum Subscriptions
@@ -117,25 +101,25 @@ service cloud.firestore {
     // Notifications
     match /notifications/{uid}/items/{nid} {
       allow read: if isSelf(uid);
-      allow write: if false; // Only Functions create notifications
+      allow write: if false;
     }
     
     // Calculator Runs
     match /calcRuns/{rid} {
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
-      allow create: if false; // Only via Functions (for validation)
+      allow create: if false;
       allow update, delete: if false;
     }
     
-    // Configs (PAYE Rules)
+    // Configs (PAYE Rules) - PUBLIC READ
     match /configs/{docId} {
-      allow read: if true; // Public read
-      allow write: if isAdmin();
+      allow read: if true;
+      allow write: if false;
     }
     
     // Rate Limits
     match /rateLimits/{uid} {
-      allow read, write: if false; // Only Functions
+      allow read, write: if false;
     }
   }
 }
