@@ -18,7 +18,7 @@ export default function CalculatorPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch PAYE rules from Firestore
+    // Fetch Personal Income Tax rules from Firestore
     const fetchRules = async () => {
       try {
         if (!db) {
@@ -31,7 +31,7 @@ export default function CalculatorPage() {
           setRules(rulesSnap.data() as PayeRules);
         }
       } catch (error) {
-        console.error('Error fetching PAYE rules:', error);
+        console.error('Error fetching tax rules:', error);
         // Use default rules on error
       }
     };
@@ -77,7 +77,7 @@ export default function CalculatorPage() {
             Personal Income Tax Calculator
           </h1>
           <p className="text-gray-600">
-            Figure your tax wahala in 60 seconds. Monthly or annual, with clean
+            Calculate your personal income tax in 60 seconds. Monthly or annual, with clean
             breakdown.
           </p>
           <div className="mt-4 inline-block px-4 py-2 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
@@ -95,7 +95,7 @@ export default function CalculatorPage() {
         {/* Info */}
         <div className="mt-8 text-center text-sm text-gray-500">
           <p>
-            💡 Based on Nigeria PAYE rules ({rules.year}). Rules are
+            💡 Based on Nigeria Personal Income Tax rules ({rules.year}). Rules are
             configurable by admin.
           </p>
         </div>

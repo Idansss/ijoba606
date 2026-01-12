@@ -13,6 +13,7 @@ import { Post } from '@/components/forum/Post';
 import { SubscribeButton } from '@/components/forum/SubscribeButton';
 import { ModeratorBar } from '@/components/forum/ModeratorBar';
 import { MarkdownEditor } from '@/components/forum/MarkdownEditor';
+import { ConsultantCTA } from '@/components/consultants/ConsultantCTA';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { createPost } from '@/lib/firebase/functions';
@@ -249,6 +250,13 @@ export default function ThreadDetailPage() {
             ))}
           </div>
         </div>
+
+        {/* Consultant CTA */}
+        {process.env.NEXT_PUBLIC_CONSULTANTS_ENABLED === 'true' && (
+          <div className="mb-6">
+            <ConsultantCTA />
+          </div>
+        )}
 
         {/* Reply Form */}
         {firebaseUser && !thread.isLocked ? (

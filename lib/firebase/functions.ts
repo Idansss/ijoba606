@@ -207,3 +207,58 @@ export async function adminSetPayeRules(data: SetPayeRulesRequest): Promise<SetP
   return result.data;
 }
 
+// ==================== Consultants Functions ====================
+
+export interface CreateConsultantApplicationRequest {
+  name: string;
+  email: string;
+  phone: string;
+  whatsapp?: string;
+  locationState?: string;
+  experienceYears?: number;
+  specialties: string[];
+  bio: string;
+  credentialsUrl?: string;
+}
+
+export interface CreateConsultantApplicationResponse {
+  applicationId: string;
+}
+
+export async function createConsultantApplication(
+  data: CreateConsultantApplicationRequest
+): Promise<CreateConsultantApplicationResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<CreateConsultantApplicationRequest, CreateConsultantApplicationResponse>(
+    fns,
+    'createConsultantApplication'
+  );
+  const result = await fn(data);
+  return result.data;
+}
+
+export interface CreateConsultantRequestRequest {
+  name?: string;
+  email: string;
+  topic: string;
+  category: 'PAYE' | 'Reliefs' | 'Filing' | 'Employment' | 'Other';
+  urgency: 'ASAP' | 'This week' | 'Later';
+  budgetRange?: 'Under ₦10k' | '₦10k–₦25k' | '₦25k–₦50k' | '₦50k+';
+}
+
+export interface CreateConsultantRequestResponse {
+  requestId: string;
+}
+
+export async function createConsultantRequest(
+  data: CreateConsultantRequestRequest
+): Promise<CreateConsultantRequestResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<CreateConsultantRequestRequest, CreateConsultantRequestResponse>(
+    fns,
+    'createConsultantRequest'
+  );
+  const result = await fn(data);
+  return result.data;
+}
+
