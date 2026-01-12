@@ -1,11 +1,14 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowLeft } from 'lucide-react';
 
-export default function ConsultantThanksPage() {
+export const dynamic = 'force-dynamic';
+
+function ConsultantThanksPageContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get('type');
 
@@ -53,6 +56,24 @@ export default function ConsultantThanksPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function ConsultantThanksPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-green-200">
+          <div className="animate-pulse">
+            <div className="w-20 h-20 rounded-full bg-green-100 mx-auto mb-6"></div>
+            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-96 mx-auto mb-8"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ConsultantThanksPageContent />
+    </Suspense>
   );
 }
 

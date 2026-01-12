@@ -18,6 +18,7 @@ export default function AdminRulesPage() {
   const { addToast } = useToastStore();
   const [loading, setLoading] = useState(true);
   const [testInputs, setTestInputs] = useState<CalcInputs>({
+    earnerType: 'salary',
     period: 'monthly',
     basic: 100000,
     housing: 0,
