@@ -5,6 +5,8 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 
+// Note: CORS is automatically handled for onCall (callable) functions in v2
+
 // Initialize Firebase Admin
 initializeApp();
 const db = getFirestore();
@@ -32,6 +34,12 @@ const ConsultantRequestSchema = z.object({
   category: z.enum(["PAYE", "Reliefs", "Filing", "Employment", "Other"]),
   urgency: z.enum(["ASAP", "This week", "Later"]),
   budgetRange: z.string().optional(),
+});
+
+const CreateThreadSchema = z.object({
+  title: z.string().min(10).max(200),
+  bodyMD: z.string().min(20).max(5000),
+  tags: z.array(z.string()).min(1).max(3),
 });
 
 /* ---------------------------------
@@ -82,4 +90,54 @@ export const createConsultantRequest = onCall(async (request) => {
   logger.info("Consultant request submitted", { email: data.email });
 
   return { success: true };
+});
+
+/* ---------------------------------
+   FORUM: CREATE THREAD
+----------------------------------*/
+export const createThread = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = CreateThreadSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid thread data");
+  }
+
+  const { title, bodyMD, tags } = parsed.data;
+
+  // Create thread
+  const threadRef = await db.collection("forumThreads").add({
+    uid,
+    title: title.trim(),
+    bodyMD: bodyMD.trim(),
+    tags,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    votes: 0,
+    replyCount: 0,
+    isLocked: false,
+    isPinned: false,
+    isHidden: false,
+  });
+
+  // Update tag usage counts
+  for (const tag of tags) {
+    const tagRef = db.collection("forumTags").doc(tag);
+    await tagRef.set(
+      {
+        name: tag,
+        usageCount: FieldValue.increment(1),
+      },
+      { merge: true }
+    );
+  }
+
+  logger.info("Thread created", { threadId: threadRef.id, uid });
+
+  return { threadId: threadRef.id };
 });

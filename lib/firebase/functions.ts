@@ -84,25 +84,21 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
     console.log('createThread error:', { errorCode, errorMessage, errorName, error: errorObj });
     
     // Check for various error conditions that indicate functions aren't available
-    // Be very permissive - catch almost any error and try fallback
     const isFunctionUnavailable = 
       errorCode === 'functions/not-found' ||
       errorCode === 'functions/unavailable' ||
       errorCode === 'internal' ||
       errorCode === 'unavailable' ||
       errorCode === 'cancelled' ||
-      errorName === 'FirebaseError' ||
-      errorMessage.includes('CORS') ||
       errorMessage.includes('Failed to fetch') ||
       errorMessage.includes('network') ||
       errorMessage.includes('ERR_FAILED') ||
-      errorString.includes('CORS') ||
       errorString.includes('Failed to fetch') ||
       errorString.includes('ERR_FAILED') ||
       errorString.includes('cloudfunctions.net');
     
-    // Always try fallback if function call failed (very permissive)
-    if (isFunctionUnavailable || true) { // Temporarily always use fallback
+    // Only use fallback if function is truly unavailable (not CORS errors - those should be fixed by deployment)
+    if (isFunctionUnavailable) {
       console.log('Cloud Functions unavailable, using Firestore fallback');
       
       try {
