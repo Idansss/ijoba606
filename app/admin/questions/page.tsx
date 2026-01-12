@@ -7,10 +7,11 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { Question } from '@/lib/types';
+import { Question, QuizLevel } from '@/lib/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { questionSchema, QuestionFormData } from '@/lib/validation/schemas';
+import { generateQuestions } from '@/lib/firebase/functions';
 
 export default function AdminQuestionsPage() {
   const router = useRouter();
@@ -20,6 +21,12 @@ export default function AdminQuestionsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [generateLevel, setGenerateLevel] = useState<QuizLevel>(1);
+  const [generateCount, setGenerateCount] = useState(5);
+  const [generateTopic, setGenerateTopic] = useState('');
+  const [useAI, setUseAI] = useState(true);
 
   const {
     register,
@@ -141,6 +148,33 @@ export default function AdminQuestionsPage() {
     }
   };
 
+  const handleGenerateQuestions = async () => {
+    setGenerating(true);
+    try {
+      const result = await generateQuestions({
+        level: generateLevel,
+        count: generateCount,
+        topic: generateTopic || undefined,
+        useAI,
+      });
+
+      addToast({
+        type: 'success',
+        message: `Successfully generated ${result.count} question(s)!`,
+      });
+      setShowGenerateModal(false);
+      fetchQuestions();
+    } catch (error: any) {
+      console.error('Error generating questions:', error);
+      addToast({
+        type: 'error',
+        message: error?.message || 'Failed to generate questions. Check if OpenAI API key is set.',
+      });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="container mx-auto px-4 py-12">
@@ -173,12 +207,20 @@ export default function AdminQuestionsPage() {
               Total: {questions.length} questions
             </p>
           </div>
-          <button
-            onClick={() => handleOpenModal()}
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
-          >
-            + Add Question
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => handleOpenModal()}
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
+            >
+              + Add Question
+            </button>
+            <button
+              onClick={() => setShowGenerateModal(true)}
+              className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg"
+            >
+              🤖 Generate with AI
+            </button>
+          </div>
         </div>
 
         {/* Questions by Level */}
@@ -398,6 +440,106 @@ export default function AdminQuestionsPage() {
                       </button>
                     </div>
                   </form>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Generate Questions Modal */}
+        <AnimatePresence>
+          {showGenerateModal && (
+            <>
+              <div
+                className="fixed inset-0 bg-black/50 z-40"
+                onClick={() => setShowGenerateModal(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              >
+                <div
+                  className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                    Generate Questions with AI
+                  </h2>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Level
+                      </label>
+                      <select
+                        value={generateLevel}
+                        onChange={(e) => setGenerateLevel(Number(e.target.value) as QuizLevel)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      >
+                        <option value={1}>Level 1 - Basics</option>
+                        <option value={2}>Level 2 - Intermediate</option>
+                        <option value={3}>Level 3 - Advanced</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Number of Questions
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="10"
+                        value={generateCount}
+                        onChange={(e) => setGenerateCount(Number(e.target.value))}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Topic (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={generateTopic}
+                        onChange={(e) => setGenerateTopic(e.target.value)}
+                        placeholder="e.g., pension, tax brackets, deductions"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="useAI"
+                        checked={useAI}
+                        onChange={(e) => setUseAI(e.target.checked)}
+                        className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                      />
+                      <label htmlFor="useAI" className="text-sm text-gray-700">
+                        Use AI (OpenAI) - Requires API key. Uncheck to use template-based generation.
+                      </label>
+                    </div>
+
+                    <div className="flex gap-3 mt-6">
+                      <button
+                        onClick={() => setShowGenerateModal(false)}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleGenerateQuestions}
+                        disabled={generating}
+                        className="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {generating ? 'Generating...' : 'Generate'}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </>

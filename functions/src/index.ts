@@ -4,6 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
+import { generateQuestionsWithOpenAI, generateQuestionsFromTemplate } from "./generateQuestion";
 
 // Note: CORS is automatically handled for onCall (callable) functions in v2
 // Region configuration for v2 functions
@@ -535,4 +536,110 @@ export const moderateContent = onCall({ region }, async (request) => {
   });
 
   return { success: true };
+});
+
+/* ---------------------------------
+   QUIZ: GENERATE QUESTIONS (AI)
+----------------------------------*/
+const GenerateQuestionsSchema = z.object({
+  level: z.number().int().min(1).max(3),
+  topic: z.string().optional(),
+  count: z.number().int().min(1).max(10).default(1),
+  useAI: z.boolean().default(true),
+});
+
+export const generateQuestions = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  // Check if user is admin
+  const uid = request.auth.uid;
+  const userRef = db.collection("users").doc(uid);
+  const userSnap = await userRef.get();
+
+  if (!userSnap.exists) {
+    throw new HttpsError("permission-denied", "User not found");
+  }
+
+  const userData = userSnap.data();
+  const role = userData?.role;
+
+  if (role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin access required");
+  }
+
+  // Validate input
+  const parsed = GenerateQuestionsSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid generation data");
+  }
+
+  const { level, topic, count, useAI } = parsed.data;
+
+  try {
+    let questions;
+
+    if (useAI) {
+      // Try AI generation first
+      try {
+        const aiResult = await generateQuestionsWithOpenAI({
+          level: level as 1 | 2 | 3,
+          topic,
+          count,
+        });
+        questions = aiResult.questions;
+        logger.info("Questions generated with AI", { level, topic, count: questions.length });
+      } catch (aiError: any) {
+        logger.warn("AI generation failed, using template fallback", { error: aiError?.message });
+        // Fallback to template-based generation
+        const templateResult = generateQuestionsFromTemplate({
+          level: level as 1 | 2 | 3,
+          topic,
+          count,
+        });
+        questions = templateResult.questions;
+      }
+    } else {
+      // Use template-based generation
+      const templateResult = generateQuestionsFromTemplate({
+        level: level as 1 | 2 | 3,
+        topic,
+        count,
+      });
+      questions = templateResult.questions;
+    }
+
+    // Save questions to Firestore
+    const batch = db.batch();
+    const questionIds: string[] = [];
+
+    for (const question of questions) {
+      const docRef = db.collection("questions").doc();
+      batch.set(docRef, {
+        ...question,
+        createdAt: FieldValue.serverTimestamp(),
+        createdBy: uid,
+        source: useAI ? "ai" : "template",
+      });
+      questionIds.push(docRef.id);
+    }
+
+    await batch.commit();
+
+    logger.info("Questions saved to Firestore", {
+      level,
+      count: questionIds.length,
+      questionIds,
+    });
+
+    return {
+      success: true,
+      questionIds,
+      count: questionIds.length,
+    };
+  } catch (error: any) {
+    logger.error("Error generating questions", { error: error?.message, level, topic });
+    throw new HttpsError("internal", `Failed to generate questions: ${error?.message || "Unknown error"}`);
+  }
 });

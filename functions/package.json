@@ -21,6 +21,11 @@
   },
   "devDependencies": {
     "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.4.1",
     "typescript": "^5.7.3"
   },
   "private": true

@@ -308,6 +308,33 @@ export async function adminSetPayeRules(data: SetPayeRulesRequest): Promise<SetP
   return result.data;
 }
 
+// ==================== Quiz/Question Functions ====================
+
+export interface GenerateQuestionsRequest {
+  level: 1 | 2 | 3;
+  topic?: string;
+  count?: number;
+  useAI?: boolean;
+}
+
+export interface GenerateQuestionsResponse {
+  success: boolean;
+  questionIds: string[];
+  count: number;
+}
+
+export async function generateQuestions(
+  data: GenerateQuestionsRequest
+): Promise<GenerateQuestionsResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<GenerateQuestionsRequest, GenerateQuestionsResponse>(
+    fns,
+    'generateQuestions'
+  );
+  const result = await fn(data);
+  return result.data;
+}
+
 // ==================== Consultants Functions ====================
 
 export interface CreateConsultantApplicationRequest {
