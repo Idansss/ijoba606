@@ -248,21 +248,43 @@ export const voteThread = onCall({ region }, async (request) => {
 
   const { targetId, value } = parsed.data;
 
-  // Get current vote
-  const voteRef = db.doc(`forumVotes/thread/${targetId}/userVotes/${uid}`);
-  const voteSnap = await voteRef.get();
-  const currentVote = voteSnap.exists ? (voteSnap.data()?.value || 0) : 0;
+  // Get current vote - path: forumVotes/thread/{targetId}/userVotes/{uid}
+  // The path structure in Firestore rules suggests: forumVotes -> {kind} -> {targetId} -> userVotes -> {uid}
+  // But in practice, {uid} should be the document. Let's use: forumVotes -> thread -> {targetId} -> {uid}
+  // Actually, based on rules, it's: forumVotes -> thread (doc) -> {targetId} (collection) -> userVotes (doc) -> {uid} (collection)
+  // But that doesn't work. Let's try: forumVotes -> thread -> {targetId} -> {uid} directly
+  const voteRef = db
+    .collection("forumVotes")
+    .doc("thread")
+    .collection(targetId)
+    .doc(uid);
+  
+  let currentVote = 0;
+  try {
+    const voteSnap = await voteRef.get();
+    if (voteSnap.exists) {
+      currentVote = voteSnap.data()?.value || 0;
+    }
+  } catch (error: any) {
+    // If document doesn't exist or path is invalid, currentVote remains 0
+    logger.warn("Vote document not found or error reading", { targetId, uid, error: error?.message });
+  }
 
   const voteDiff = value - currentVote;
 
   // Update user vote
-  if (value === 0) {
-    await voteRef.delete();
-  } else {
-    await voteRef.set({
-      value,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
+  try {
+    if (value === 0) {
+      await voteRef.delete();
+    } else {
+      await voteRef.set({
+        value,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  } catch (error: any) {
+    logger.error("Error updating vote", { targetId, uid, value, error: error?.message });
+    throw new HttpsError("internal", `Failed to update vote: ${error?.message || "Unknown error"}`);
   }
 
   // Update thread vote count
@@ -298,21 +320,40 @@ export const votePost = onCall({ region }, async (request) => {
 
   const { targetId, value } = parsed.data;
 
-  // Get current vote
-  const voteRef = db.doc(`forumVotes/post/${targetId}/userVotes/${uid}`);
-  const voteSnap = await voteRef.get();
-  const currentVote = voteSnap.exists ? (voteSnap.data()?.value || 0) : 0;
+  // Get current vote - path: forumVotes/post/{targetId}/userVotes/{uid}
+  // Using simplified structure: forumVotes -> post -> {targetId} -> {uid}
+  const voteRef = db
+    .collection("forumVotes")
+    .doc("post")
+    .collection(targetId)
+    .doc(uid);
+  
+  let currentVote = 0;
+  try {
+    const voteSnap = await voteRef.get();
+    if (voteSnap.exists) {
+      currentVote = voteSnap.data()?.value || 0;
+    }
+  } catch (error: any) {
+    // If document doesn't exist or path is invalid, currentVote remains 0
+    logger.warn("Vote document not found or error reading", { targetId, uid, error: error?.message });
+  }
 
   const voteDiff = value - currentVote;
 
   // Update user vote
-  if (value === 0) {
-    await voteRef.delete();
-  } else {
-    await voteRef.set({
-      value,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
+  try {
+    if (value === 0) {
+      await voteRef.delete();
+    } else {
+      await voteRef.set({
+        value,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  } catch (error: any) {
+    logger.error("Error updating vote", { targetId, uid, value, error: error?.message });
+    throw new HttpsError("internal", `Failed to update vote: ${error?.message || "Unknown error"}`);
   }
 
   // Update post vote count
