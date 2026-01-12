@@ -308,6 +308,143 @@ Only return the JSON array, no other text.`;
 }
 
 /**
+ * Generate questions using Cursor AI API
+ * Note: Cursor AI integration requires API key setup
+ */
+export async function generateQuestionsWithCursor(
+  request: GenerateQuestionRequest
+): Promise<GenerateQuestionResponse> {
+  // Use passed apiKey or fallback to environment variable
+  const apiKey = request.apiKey || process.env.CURSOR_API_KEY;
+  if (!apiKey) {
+    throw new Error('CURSOR_API_KEY is not set. Set it via: firebase functions:secrets:set CURSOR_API_KEY');
+  }
+
+  const validated = QuestionGenerationSchema.parse({
+    level: request.level,
+    topic: request.topic,
+    count: request.count || 1,
+  });
+
+  const levelKey = validated.level as 1 | 2 | 3;
+  const levelDescriptions: Record<1 | 2 | 3, string> = {
+    1: 'basic concepts and definitions',
+    2: 'intermediate calculations and deductions',
+    3: 'advanced scenarios and complex tax situations',
+  };
+
+  const prompt = `Generate ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria.
+
+Level: ${validated.level} (${levelDescriptions[levelKey]})
+${validated.topic ? `Topic: ${validated.topic}` : ''}
+
+Requirements:
+- Each question must have exactly 4 options
+- Questions can be single-answer (correct: [0]) or multi-answer (correct: [0, 2])
+- Include a clear explanation
+- Make questions practical and relevant to Nigerian PAYE system
+- Use Nigerian Naira (₦) currency
+- Questions should test understanding, not just memorization
+
+Return a JSON array with this exact structure:
+[
+  {
+    "level": ${validated.level},
+    "type": "single" or "multi",
+    "prompt": "Question text here?",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct": [0] or [0, 2] (array of correct option indices),
+    "explanation": "Clear explanation of the answer",
+    "tags": ["tag1", "tag2"]
+  }
+]
+
+Only return the JSON array, no other text.`;
+
+  try {
+    // Cursor AI API endpoint
+    // Base URL: https://api.cursor.com
+    // Note: Cursor may use OpenAI-compatible endpoints or have custom structure
+    // If using OpenAI-compatible: https://api.cursor.com/v1/chat/completions
+    const apiUrl = process.env.CURSOR_API_URL || 'https://api.cursor.com/v1/chat/completions';
+    const model = process.env.CURSOR_MODEL || 'gpt-4'; // Default model, update based on Cursor's available models
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert in Nigerian tax law, specifically PAYE (Pay As You Earn) taxation. Generate accurate, educational quiz questions. Always return valid JSON in the specified format.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+        response_format: { type: 'json_object' },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Cursor API error: ${response.status} - ${error}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error('No content in Cursor API response');
+    }
+
+    // Parse the JSON response
+    let questions: Omit<Question, 'id'>[];
+    try {
+      const parsed = JSON.parse(content);
+      questions = Array.isArray(parsed) ? parsed : parsed.questions || [];
+    } catch (parseError) {
+      // Try to extract JSON from markdown code blocks
+      const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/```\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        questions = JSON.parse(jsonMatch[1]);
+      } else {
+        throw new Error('Could not parse JSON from response');
+      }
+    }
+
+    // Validate questions
+    const validatedQuestions: Omit<Question, 'id'>[] = questions.map((q: any) => {
+      const optionsArray = Array.isArray(q.options) && q.options.length === 4 
+        ? q.options 
+        : ['', '', '', ''];
+      
+      return {
+        level: validated.level as QuizLevel,
+        type: (q.type === 'single' || q.type === 'multi' ? q.type : 'single') as QuestionType,
+        prompt: q.prompt || '',
+        options: [optionsArray[0] || '', optionsArray[1] || '', optionsArray[2] || '', optionsArray[3] || ''] as [string, string, string, string],
+        correct: Array.isArray(q.correct) ? q.correct : [0],
+        explanation: q.explanation || '',
+        tags: Array.isArray(q.tags) ? q.tags : [],
+        topic: q.topic || validated.topic,
+      };
+    });
+
+    return { questions: validatedQuestions };
+  } catch (error) {
+    console.error('Error generating questions with Cursor:', error);
+    throw error;
+  }
+}
+
+/**
  * Generate questions using template-based fallback
  */
 export function generateQuestionsFromTemplate(

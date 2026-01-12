@@ -314,7 +314,7 @@ export interface GenerateQuestionsRequest {
   level: 1 | 2 | 3;
   topic?: string;
   count?: number;
-  provider?: 'openai' | 'gemini' | 'template';
+  provider?: 'openai' | 'gemini' | 'cursor' | 'template';
 }
 
 export interface GenerateQuestionsResponse {

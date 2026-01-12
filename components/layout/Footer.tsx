@@ -19,6 +19,7 @@ const communityLinks = [
 const legalLinks = [
   { href: '/legal/privacy', label: 'Privacy Policy' },
   { href: '/legal/terms', label: 'Terms of Service' },
+  { href: '/contact', label: 'Contact Us' },
 ];
 
 export function Footer() {

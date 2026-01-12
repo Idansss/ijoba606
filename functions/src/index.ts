@@ -4,7 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
-import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsFromTemplate } from "./generateQuestion";
+import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsWithCursor, generateQuestionsFromTemplate } from "./generateQuestion";
 
 // Note: Secrets set via `firebase functions:secrets:set` are automatically available via process.env
 
@@ -547,7 +547,7 @@ const GenerateQuestionsSchema = z.object({
   level: z.number().int().min(1).max(3),
   topic: z.string().optional().or(z.literal('')).transform(val => val === '' ? undefined : val),
   count: z.number().int().min(1).max(10).default(1),
-  provider: z.enum(['openai', 'gemini', 'template']).default('openai'),
+  provider: z.enum(['openai', 'gemini', 'cursor', 'template']).default('openai'),
 });
 
 export const generateQuestions = onCall({ region }, async (request) => {
@@ -641,6 +641,26 @@ export const generateQuestions = onCall({ region }, async (request) => {
         questions = templateResult.questions;
         source = 'template';
       }
+    } else if (provider === 'cursor') {
+      try {
+        const cursorResult = await generateQuestionsWithCursor({
+          level: level as 1 | 2 | 3,
+          topic,
+          count,
+        });
+        questions = cursorResult.questions;
+        logger.info("Questions generated with Cursor", { level, topic, count: questions.length });
+      } catch (cursorError: any) {
+        logger.warn("Cursor generation failed, using template fallback", { error: cursorError?.message });
+        // Fallback to template
+        const templateResult = generateQuestionsFromTemplate({
+          level: level as 1 | 2 | 3,
+          topic,
+          count,
+        });
+        questions = templateResult.questions;
+        source = 'template';
+      }
     } else {
       // Use template-based generation
       const templateResult = generateQuestionsFromTemplate({
@@ -655,14 +675,27 @@ export const generateQuestions = onCall({ region }, async (request) => {
     const batch = db.batch();
     const questionIds: string[] = [];
 
+    // Helper function to remove undefined values (Firestore doesn't accept undefined)
+    const removeUndefined = (obj: any): any => {
+      const cleaned: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        if (value !== undefined) {
+          cleaned[key] = value;
+        }
+      }
+      return cleaned;
+    };
+
     for (const question of questions) {
       const docRef = db.collection("questions").doc();
-      batch.set(docRef, {
+      // Remove undefined values before saving
+      const cleanedQuestion = removeUndefined({
         ...question,
         createdAt: FieldValue.serverTimestamp(),
         createdBy: uid,
         source: source,
       });
+      batch.set(docRef, cleanedQuestion);
       questionIds.push(docRef.id);
     }
 
