@@ -159,7 +159,7 @@ export default function AdminQuestionsPage() {
         level: 1 | 2 | 3;
         count: number;
         topic?: string;
-        provider: 'openai' | 'gemini' | 'template';
+        provider: 'openai' | 'gemini' | 'cursor' | 'template';
       } = {
         level: Number(generateLevel) as 1 | 2 | 3,
         count: Number(generateCount),
