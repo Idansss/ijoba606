@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase/config';
+import { handleGoogleRedirect } from '@/lib/firebase/auth';
 import { useAuthStore } from '@/lib/store/auth';
 import { User, Profile } from '@/lib/types';
 
@@ -21,6 +22,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Handle Google redirect result if user was redirected
+    handleGoogleRedirect().catch((error) => {
+      console.error('Error handling Google redirect:', error);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setFirebaseUser(firebaseUser);
 
@@ -28,19 +34,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Subscribe to user doc
         if (!db) return;
         const userRef = doc(db, 'users', firebaseUser.uid);
-        const unsubUser = onSnapshot(userRef, (snap) => {
-          if (snap.exists()) {
-            setUser(snap.data() as User);
+        const unsubUser = onSnapshot(
+          userRef,
+          (snap) => {
+            if (snap.exists()) {
+              setUser(snap.data() as User);
+            }
+          },
+          (error) => {
+            // Handle permission errors gracefully
+            console.error('Error reading user document:', error);
+            // Don't set user if permission denied - rules might not be deployed yet
+            if (error.code !== 'permission-denied') {
+              setUser(null);
+            }
           }
-        });
+        );
 
         // Subscribe to profile doc
         const profileRef = doc(db, 'profiles', firebaseUser.uid);
-        const unsubProfile = onSnapshot(profileRef, (snap) => {
-          if (snap.exists()) {
-            setProfile(snap.data() as Profile);
+        const unsubProfile = onSnapshot(
+          profileRef,
+          (snap) => {
+            if (snap.exists()) {
+              setProfile(snap.data() as Profile);
+            }
+          },
+          (error) => {
+            // Handle permission errors gracefully
+            console.error('Error reading profile document:', error);
+            // Don't set profile if permission denied - rules might not be deployed yet
+            if (error.code !== 'permission-denied') {
+              setProfile(null);
+            }
           }
-        });
+        );
 
         setLoading(false);
 

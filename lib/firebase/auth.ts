@@ -1,6 +1,8 @@
 import {
   signInAnonymously,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   linkWithPopup,
   type Auth,
@@ -11,6 +13,13 @@ import { auth as firebaseAuth, db as firestoreDb } from './config';
 import { User } from '@/lib/types';
 
 const googleProvider = new GoogleAuthProvider();
+// Add scopes if needed
+googleProvider.addScope('profile');
+googleProvider.addScope('email');
+// Set custom parameters
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+});
 
 function requireFirebase() {
   if (!firebaseAuth || !firestoreDb) {
@@ -46,14 +55,44 @@ export async function signInAnon() {
 }
 
 /**
- * Sign in with Google
+ * Sign in with Google (tries popup first, falls back to redirect)
  */
 export async function signInWithGoogle() {
   try {
     const { auth } = requireFirebase();
-    const result = await signInWithPopup(auth, googleProvider);
-    await ensureUserDoc(result.user, false);
-    return result.user;
+    
+    // Try popup first
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      await ensureUserDoc(result.user, false);
+      return result.user;
+    } catch (popupError: unknown) {
+      // If popup fails due to unauthorized domain, don't try redirect (it will fail too)
+      if (
+        popupError &&
+        typeof popupError === 'object' &&
+        'code' in popupError &&
+        popupError.code === 'auth/unauthorized-domain'
+      ) {
+        // Don't try redirect - domain needs to be authorized first
+        throw popupError;
+      }
+      // If popup fails due to blocking, try redirect as fallback
+      if (
+        popupError &&
+        typeof popupError === 'object' &&
+        'code' in popupError &&
+        (popupError.code === 'auth/popup-blocked' ||
+         popupError.code === 'auth/popup-closed-by-user')
+      ) {
+        // Use redirect as fallback
+        await signInWithRedirect(auth, googleProvider);
+        // Note: User will be redirected, so we won't return here
+        // The redirect result will be handled on page load
+        throw new Error('Redirecting to sign in...');
+      }
+      throw popupError;
+    }
   } catch (error) {
     console.error('Google sign-in error:', error);
     if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-closed-by-user') {
@@ -66,6 +105,33 @@ export async function signInWithGoogle() {
     if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/popup-blocked') {
       throw new Error('Popup was blocked. Please allow popups for this site.');
     }
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'auth/unauthorized-domain') {
+      const domain = typeof window !== 'undefined' ? window.location.hostname : 'your domain';
+      throw new Error(
+        `Domain "${domain}" is not authorized. Go to Firebase Console → Authentication → Settings → Authorized domains and add "${domain}".`
+      );
+    }
+    if (error instanceof Error && error.message === 'Redirecting to sign in...') {
+      throw error; // Re-throw redirect message
+    }
+    throw error;
+  }
+}
+
+/**
+ * Handle Google sign-in redirect result (call this on page load)
+ */
+export async function handleGoogleRedirect() {
+  try {
+    const { auth } = requireFirebase();
+    const result = await getRedirectResult(auth);
+    if (result?.user) {
+      await ensureUserDoc(result.user, false);
+      return result.user;
+    }
+    return null;
+  } catch (error) {
+    console.error('Google redirect error:', error);
     throw error;
   }
 }
