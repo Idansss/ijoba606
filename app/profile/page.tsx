@@ -197,7 +197,7 @@ export default function ProfilePage() {
               href="/calculator"
               className="rounded-full border border-slate-200 px-6 py-4 text-center text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
             >
-              Calculate PAYE
+              Calculate Tax
             </Link>
           </div>
         </div>

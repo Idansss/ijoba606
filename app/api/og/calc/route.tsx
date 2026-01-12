@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
               margin: '10px 0',
             }}
           >
-            My PAYE estimate be
+            My Personal Income Tax estimate
           </div>
 
           <div

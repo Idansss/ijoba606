@@ -157,6 +157,43 @@ export interface Notification {
   createdAt: Timestamp;
 }
 
+// ==================== Consultants ====================
+
+export type ConsultantApplicationStatus = 'pending' | 'approved' | 'rejected';
+
+export interface ConsultantApplication {
+  id?: string;
+  uid?: string;
+  name: string;
+  email: string;
+  phone: string;
+  whatsapp?: string;
+  locationState?: string;
+  experienceYears?: number;
+  specialties: string[];
+  bio: string;
+  credentialsUrl?: string;
+  status: ConsultantApplicationStatus;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export type ConsultantRequestCategory = 'PAYE' | 'Reliefs' | 'Filing' | 'Employment' | 'Other';
+export type ConsultantRequestUrgency = 'ASAP' | 'This week' | 'Later';
+export type ConsultantRequestBudgetRange = 'Under ₦10k' | '₦10k–₦25k' | '₦25k–₦50k' | '₦50k+';
+
+export interface ConsultantRequest {
+  id?: string;
+  uid?: string;
+  name?: string;
+  email: string;
+  topic: string;
+  category: ConsultantRequestCategory;
+  urgency: ConsultantRequestUrgency;
+  budgetRange?: ConsultantRequestBudgetRange;
+  createdAt: Timestamp;
+}
+
 // ==================== Calculator ====================
 export interface PayeRules {
   currency: 'NGN';
@@ -177,18 +214,48 @@ export interface PayeRules {
   notes: string;
 }
 
+export type ReliefType =
+  | 'pension'
+  | 'nhis'
+  | 'nhf'
+  | 'housing_interest'
+  | 'life_insurance'
+  | 'rent_relief'
+  | 'gifts'
+  | 'pension_funds'
+  | 'retirement_benefits'
+  | 'employment_compensation'
+  | 'owner_occupied_house'
+  | 'personal_effects'
+  | 'private_vehicles'
+  | 'share_gains'
+  | 'share_gains_reinvested'
+  | 'charity_religious';
+
+export interface ReliefItem {
+  type: ReliefType;
+  amount: number;
+  // For rent relief, store the annual rent to calculate 20%
+  annualRent?: number;
+}
+
 export interface CalcInputs {
+  earnerType: 'salary' | 'non-salary';
   period: 'monthly' | 'annual';
-  basic: number;
-  housing: number;
-  transport: number;
-  other: number;
-  bonus: number;
-  pensionPct: number;
-  nhfEnabled: boolean;
+  // For salary earners
+  basic?: number;
+  housing?: number;
+  transport?: number;
+  other?: number;
+  bonus?: number;
+  pensionPct?: number;
+  nhfEnabled?: boolean;
   nhfAmount?: number;
   lifeAssurance?: number;
   voluntaryContrib?: number;
+  // For non-salary earners
+  grossIncome?: number;
+  reliefs?: ReliefItem[];
 }
 
 export interface CalcLineItem {

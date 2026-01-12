@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   Bell,
+  Briefcase,
   Calculator,
   Gamepad2,
   LogOut,
@@ -33,6 +34,7 @@ const navLinks = [
   { href: '/forum', label: 'Forum', icon: MessageCircle },
   { href: '/calculator', label: 'Calculator', icon: Calculator },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/consultants', label: 'Consultants', icon: Briefcase, featureFlag: 'NEXT_PUBLIC_CONSULTANTS_ENABLED' },
 ];
 
 export function Header() {
@@ -42,6 +44,14 @@ export function Header() {
   const [navOpen, setNavOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Filter nav links based on feature flags
+  const visibleNavLinks = navLinks.filter((link) => {
+    if (link.featureFlag) {
+      return process.env[link.featureFlag] === 'true';
+    }
+    return true;
+  });
 
   useEffect(() => {
     if (!firebaseUser) {
@@ -126,7 +136,7 @@ export function Header() {
           </Link>
 
           <nav className="hidden items-center gap-1 rounded-full border border-white/70 bg-white/70 px-1 py-1 shadow-inner shadow-white/40 md:flex">
-            {navLinks.map(({ href, label, icon: Icon }) => {
+            {visibleNavLinks.map(({ href, label, icon: Icon }) => {
               const isActive =
                 pathname === href || pathname.startsWith(`${href}/`);
               return (
@@ -261,7 +271,7 @@ export function Header() {
               className="mt-4 space-y-4 rounded-3xl border border-white/60 bg-white/95 p-5 shadow-2xl md:hidden"
             >
               <div className="space-y-2">
-                {navLinks.map(({ href, label, icon: Icon }) => {
+                {visibleNavLinks.map(({ href, label, icon: Icon }) => {
                   const isActive =
                     pathname === href || pathname.startsWith(`${href}/`);
                   return (

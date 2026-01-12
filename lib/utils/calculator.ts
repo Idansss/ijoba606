@@ -1,111 +1,190 @@
 import { CalcInputs, CalcLineItem, CalcOutputs, PayeRules } from '@/lib/types';
 
 /**
- * Pure function to compute PAYE tax based on configurable rules
+ * Pure function to compute Personal Income Tax based on configurable rules
  */
 export function computeTax(inputs: CalcInputs, rules: PayeRules): CalcOutputs {
   const lineItems: CalcLineItem[] = [];
 
   // Step 1: Calculate gross income (annualized)
-  const isMonthly = inputs.period === 'monthly';
-  const multiplier = isMonthly ? 12 : 1;
+  let grossIncome = 0;
 
-  const annualBasic = inputs.basic * multiplier;
-  const annualHousing = inputs.housing * multiplier;
-  const annualTransport = inputs.transport * multiplier;
-  const annualOther = inputs.other * multiplier;
-  const annualBonus = inputs.bonus * multiplier;
+  if (inputs.earnerType === 'non-salary') {
+    // For non-salary earners, grossIncome is always annual (no monthly/annual conversion)
+    grossIncome = inputs.grossIncome || 0;
+  } else {
+    // For salary earners, sum up all components
+    const isMonthly = inputs.period === 'monthly';
+    const multiplier = isMonthly ? 12 : 1;
+    const annualBasic = (inputs.basic || 0) * multiplier;
+    const annualHousing = (inputs.housing || 0) * multiplier;
+    const annualTransport = (inputs.transport || 0) * multiplier;
+    const annualOther = (inputs.other || 0) * multiplier;
+    const annualBonus = (inputs.bonus || 0) * multiplier;
 
-  const grossIncome =
-    annualBasic + annualHousing + annualTransport + annualOther + annualBonus;
+    grossIncome =
+      annualBasic + annualHousing + annualTransport + annualOther + annualBonus;
+  }
 
-  lineItems.push({ label: 'Gross Annual Income', amount: grossIncome });
+  lineItems.push({ label: 'Income Amount', amount: grossIncome });
 
   // Step 2: Calculate deductions
   let totalDeductions = 0;
 
-  // Pension deduction
-  if (rules.reliefs.pensionIsDeductible && inputs.pensionPct > 0) {
-    const pensionDeduction = grossIncome * (inputs.pensionPct / 100);
-    totalDeductions += pensionDeduction;
-    lineItems.push({
-      label: `Pension (${inputs.pensionPct}%)`,
-      amount: pensionDeduction,
-      isDeduction: true,
-    });
-  }
+  if (inputs.earnerType === 'non-salary' && inputs.reliefs && inputs.reliefs.length > 0) {
+    // Process reliefs for non-salary earners
+    inputs.reliefs.forEach((relief) => {
+      let reliefAmount = relief.amount || 0;
+      let reliefLabel = '';
 
-  // NHF deduction
-  if (rules.reliefs.nhfIsDeductible && inputs.nhfEnabled) {
-    const nhfDeduction = inputs.nhfAmount
-      ? inputs.nhfAmount * multiplier
-      : grossIncome * 0.025; // 2.5% default
-    totalDeductions += nhfDeduction;
-    lineItems.push({
-      label: 'NHF (2.5%)',
-      amount: nhfDeduction,
-      isDeduction: true,
-    });
-  }
+      switch (relief.type) {
+        case 'pension':
+          reliefLabel = 'Pension Contribution (PFA)';
+          break;
+        case 'nhis':
+          reliefLabel = 'National Health Insurance Scheme (NHIS)';
+          break;
+        case 'nhf':
+          reliefLabel = 'National Housing Fund (NHF)';
+          break;
+        case 'housing_interest':
+          reliefLabel = 'Interest on Housing Loan';
+          break;
+        case 'life_insurance':
+          reliefLabel = 'Life Insurance Premium';
+          break;
+        case 'rent_relief':
+          // Rent is 20% of annual rent, capped at ₦500,000
+          if (relief.annualRent) {
+            reliefAmount = Math.min(relief.annualRent * 0.2, 500000);
+          }
+          reliefLabel = 'Rent (20% of annual rent, max ₦500,000)';
+          break;
+        case 'gifts':
+          reliefLabel = 'Gifts (Exempt)';
+          break;
+        case 'pension_funds':
+          reliefLabel = 'Pension Funds & Assets (PRA)';
+          break;
+        case 'retirement_benefits':
+          reliefLabel = 'Retirement Benefits (PRA)';
+          break;
+        case 'employment_compensation':
+          // Compensation capped at ₦50 million
+          reliefAmount = Math.min(relief.amount, 50000000);
+          reliefLabel = 'Employment Compensation (max ₦50 million)';
+          break;
+        case 'owner_occupied_house':
+          reliefLabel = 'Sale of Owner-Occupied House (Exempt)';
+          break;
+        case 'personal_effects':
+          // Personal effects capped at ₦5 million
+          reliefAmount = Math.min(relief.amount, 5000000);
+          reliefLabel = 'Personal Effects/Chattels (max ₦5 million)';
+          break;
+        case 'private_vehicles':
+          reliefLabel = 'Sale of Private Vehicles (up to 2 per year, Exempt)';
+          break;
+        case 'share_gains':
+          // Share gains: below ₦150M/year OR gains up to ₦10M (both exempt)
+          // If amount is <= ₦10M, fully exempt; if > ₦10M but <= ₦150M, also exempt
+          if (relief.amount <= 10000000 || relief.amount <= 150000000) {
+            reliefAmount = relief.amount;
+            reliefLabel = relief.amount <= 10000000 
+              ? 'Share Gains (up to ₦10M, Exempt)'
+              : 'Share Gains (below ₦150M/year, Exempt)';
+          } else {
+            // Above ₦150M - only ₦150M is exempt
+            reliefAmount = 150000000;
+            reliefLabel = 'Share Gains (₦150M exempt portion)';
+          }
+          break;
+        case 'share_gains_reinvested':
+          reliefLabel = 'Share Gains (Reinvested, Exempt)';
+          break;
+        case 'charity_religious':
+          reliefLabel = 'Charity/Religious Institution Income (Exempt)';
+          break;
+      }
 
-  // Life assurance
-  if (inputs.lifeAssurance && inputs.lifeAssurance > 0) {
-    let lifeAssuranceDeduction = inputs.lifeAssurance * multiplier;
-    if (rules.reliefs.lifeAssuranceCap) {
-      lifeAssuranceDeduction = Math.min(
-        lifeAssuranceDeduction,
-        rules.reliefs.lifeAssuranceCap
-      );
+      if (reliefAmount > 0) {
+        totalDeductions += reliefAmount;
+        lineItems.push({
+          label: reliefLabel,
+          amount: reliefAmount,
+          isDeduction: true,
+        });
+      }
+    });
+  } else if (inputs.earnerType === 'salary') {
+    const isMonthly = inputs.period === 'monthly';
+    const multiplier = isMonthly ? 12 : 1;
+    
+    // Pension deduction
+    if (rules.reliefs.pensionIsDeductible && (inputs.pensionPct || 0) > 0) {
+      const pensionDeduction = grossIncome * ((inputs.pensionPct || 0) / 100);
+      totalDeductions += pensionDeduction;
+      lineItems.push({
+        label: `Pension (${inputs.pensionPct}%)`,
+        amount: pensionDeduction,
+        isDeduction: true,
+      });
     }
-    totalDeductions += lifeAssuranceDeduction;
-    lineItems.push({
-      label: 'Life Assurance Premium',
-      amount: lifeAssuranceDeduction,
-      isDeduction: true,
-    });
-  }
 
-  // Voluntary contributions
-  if (inputs.voluntaryContrib && inputs.voluntaryContrib > 0) {
-    const voluntaryDeduction = inputs.voluntaryContrib * multiplier;
-    totalDeductions += voluntaryDeduction;
-    lineItems.push({
-      label: 'Voluntary Contributions',
-      amount: voluntaryDeduction,
-      isDeduction: true,
-    });
+    // NHF deduction
+    if (rules.reliefs.nhfIsDeductible && inputs.nhfEnabled) {
+      const nhfDeduction = inputs.nhfAmount
+        ? inputs.nhfAmount * multiplier
+        : grossIncome * 0.025; // 2.5% default
+      totalDeductions += nhfDeduction;
+      lineItems.push({
+        label: 'NHF (2.5%)',
+        amount: nhfDeduction,
+        isDeduction: true,
+      });
+    }
+
+    // Life assurance
+    if (inputs.lifeAssurance && inputs.lifeAssurance > 0) {
+      let lifeAssuranceDeduction = inputs.lifeAssurance * multiplier;
+      if (rules.reliefs.lifeAssuranceCap) {
+        lifeAssuranceDeduction = Math.min(
+          lifeAssuranceDeduction,
+          rules.reliefs.lifeAssuranceCap
+        );
+      }
+      totalDeductions += lifeAssuranceDeduction;
+      lineItems.push({
+        label: 'Life Assurance Premium',
+        amount: lifeAssuranceDeduction,
+        isDeduction: true,
+      });
+    }
+
+    // Voluntary contributions
+    if (inputs.voluntaryContrib && inputs.voluntaryContrib > 0) {
+      const voluntaryDeduction = inputs.voluntaryContrib * multiplier;
+      totalDeductions += voluntaryDeduction;
+      lineItems.push({
+        label: 'Voluntary Contributions',
+        amount: voluntaryDeduction,
+        isDeduction: true,
+      });
+    }
   }
 
   const incomeAfterDeductions = grossIncome - totalDeductions;
-  lineItems.push({
-    label: 'Total Deductions',
-    amount: totalDeductions,
-    isDeduction: true,
-  });
-
-  // Step 3: Apply personal allowance
-  let personalAllowance = 0;
-  const { type, value } = rules.personalAllowance;
-
-  if (type === 'fixed') {
-    personalAllowance = value;
-  } else if (type === 'percentOfGross') {
-    personalAllowance = grossIncome * value;
-  } else if (type === 'hybrid') {
-    // Higher of 20% of gross or 200,000 (Nigerian typical hybrid rule)
-    const percentAmount = grossIncome * 0.2;
-    const fixedAmount = 200000;
-    personalAllowance = Math.max(percentAmount, fixedAmount);
+  if (totalDeductions > 0) {
+    lineItems.push({
+      label: 'Total Deductions',
+      amount: totalDeductions,
+      isDeduction: true,
+    });
   }
 
-  lineItems.push({
-    label: 'Personal Allowance',
-    amount: personalAllowance,
-    isDeduction: true,
-  });
-
-  // Step 4: Calculate taxable income
-  const taxableIncome = Math.max(0, incomeAfterDeductions - personalAllowance);
+  // Step 3: Calculate taxable income (personal allowance removed - not applied)
+  // Personal allowance is not included in the calculation
+  const taxableIncome = incomeAfterDeductions;
   lineItems.push({ label: 'Taxable Income', amount: taxableIncome });
 
   // Step 5: Apply progressive tax brackets
@@ -124,7 +203,7 @@ export function computeTax(inputs: CalcInputs, rules: PayeRules): CalcOutputs {
     annualTax += taxInBracket;
 
     lineItems.push({
-      label: `Tax on ${formatCurrency(taxableInBracket)} @ ${(bracket.rate * 100).toFixed(1)}%`,
+      label: `Tax on ${formatCurrency(taxableInBracket)} @ ${(bracket.rate * 100).toFixed(0)}%`,
       amount: taxInBracket,
     });
 
@@ -157,7 +236,7 @@ export function formatCurrency(amount: number): string {
 }
 
 /**
- * Default PAYE rules for Nigeria (2025)
+ * Default Personal Income Tax rules for Nigeria (2025)
  */
 export const DEFAULT_PAYE_RULES: PayeRules = {
   currency: 'NGN',
@@ -168,19 +247,19 @@ export const DEFAULT_PAYE_RULES: PayeRules = {
     lifeAssuranceCap: undefined,
   },
   brackets: [
-    { upTo: 300000, rate: 0.07 },     // First 300k @ 7%
-    { upTo: 600000, rate: 0.11 },     // Next 300k @ 11%
-    { upTo: 1100000, rate: 0.15 },    // Next 500k @ 15%
-    { upTo: 1600000, rate: 0.19 },    // Next 500k @ 19%
-    { upTo: 3200000, rate: 0.21 },    // Next 1.6M @ 21%
-    { upTo: Infinity, rate: 0.24 },   // Above 3.2M @ 24%
+    { upTo: 800000, rate: 0.00 },      // First NGN 800,000 @ 0%
+    { upTo: 3000000, rate: 0.15 },     // Next NGN 2,200,000 @ 15%
+    { upTo: 12000000, rate: 0.18 },    // Next NGN 9,000,000 @ 18%
+    { upTo: 25000000, rate: 0.21 },    // Next NGN 13,000,000 @ 21%
+    { upTo: 50000000, rate: 0.23 },    // Next NGN 25,000,000 @ 23%
+    { upTo: Infinity, rate: 0.25 },    // Above NGN 50,000,000 @ 25%
   ],
   personalAllowance: {
     type: 'hybrid',
     value: 200000, // Higher of 20% of gross or ₦200,000
   },
   notes:
-    'Educational purposes only. Not legal or tax advice. Based on Nigeria PAYE 2025 estimates. Consult a tax professional for your specific situation.',
+    'Educational purposes only. Not legal or tax advice. Based on Nigeria Personal Income Tax 2025 rates. Consult a tax professional for your specific situation.',
 };
 
 

@@ -62,7 +62,7 @@ service cloud.firestore {
     
     // Forum Threads
     match /forumThreads/{tid} {
-      allow read: if true; // Public read
+      allow read: if !('isHidden' in resource.data) || resource.data.isHidden == false;
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.title.size() >= 10 &&
@@ -77,7 +77,7 @@ service cloud.firestore {
     
     // Forum Posts
     match /forumPosts/{pid} {
-      allow read: if true; // Public read (hidden posts filtered client-side or via Functions)
+      allow read: if !('isHidden' in resource.data) || resource.data.isHidden == false;
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.bodyMD.size() >= 10 &&

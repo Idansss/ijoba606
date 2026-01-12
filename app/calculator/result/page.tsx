@@ -118,9 +118,12 @@ function ResultPageContent() {
     );
   }
 
+  const isNonSalary = inputs.earnerType === 'non-salary';
   const shareData = {
     title: 'ijoba 606 Tax Calculator',
-    text: `My PAYE estimate is ${formatCurrency(outputs.monthlyTax)}/month on ijoba 606 — check yours.`,
+    text: isNonSalary
+      ? `My Personal Income Tax estimate is ${formatCurrency(outputs.annualTax)} on ijoba 606 — check yours.`
+      : `My Personal Income Tax estimate is ${formatCurrency(outputs.monthlyTax)}/month on ijoba 606 — check yours.`,
     url:
       typeof window !== 'undefined'
         ? window.location.origin + '/calculator'
@@ -137,37 +140,39 @@ function ResultPageContent() {
         <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
-              PAYE summary
+              Personal Income Tax Summary
             </p>
             <h1 className="mt-3 text-4xl font-semibold text-slate-900">
               Here&apos;s your estimated tax footprint.
           </h1>
             <p className="mt-2 text-sm text-slate-500">
-              Print or save this snapshot for your payroll conversations.
+              Print or save this snapshot for your tax planning.
           </p>
         </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className={`mt-10 grid gap-4 ${isNonSalary ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
           <SummaryStat
-              label="Annual tax"
+              label={isNonSalary ? "Total tax" : "Annual tax"}
             value={formatCurrency(outputs.annualTax)}
               icon="₦"
             color="purple"
             delay={0.1}
           />
-          <SummaryStat
-              label="Monthly tax"
-            value={formatCurrency(outputs.monthlyTax)}
-              icon="🗓️"
-            color="blue"
-            delay={0.2}
-          />
+          {!isNonSalary && (
+            <SummaryStat
+                label="Monthly tax"
+              value={formatCurrency(outputs.monthlyTax)}
+                icon="🗓️"
+              color="blue"
+              delay={0.2}
+            />
+          )}
           <SummaryStat
               label="Effective rate"
             value={`${(outputs.effectiveRate * 100).toFixed(2)}%`}
               icon="%"
             color="green"
-            delay={0.3}
+            delay={isNonSalary ? 0.2 : 0.3}
           />
         </div>
 
@@ -182,17 +187,19 @@ function ResultPageContent() {
               delay={0.1}
             />
             <ResultRow
-              label="Annual tax"
+              label={isNonSalary ? "Total tax" : "Annual tax"}
               value={formatCurrency(outputs.annualTax)}
               highlight
               delay={0.2}
             />
-            <ResultRow
-              label="Monthly tax"
-              value={formatCurrency(outputs.monthlyTax)}
-              highlight
-              delay={0.3}
-            />
+            {!isNonSalary && (
+              <ResultRow
+                label="Monthly tax"
+                value={formatCurrency(outputs.monthlyTax)}
+                highlight
+                delay={0.3}
+              />
+            )}
         </div>
 
           <div className="mt-6">
