@@ -11,6 +11,8 @@ import { db } from '@/lib/firebase/config';
 import { ForumReport } from '@/lib/types';
 import { moderateContent } from '@/lib/firebase/functions';
 import { formatDistanceToNow } from 'date-fns';
+import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AdminModerationPage() {
   const router = useRouter();
@@ -125,6 +127,19 @@ export default function AdminModerationPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
+        {/* Breadcrumb */}
+        <AdminBreadcrumb items={[{ label: 'Moderation' }]} />
+
+        {/* Back Button */}
+        <div className="mb-6">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-semibold">Back to Dashboard</span>
+          </Link>
+        </div>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">

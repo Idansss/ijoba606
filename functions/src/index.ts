@@ -545,7 +545,7 @@ export const moderateContent = onCall({ region }, async (request) => {
 ----------------------------------*/
 const GenerateQuestionsSchema = z.object({
   level: z.number().int().min(1).max(3),
-  topic: z.string().optional(),
+  topic: z.string().optional().or(z.literal('')).transform(val => val === '' ? undefined : val),
   count: z.number().int().min(1).max(10).default(1),
   provider: z.enum(['openai', 'gemini', 'template']).default('openai'),
 });
@@ -572,9 +572,14 @@ export const generateQuestions = onCall({ region }, async (request) => {
   }
 
   // Validate input
+  logger.info("Received generateQuestions request", { data: request.data });
   const parsed = GenerateQuestionsSchema.safeParse(request.data);
   if (!parsed.success) {
-    throw new HttpsError("invalid-argument", "Invalid generation data");
+    const errorMessages = parsed.error.issues.map((issue: any) => 
+      `${issue.path.join('.')}: ${issue.message}`
+    ).join(', ');
+    logger.error("Validation failed", { issues: parsed.error.issues, data: request.data });
+    throw new HttpsError("invalid-argument", `Invalid generation data: ${errorMessages}`);
   }
 
   const { level, topic, count, provider } = parsed.data;

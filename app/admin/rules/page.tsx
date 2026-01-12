@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -11,6 +12,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { payeRulesSchema, PayeRulesFormData } from '@/lib/validation/schemas';
 import { computeTax, DEFAULT_PAYE_RULES, formatCurrency } from '@/lib/utils/calculator';
+import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AdminRulesPage() {
   const router = useRouter();
@@ -138,8 +141,20 @@ export default function AdminRulesPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
+        {/* Breadcrumb */}
+        <AdminBreadcrumb items={[{ label: 'PAYE Rules' }]} />
+
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <Link
+              href="/admin"
+              className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm font-semibold">Back to Dashboard</span>
+            </Link>
+          </div>
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             PAYE Rules Configuration
           </h1>

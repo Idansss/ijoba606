@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
@@ -12,6 +13,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { questionSchema, QuestionFormData } from '@/lib/validation/schemas';
 import { generateQuestions } from '@/lib/firebase/functions';
+import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AdminQuestionsPage() {
   const router = useRouter();
@@ -151,12 +154,26 @@ export default function AdminQuestionsPage() {
   const handleGenerateQuestions = async () => {
     setGenerating(true);
     try {
-      const result = await generateQuestions({
-        level: generateLevel,
-        count: generateCount,
-        topic: generateTopic || undefined,
+      // Ensure data types are correct and handle empty strings
+      const requestData: {
+        level: 1 | 2 | 3;
+        count: number;
+        topic?: string;
+        provider: 'openai' | 'gemini' | 'template';
+      } = {
+        level: Number(generateLevel) as 1 | 2 | 3,
+        count: Number(generateCount),
         provider: generateProvider,
-      });
+      };
+      
+      // Only include topic if it's not empty
+      if (generateTopic && generateTopic.trim()) {
+        requestData.topic = generateTopic.trim();
+      }
+      
+      console.log('Sending generateQuestions request:', requestData);
+      
+      const result = await generateQuestions(requestData);
 
       addToast({
         type: 'success',
@@ -197,6 +214,20 @@ export default function AdminQuestionsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
+        {/* Breadcrumb */}
+        <AdminBreadcrumb items={[{ label: 'Question Management' }]} />
+
+        {/* Back Button */}
+        <div className="mb-6">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-semibold">Back to Dashboard</span>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
