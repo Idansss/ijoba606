@@ -143,49 +143,47 @@ export default function Home() {
           </Link>
         </motion.div>
 
-        {process.env.NEXT_PUBLIC_CONSULTANTS_ENABLED === 'true' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Link
+            href="/consultants/request"
+            className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-orange-200 hover:border-orange-400 hover:shadow-xl transition-all relative"
           >
-            <Link
-              href="/consultants/request"
-              className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-orange-200 hover:border-orange-400 hover:shadow-xl transition-all relative"
-            >
-              <div className="absolute top-4 right-4">
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
-                  Coming Soon
-                </span>
-              </div>
-              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
-                💼
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">
-                Talk to a Consultant
-              </h2>
-              <p className="text-gray-600 mb-4">
-                Get 1-on-1 clarity for your own situation. We're onboarding verified experts now.
-              </p>
-              <div className="inline-flex items-center gap-2 text-orange-600 font-semibold">
-                Join Waitlist
-                <svg
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            </Link>
-          </motion.div>
-        )}
+            <div className="absolute top-4 right-4">
+              <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+                Coming Soon
+              </span>
+            </div>
+            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+              💼
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+              Talk to a Consultant
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Get 1-on-1 clarity for your own situation. We're onboarding verified experts now.
+            </p>
+            <div className="inline-flex items-center gap-2 text-orange-600 font-semibold">
+              Join Waitlist
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </Link>
+        </motion.div>
       </div>
 
       {/* Stats Preview (if logged in) */}

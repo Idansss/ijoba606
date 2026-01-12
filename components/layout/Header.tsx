@@ -34,7 +34,7 @@ const navLinks = [
   { href: '/forum', label: 'Forum', icon: MessageCircle },
   { href: '/calculator', label: 'Calculator', icon: Calculator },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { href: '/consultants', label: 'Consultants', icon: Briefcase, featureFlag: 'NEXT_PUBLIC_CONSULTANTS_ENABLED' },
+  { href: '/consultants', label: 'Consultants', icon: Briefcase },
 ];
 
 export function Header() {
@@ -45,13 +45,8 @@ export function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Filter nav links based on feature flags
-  const visibleNavLinks = navLinks.filter((link) => {
-    if (link.featureFlag) {
-      return process.env[link.featureFlag] === 'true';
-    }
-    return true;
-  });
+  // All nav links are visible (feature flags removed for consultants)
+  const visibleNavLinks = navLinks;
 
   useEffect(() => {
     if (!firebaseUser) {
