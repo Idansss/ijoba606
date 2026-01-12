@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   Bell,
+  BookOpen,
   Briefcase,
   Calculator,
   Gamepad2,
@@ -34,6 +35,7 @@ const navLinks = [
   { href: '/forum', label: 'Forum', icon: MessageCircle },
   { href: '/calculator', label: 'Calculator', icon: Calculator },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/glossary', label: 'Glossary', icon: BookOpen },
   { href: '/consultants', label: 'Consultants', icon: Briefcase },
 ];
 

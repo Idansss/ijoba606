@@ -676,14 +676,28 @@ export const generateQuestions = onCall({ region }, async (request) => {
     const questionIds: string[] = [];
 
     // Helper function to remove undefined values (Firestore doesn't accept undefined)
+    // Also handles nested objects and arrays
     const removeUndefined = (obj: any): any => {
-      const cleaned: any = {};
-      for (const [key, value] of Object.entries(obj)) {
-        if (value !== undefined) {
-          cleaned[key] = value;
-        }
+      if (obj === null || obj === undefined) {
+        return null;
       }
-      return cleaned;
+      
+      if (Array.isArray(obj)) {
+        return obj.map(item => removeUndefined(item)).filter(item => item !== undefined);
+      }
+      
+      if (typeof obj === 'object') {
+        const cleaned: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+          if (value !== undefined) {
+            // Recursively clean nested objects
+            cleaned[key] = removeUndefined(value);
+          }
+        }
+        return cleaned;
+      }
+      
+      return obj;
     };
 
     for (const question of questions) {

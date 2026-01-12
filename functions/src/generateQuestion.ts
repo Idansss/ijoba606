@@ -65,20 +65,22 @@ export async function generateQuestionsWithOpenAI(
   };
 
   const levelKey = validated.level as 1 | 2 | 3;
-  const prompt = `Generate ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria.
+  const prompt = `You MUST generate exactly ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria. Return ALL ${validated.count} questions in the JSON array.
 
 Level: ${validated.level} (${levelDescriptions[levelKey]})
 ${validated.topic ? `Topic: ${validated.topic}` : ''}
 
 Requirements:
+- Generate EXACTLY ${validated.count} questions (not just one)
 - Each question must have exactly 4 options
 - Questions can be single-answer (correct: [0]) or multi-answer (correct: [0, 2])
-- Include a clear explanation
+- Include a clear explanation for each question
 - Make questions practical and relevant to Nigerian PAYE system
 - Use Nigerian Naira (₦) currency
 - Questions should test understanding, not just memorization
+- Vary the questions to cover different aspects of the topic
 
-Return a JSON array with this exact structure:
+Return a JSON array with EXACTLY ${validated.count} question objects in this structure:
 [
   {
     "level": ${validated.level},
@@ -88,10 +90,11 @@ Return a JSON array with this exact structure:
     "correct": [0] or [0, 2] (array of correct option indices),
     "explanation": "Clear explanation of the answer",
     "tags": ["tag1", "tag2"]
-  }
+  },
+  ... (repeat for all ${validated.count} questions)
 ]
 
-Only return the JSON array, no other text.`;
+IMPORTANT: Return exactly ${validated.count} questions in the array. Only return the JSON array, no other text.`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -152,7 +155,8 @@ Only return the JSON array, no other text.`;
         ? q.options 
         : ['', '', '', ''];
       
-      return {
+      // Build question object, only including topic if it has a value
+      const questionObj: any = {
         level: validated.level as QuizLevel,
         type: (q.type === 'single' || q.type === 'multi' ? q.type : 'single') as QuestionType,
         prompt: q.prompt || '',
@@ -160,8 +164,15 @@ Only return the JSON array, no other text.`;
         correct: Array.isArray(q.correct) ? q.correct : [0],
         explanation: q.explanation || '',
         tags: Array.isArray(q.tags) ? q.tags : [],
-        topic: q.topic || validated.topic,
       };
+      
+      // Only add topic if it exists (not undefined or empty)
+      const topicValue = q.topic || validated.topic;
+      if (topicValue && topicValue.trim()) {
+        questionObj.topic = topicValue.trim();
+      }
+      
+      return questionObj;
     });
 
     return { questions: validatedQuestions };
@@ -272,11 +283,19 @@ Only return the JSON array, no other text.`;
     try {
       const parsed = JSON.parse(content);
       questions = Array.isArray(parsed) ? parsed : parsed.questions || [];
+      
+      // Ensure we have the requested count (if AI returned fewer, log a warning)
+      if (questions.length < validated.count) {
+        console.warn(`Gemini returned ${questions.length} questions but ${validated.count} were requested`);
+      }
     } catch (parseError) {
       // Try to extract JSON from markdown code blocks
       const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/```\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         questions = JSON.parse(jsonMatch[1]);
+        if (questions.length < validated.count) {
+          console.warn(`Gemini returned ${questions.length} questions but ${validated.count} were requested`);
+        }
       } else {
         throw new Error('Could not parse JSON from response');
       }
@@ -288,7 +307,8 @@ Only return the JSON array, no other text.`;
         ? q.options 
         : ['', '', '', ''];
       
-      return {
+      // Build question object, only including topic if it has a value
+      const questionObj: any = {
         level: validated.level as QuizLevel,
         type: (q.type === 'single' || q.type === 'multi' ? q.type : 'single') as QuestionType,
         prompt: q.prompt || '',
@@ -296,8 +316,15 @@ Only return the JSON array, no other text.`;
         correct: Array.isArray(q.correct) ? q.correct : [0],
         explanation: q.explanation || '',
         tags: Array.isArray(q.tags) ? q.tags : [],
-        topic: q.topic || validated.topic,
       };
+      
+      // Only add topic if it exists (not undefined or empty)
+      const topicValue = q.topic || validated.topic;
+      if (topicValue && topicValue.trim()) {
+        questionObj.topic = topicValue.trim();
+      }
+      
+      return questionObj;
     });
 
     return { questions: validatedQuestions };
@@ -409,11 +436,19 @@ Only return the JSON array, no other text.`;
     try {
       const parsed = JSON.parse(content);
       questions = Array.isArray(parsed) ? parsed : parsed.questions || [];
+      
+      // Ensure we have the requested count (if AI returned fewer, log a warning)
+      if (questions.length < validated.count) {
+        console.warn(`Cursor returned ${questions.length} questions but ${validated.count} were requested`);
+      }
     } catch (parseError) {
       // Try to extract JSON from markdown code blocks
       const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/```\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         questions = JSON.parse(jsonMatch[1]);
+        if (questions.length < validated.count) {
+          console.warn(`Cursor returned ${questions.length} questions but ${validated.count} were requested`);
+        }
       } else {
         throw new Error('Could not parse JSON from response');
       }
@@ -425,7 +460,8 @@ Only return the JSON array, no other text.`;
         ? q.options 
         : ['', '', '', ''];
       
-      return {
+      // Build question object, only including topic if it has a value
+      const questionObj: any = {
         level: validated.level as QuizLevel,
         type: (q.type === 'single' || q.type === 'multi' ? q.type : 'single') as QuestionType,
         prompt: q.prompt || '',
@@ -433,8 +469,15 @@ Only return the JSON array, no other text.`;
         correct: Array.isArray(q.correct) ? q.correct : [0],
         explanation: q.explanation || '',
         tags: Array.isArray(q.tags) ? q.tags : [],
-        topic: q.topic || validated.topic,
       };
+      
+      // Only add topic if it exists (not undefined or empty)
+      const topicValue = q.topic || validated.topic;
+      if (topicValue && topicValue.trim()) {
+        questionObj.topic = topicValue.trim();
+      }
+      
+      return questionObj;
     });
 
     return { questions: validatedQuestions };
@@ -474,9 +517,13 @@ export function generateQuestionsFromTemplate(
   const selected = matchingTemplates.slice(0, request.count || 1);
 
   return {
-    questions: selected.map(t => ({
-      ...t,
-      topic: request.topic,
-    })),
+    questions: selected.map(t => {
+      // Only include topic if it has a value
+      const questionObj: any = { ...t };
+      if (request.topic && request.topic.trim()) {
+        questionObj.topic = request.topic.trim();
+      }
+      return questionObj;
+    }),
   };
 }
