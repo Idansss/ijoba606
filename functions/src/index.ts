@@ -6,6 +6,8 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 
 // Note: CORS is automatically handled for onCall (callable) functions in v2
+// Region configuration for v2 functions
+const region = "us-central1"; // Default region, change if needed
 
 // Initialize Firebase Admin
 initializeApp();
@@ -45,7 +47,9 @@ const CreateThreadSchema = z.object({
 /* ---------------------------------
    CONSULTANT APPLICATION
 ----------------------------------*/
-export const createConsultantApplication = onCall(async (request) => {
+export const createConsultantApplication = onCall(
+  { region },
+  async (request) => {
   const uid = request.auth?.uid ?? null;
 
   const parsed = ConsultantApplicationSchema.safeParse(request.data);
@@ -66,12 +70,15 @@ export const createConsultantApplication = onCall(async (request) => {
   logger.info("Consultant application submitted", { email: data.email });
 
   return { success: true };
-});
+  }
+);
 
 /* ---------------------------------
    CONSULTANT REQUEST (WAITLIST)
 ----------------------------------*/
-export const createConsultantRequest = onCall(async (request) => {
+export const createConsultantRequest = onCall(
+  { region },
+  async (request) => {
   const uid = request.auth?.uid ?? null;
 
   const parsed = ConsultantRequestSchema.safeParse(request.data);
@@ -90,12 +97,13 @@ export const createConsultantRequest = onCall(async (request) => {
   logger.info("Consultant request submitted", { email: data.email });
 
   return { success: true };
-});
+  }
+);
 
 /* ---------------------------------
    FORUM: CREATE THREAD
 ----------------------------------*/
-export const createThread = onCall(async (request) => {
+export const createThread = onCall({ region }, async (request) => {
   if (!request.auth) {
     throw new HttpsError("unauthenticated", "Must be signed in");
   }

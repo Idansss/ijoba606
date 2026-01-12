@@ -8,7 +8,8 @@ let functions: FirebaseFunctions | null = null;
 
 if (app) {
   try {
-    functions = getFunctions(app);
+    // Specify region to match server-side function configuration
+    functions = getFunctions(app, 'us-central1');
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn(
@@ -84,20 +85,34 @@ export async function createThread(data: CreateThreadRequest): Promise<CreateThr
     console.log('createThread error:', { errorCode, errorMessage, errorName, error: errorObj });
     
     // Check for various error conditions that indicate functions aren't available
+    const isCorsError = 
+      errorMessage.includes('CORS') ||
+      errorMessage.includes('Access-Control-Allow-Origin') ||
+      errorString.includes('CORS') ||
+      errorString.includes('Access-Control-Allow-Origin');
+    
     const isFunctionUnavailable = 
       errorCode === 'functions/not-found' ||
       errorCode === 'functions/unavailable' ||
       errorCode === 'internal' ||
       errorCode === 'unavailable' ||
       errorCode === 'cancelled' ||
-      errorMessage.includes('Failed to fetch') ||
-      errorMessage.includes('network') ||
-      errorMessage.includes('ERR_FAILED') ||
-      errorString.includes('Failed to fetch') ||
-      errorString.includes('ERR_FAILED') ||
-      errorString.includes('cloudfunctions.net');
+      (!isCorsError && (
+        errorMessage.includes('Failed to fetch') ||
+        errorMessage.includes('network') ||
+        errorMessage.includes('ERR_FAILED') ||
+        errorString.includes('Failed to fetch') ||
+        errorString.includes('ERR_FAILED') ||
+        errorString.includes('cloudfunctions.net')
+      ));
     
-    // Only use fallback if function is truly unavailable (not CORS errors - those should be fixed by deployment)
+    // If it's a CORS error, the function might be deployed but misconfigured
+    if (isCorsError) {
+      console.error('CORS error detected. Make sure the function is deployed and the region matches:', error);
+      throw new Error('CORS error: The Cloud Function may not be deployed or the region configuration is incorrect. Please deploy functions with: firebase deploy --only functions');
+    }
+    
+    // Only use fallback if function is truly unavailable (not CORS errors)
     if (isFunctionUnavailable) {
       console.log('Cloud Functions unavailable, using Firestore fallback');
       
