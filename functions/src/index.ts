@@ -51,6 +51,24 @@ const CreatePostSchema = z.object({
   mentionedUids: z.array(z.string()).optional(),
 });
 
+const VoteSchema = z.object({
+  targetId: z.string().min(1),
+  value: z.union([z.literal(1), z.literal(-1), z.literal(0)]),
+});
+
+const ReportContentSchema = z.object({
+  targetKind: z.enum(["thread", "post"]),
+  targetId: z.string().min(1),
+  reason: z.string().min(1),
+  text: z.string().optional(),
+});
+
+const ModerateContentSchema = z.object({
+  targetKind: z.enum(["thread", "post"]),
+  targetId: z.string().min(1),
+  action: z.enum(["hide", "unhide", "lock", "unlock", "pin", "unpin", "accept_answer"]),
+});
+
 /* ---------------------------------
    CONSULTANT APPLICATION
 ----------------------------------*/
@@ -210,4 +228,270 @@ export const createPost = onCall({ region }, async (request) => {
   logger.info("Post created", { postId: postRef.id, tid, uid });
 
   return { postId: postRef.id };
+});
+
+/* ---------------------------------
+   FORUM: VOTE THREAD
+----------------------------------*/
+export const voteThread = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = VoteSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid vote data");
+  }
+
+  const { targetId, value } = parsed.data;
+
+  // Get current vote
+  const voteRef = db.doc(`forumVotes/thread/${targetId}/userVotes/${uid}`);
+  const voteSnap = await voteRef.get();
+  const currentVote = voteSnap.exists ? (voteSnap.data()?.value || 0) : 0;
+
+  const voteDiff = value - currentVote;
+
+  // Update user vote
+  if (value === 0) {
+    await voteRef.delete();
+  } else {
+    await voteRef.set({
+      value,
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Update thread vote count
+  const threadRef = db.collection("forumThreads").doc(targetId);
+  await threadRef.update({
+    votes: FieldValue.increment(voteDiff),
+  });
+
+  // Get updated vote count
+  const threadSnap = await threadRef.get();
+  const newVoteCount = threadSnap.data()?.votes || 0;
+
+  logger.info("Thread voted", { targetId, uid, value, newVoteCount });
+
+  return { newVoteCount };
+});
+
+/* ---------------------------------
+   FORUM: VOTE POST
+----------------------------------*/
+export const votePost = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = VoteSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid vote data");
+  }
+
+  const { targetId, value } = parsed.data;
+
+  // Get current vote
+  const voteRef = db.doc(`forumVotes/post/${targetId}/userVotes/${uid}`);
+  const voteSnap = await voteRef.get();
+  const currentVote = voteSnap.exists ? (voteSnap.data()?.value || 0) : 0;
+
+  const voteDiff = value - currentVote;
+
+  // Update user vote
+  if (value === 0) {
+    await voteRef.delete();
+  } else {
+    await voteRef.set({
+      value,
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Update post vote count
+  const postRef = db.collection("forumPosts").doc(targetId);
+  await postRef.update({
+    votes: FieldValue.increment(voteDiff),
+  });
+
+  // Get updated vote count
+  const postSnap = await postRef.get();
+  const newVoteCount = postSnap.data()?.votes || 0;
+
+  logger.info("Post voted", { targetId, uid, value, newVoteCount });
+
+  return { newVoteCount };
+});
+
+/* ---------------------------------
+   FORUM: REPORT CONTENT
+----------------------------------*/
+export const reportContent = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = ReportContentSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid report data");
+  }
+
+  const { targetKind, targetId, reason, text } = parsed.data;
+
+  // Create report
+  const reportRef = await db.collection("forumReports").add({
+    targetKind,
+    targetId,
+    reporterUid: uid,
+    reason,
+    text: text || "",
+    createdAt: FieldValue.serverTimestamp(),
+    status: "open",
+  });
+
+  logger.info("Content reported", {
+    reportId: reportRef.id,
+    targetKind,
+    targetId,
+    reporterUid: uid,
+  });
+
+  return { reportId: reportRef.id };
+});
+
+/* ---------------------------------
+   FORUM: MODERATE CONTENT
+----------------------------------*/
+export const moderateContent = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Check if user is moderator or admin
+  const userRef = db.collection("users").doc(uid);
+  const userSnap = await userRef.get();
+
+  if (!userSnap.exists) {
+    throw new HttpsError("permission-denied", "User not found");
+  }
+
+  const userData = userSnap.data();
+  const role = userData?.role;
+
+  if (role !== "moderator" && role !== "admin") {
+    throw new HttpsError("permission-denied", "Moderator access required");
+  }
+
+  // Validate input
+  const parsed = ModerateContentSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid moderation data");
+  }
+
+  const { targetKind, targetId, action } = parsed.data;
+
+  // Determine collection
+  const collection = targetKind === "thread" ? "forumThreads" : "forumPosts";
+  const targetRef = db.collection(collection).doc(targetId);
+
+  // Verify target exists
+  const targetSnap = await targetRef.get();
+  if (!targetSnap.exists) {
+    throw new HttpsError("not-found", `${targetKind} not found`);
+  }
+
+  // Perform action
+  switch (action) {
+    case "hide":
+      await targetRef.update({
+        isHidden: true,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      break;
+    case "unhide":
+      await targetRef.update({
+        isHidden: false,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      break;
+    case "lock":
+      if (targetKind === "thread") {
+        await targetRef.update({
+          isLocked: true,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        throw new HttpsError("invalid-argument", "Cannot lock posts");
+      }
+      break;
+    case "unlock":
+      if (targetKind === "thread") {
+        await targetRef.update({
+          isLocked: false,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        throw new HttpsError("invalid-argument", "Cannot unlock posts");
+      }
+      break;
+    case "pin":
+      if (targetKind === "thread") {
+        await targetRef.update({
+          isPinned: true,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        throw new HttpsError("invalid-argument", "Cannot pin posts");
+      }
+      break;
+    case "unpin":
+      if (targetKind === "thread") {
+        await targetRef.update({
+          isPinned: false,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        throw new HttpsError("invalid-argument", "Cannot unpin posts");
+      }
+      break;
+    case "accept_answer":
+      if (targetKind === "post") {
+        // Mark this post as accepted answer
+        const postData = targetSnap.data();
+        const threadId = postData?.tid;
+        if (threadId) {
+          // Update thread to mark this as accepted answer
+          await db.collection("forumThreads").doc(threadId).update({
+            acceptedPostId: targetId,
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        }
+      } else {
+        throw new HttpsError("invalid-argument", "Can only accept posts as answers");
+      }
+      break;
+    default:
+      throw new HttpsError("invalid-argument", `Unknown action: ${action}`);
+  }
+
+  logger.info("Content moderated", {
+    targetKind,
+    targetId,
+    action,
+    moderatorUid: uid,
+  });
+
+  return { success: true };
 });
