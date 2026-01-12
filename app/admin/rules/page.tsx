@@ -44,7 +44,7 @@ export default function AdminRulesPage() {
   useEffect(() => {
     if (!authLoading && user?.role !== 'admin') {
       addToast({ type: 'error', message: 'Admin access required' });
-      router.push('/');
+      router.push('/admin/login');
     }
   }, [user, authLoading, router, addToast]);
 

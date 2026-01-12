@@ -224,13 +224,21 @@ export function Header() {
                           <MessageCircle className="h-4 w-4 text-blue-600" />
                           Forum Activity
                         </Link>
-                        {user?.role === 'admin' && (
+                        {user?.role === 'admin' ? (
                           <Link
-                            href="/admin/questions"
+                            href="/admin"
                             className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
                           >
                             <Sparkles className="h-4 w-4" />
                             Admin Panel
+                          </Link>
+                        ) : (
+                          <Link
+                            href="/admin/login"
+                            className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                          >
+                            <Sparkles className="h-4 w-4" />
+                            Admin Access
                           </Link>
                         )}
                         <button

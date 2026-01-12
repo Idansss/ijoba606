@@ -4,7 +4,9 @@ import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
-import { generateQuestionsWithOpenAI, generateQuestionsFromTemplate } from "./generateQuestion";
+import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsFromTemplate } from "./generateQuestion";
+
+// Note: Secrets set via `firebase functions:secrets:set` are automatically available via process.env
 
 // Note: CORS is automatically handled for onCall (callable) functions in v2
 // Region configuration for v2 functions
@@ -545,7 +547,7 @@ const GenerateQuestionsSchema = z.object({
   level: z.number().int().min(1).max(3),
   topic: z.string().optional(),
   count: z.number().int().min(1).max(10).default(1),
-  useAI: z.boolean().default(true),
+  provider: z.enum(['openai', 'gemini', 'template']).default('openai'),
 });
 
 export const generateQuestions = onCall({ region }, async (request) => {
@@ -575,13 +577,13 @@ export const generateQuestions = onCall({ region }, async (request) => {
     throw new HttpsError("invalid-argument", "Invalid generation data");
   }
 
-  const { level, topic, count, useAI } = parsed.data;
+  const { level, topic, count, provider } = parsed.data;
 
   try {
     let questions;
+    let source = provider;
 
-    if (useAI) {
-      // Try AI generation first
+    if (provider === 'openai') {
       try {
         const aiResult = await generateQuestionsWithOpenAI({
           level: level as 1 | 2 | 3,
@@ -589,16 +591,50 @@ export const generateQuestions = onCall({ region }, async (request) => {
           count,
         });
         questions = aiResult.questions;
-        logger.info("Questions generated with AI", { level, topic, count: questions.length });
+        logger.info("Questions generated with OpenAI", { level, topic, count: questions.length });
       } catch (aiError: any) {
-        logger.warn("AI generation failed, using template fallback", { error: aiError?.message });
-        // Fallback to template-based generation
+        logger.warn("OpenAI generation failed, trying Gemini", { error: aiError?.message });
+          // Fallback to Gemini
+          try {
+            const geminiResult = await generateQuestionsWithGemini({
+              level: level as 1 | 2 | 3,
+              topic,
+              count,
+            });
+          questions = geminiResult.questions;
+          source = 'gemini';
+          logger.info("Questions generated with Gemini (fallback)", { level, topic, count: questions.length });
+        } catch (geminiError: any) {
+          logger.warn("Gemini generation also failed, using template fallback", { error: geminiError?.message });
+          // Final fallback to template
+          const templateResult = generateQuestionsFromTemplate({
+            level: level as 1 | 2 | 3,
+            topic,
+            count,
+          });
+          questions = templateResult.questions;
+          source = 'template';
+        }
+      }
+    } else if (provider === 'gemini') {
+      try {
+        const geminiResult = await generateQuestionsWithGemini({
+          level: level as 1 | 2 | 3,
+          topic,
+          count,
+        });
+        questions = geminiResult.questions;
+        logger.info("Questions generated with Gemini", { level, topic, count: questions.length });
+      } catch (geminiError: any) {
+        logger.warn("Gemini generation failed, using template fallback", { error: geminiError?.message });
+        // Fallback to template
         const templateResult = generateQuestionsFromTemplate({
           level: level as 1 | 2 | 3,
           topic,
           count,
         });
         questions = templateResult.questions;
+        source = 'template';
       }
     } else {
       // Use template-based generation
@@ -620,7 +656,7 @@ export const generateQuestions = onCall({ region }, async (request) => {
         ...question,
         createdAt: FieldValue.serverTimestamp(),
         createdBy: uid,
-        source: useAI ? "ai" : "template",
+        source: source,
       });
       questionIds.push(docRef.id);
     }

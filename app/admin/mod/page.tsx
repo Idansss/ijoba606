@@ -23,7 +23,7 @@ export default function AdminModerationPage() {
   useEffect(() => {
     if (!authLoading && user?.role !== 'moderator' && user?.role !== 'admin') {
       addToast({ type: 'error', message: 'Moderator access required' });
-      router.push('/');
+      router.push('/admin/login');
     }
   }, [user, authLoading, router, addToast]);
 

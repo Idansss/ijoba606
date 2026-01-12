@@ -26,7 +26,7 @@ export default function AdminQuestionsPage() {
   const [generateLevel, setGenerateLevel] = useState<QuizLevel>(1);
   const [generateCount, setGenerateCount] = useState(5);
   const [generateTopic, setGenerateTopic] = useState('');
-  const [useAI, setUseAI] = useState(true);
+  const [generateProvider, setGenerateProvider] = useState<'openai' | 'gemini' | 'template'>('openai');
 
   const {
     register,
@@ -71,7 +71,7 @@ export default function AdminQuestionsPage() {
   useEffect(() => {
     if (!authLoading && user?.role !== 'admin') {
       addToast({ type: 'error', message: 'Admin access required' });
-      router.push('/');
+      router.push('/admin/login');
     }
   }, [user, authLoading, router, addToast]);
 
@@ -155,7 +155,7 @@ export default function AdminQuestionsPage() {
         level: generateLevel,
         count: generateCount,
         topic: generateTopic || undefined,
-        useAI,
+        provider: generateProvider,
       });
 
       addToast({
@@ -511,17 +511,24 @@ export default function AdminQuestionsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id="useAI"
-                        checked={useAI}
-                        onChange={(e) => setUseAI(e.target.checked)}
-                        className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                      />
-                      <label htmlFor="useAI" className="text-sm text-gray-700">
-                        Use AI (OpenAI) - Requires API key. Uncheck to use template-based generation.
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        AI Provider
                       </label>
+                      <select
+                        value={generateProvider}
+                        onChange={(e) => setGenerateProvider(e.target.value as 'openai' | 'gemini' | 'template')}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      >
+                        <option value="openai">OpenAI (GPT-4o-mini) - Requires OPENAI_API_KEY</option>
+                        <option value="gemini">Google Gemini (1.5 Flash) - Requires GEMINI_API_KEY</option>
+                        <option value="template">Template-based (Free, limited variety)</option>
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {generateProvider === 'openai' && 'Add OPENAI_API_KEY in Firebase Console → Functions → Configuration'}
+                        {generateProvider === 'gemini' && 'Add GEMINI_API_KEY in Firebase Console → Functions → Configuration'}
+                        {generateProvider === 'template' && 'Uses pre-written templates (no API key needed)'}
+                      </p>
                     </div>
 
                     <div className="flex gap-3 mt-6">
