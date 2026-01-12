@@ -44,6 +44,13 @@ const CreateThreadSchema = z.object({
   tags: z.array(z.string()).min(1).max(3),
 });
 
+const CreatePostSchema = z.object({
+  tid: z.string().min(1),
+  bodyMD: z.string().min(10).max(3000),
+  parentPostId: z.string().optional(),
+  mentionedUids: z.array(z.string()).optional(),
+});
+
 /* ---------------------------------
    CONSULTANT APPLICATION
 ----------------------------------*/
@@ -148,4 +155,59 @@ export const createThread = onCall({ region }, async (request) => {
   logger.info("Thread created", { threadId: threadRef.id, uid });
 
   return { threadId: threadRef.id };
+});
+
+/* ---------------------------------
+   FORUM: CREATE POST (REPLY)
+----------------------------------*/
+export const createPost = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = CreatePostSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid post data");
+  }
+
+  const { tid, bodyMD, parentPostId, mentionedUids } = parsed.data;
+
+  // Check if thread exists and is not locked
+  const threadRef = db.collection("forumThreads").doc(tid);
+  const threadSnap = await threadRef.get();
+
+  if (!threadSnap.exists) {
+    throw new HttpsError("not-found", "Thread not found");
+  }
+
+  const threadData = threadSnap.data();
+  if (threadData?.isLocked) {
+    throw new HttpsError("failed-precondition", "Thread is locked");
+  }
+
+  // Create post
+  const postRef = await db.collection("forumPosts").add({
+    tid,
+    uid,
+    bodyMD: bodyMD.trim(),
+    parentPostId: parentPostId || null,
+    mentionedUids: mentionedUids || [],
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    votes: 0,
+    isHidden: false,
+  });
+
+  // Update thread reply count
+  await threadRef.update({
+    replyCount: FieldValue.increment(1),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+
+  logger.info("Post created", { postId: postRef.id, tid, uid });
+
+  return { postId: postRef.id };
 });
