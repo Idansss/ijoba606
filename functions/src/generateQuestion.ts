@@ -523,37 +523,174 @@ IMPORTANT: Return exactly ${validated.count} questions in the array. Only return
 export function generateQuestionsFromTemplate(
   request: GenerateQuestionRequest
 ): GenerateQuestionResponse {
-  // This is a simple template-based generator as fallback
-  // You can expand this with more templates
-  const templates: Omit<Question, 'id'>[] = [
-    {
-      level: 1 as QuizLevel,
-      type: 'single' as QuestionType,
-      prompt: 'What is the personal allowance for PAYE in Nigeria?',
-      options: [
-        '₦200,000 per year',
-        '₦300,000 per year',
-        '₦500,000 per year',
-        'No personal allowance'
-      ] as [string, string, string, string],
-      correct: [0],
-      explanation: 'The personal allowance in Nigeria is typically ₦200,000 per year.',
-      tags: ['basics', 'allowance'],
-    },
-    // Add more templates as needed
-  ];
+  const validated = QuestionGenerationSchema.parse({
+    level: request.level,
+    topic: request.topic,
+    count: request.count || 1,
+  });
 
-  const matchingTemplates = templates.filter(t => t.level === request.level);
-  const selected = matchingTemplates.slice(0, request.count || 1);
+  const level = validated.level;
+  const count = validated.count;
+  
+  // Generate questions dynamically based on level
+  const questions: Omit<Question, 'id'>[] = [];
+  
+  const levelTemplates: Record<1 | 2 | 3, Array<Omit<Question, 'id'>>> = {
+    1: [
+      {
+        level: 1 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What is the personal allowance for PAYE in Nigeria?',
+        options: [
+          '₦200,000 per year',
+          '₦300,000 per year',
+          '₦500,000 per year',
+          'No personal allowance'
+        ] as [string, string, string, string],
+        correct: [0],
+        explanation: 'The personal allowance in Nigeria is typically ₦200,000 per year.',
+        tags: ['basics', 'allowance'],
+      },
+      {
+        level: 1 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What does PAYE stand for?',
+        options: [
+          'Pay As You Earn',
+          'Pay After Year End',
+          'Personal Annual Yearly Earnings',
+          'Progressive Annual Yearly Estimate'
+        ] as [string, string, string, string],
+        correct: [0],
+        explanation: 'PAYE stands for Pay As You Earn, a method of collecting income tax from employees.',
+        tags: ['basics', 'definition'],
+      },
+      {
+        level: 1 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'Who is responsible for deducting PAYE tax?',
+        options: [
+          'The employee',
+          'The employer',
+          'The tax authority',
+          'The bank'
+        ] as [string, string, string, string],
+        correct: [1],
+        explanation: 'The employer is responsible for deducting PAYE tax from employees\' salaries.',
+        tags: ['basics', 'employer'],
+      },
+    ],
+    2: [
+      {
+        level: 2 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What is the tax rate for income between ₦300,000 and ₦600,000 in Nigeria?',
+        options: [
+          '7%',
+          '11%',
+          '15%',
+          '19%'
+        ] as [string, string, string, string],
+        correct: [1],
+        explanation: 'Income between ₦300,000 and ₦600,000 is taxed at 11% in Nigeria.',
+        tags: ['intermediate', 'tax-rates'],
+      },
+      {
+        level: 2 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What percentage of gross income is typically used for Consolidated Relief Allowance (CRA)?',
+        options: [
+          '1% or ₦200,000, whichever is higher, plus 20%',
+          '5% or ₦100,000, whichever is higher',
+          '10% of gross income',
+          '15% of gross income'
+        ] as [string, string, string, string],
+        correct: [0],
+        explanation: 'CRA is calculated as ₦200,000 or 1% of gross income (whichever is higher), plus 20% of gross income.',
+        tags: ['intermediate', 'allowances', 'CRA'],
+      },
+      {
+        level: 2 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'If an employee earns ₦500,000 annually, what is their taxable income after CRA?',
+        options: [
+          '₦200,000',
+          '₦300,000',
+          '₦400,000',
+          '₦500,000'
+        ] as [string, string, string, string],
+        correct: [1],
+        explanation: 'CRA = max(₦200,000, 1% of ₦500,000) + 20% of ₦500,000 = ₦200,000 + ₦100,000 = ₦300,000. Taxable income = ₦500,000 - ₦300,000 = ₦200,000.',
+        tags: ['intermediate', 'calculations'],
+      },
+    ],
+    3: [
+      {
+        level: 3 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What is the highest tax bracket rate for personal income tax in Nigeria?',
+        options: [
+          '19%',
+          '21%',
+          '24%',
+          '30%'
+        ] as [string, string, string, string],
+        correct: [2],
+        explanation: 'The highest tax bracket in Nigeria is 24% for income above ₦3,200,000 annually.',
+        tags: ['advanced', 'tax-brackets'],
+      },
+      {
+        level: 3 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'How is PAYE calculated for an employee with multiple income sources?',
+        options: [
+          'Only the primary income is taxed',
+          'All income sources are combined and taxed together',
+          'Each source is taxed separately',
+          'Only the highest income source is taxed'
+        ] as [string, string, string, string],
+        correct: [1],
+        explanation: 'All income sources are combined to determine the total taxable income, which is then taxed according to the progressive tax brackets.',
+        tags: ['advanced', 'multiple-income'],
+      },
+      {
+        level: 3 as QuizLevel,
+        type: 'single' as QuestionType,
+        prompt: 'What happens if an employer fails to remit PAYE deductions to the tax authority?',
+        options: [
+          'Nothing, it\'s optional',
+          'The employee is responsible',
+          'The employer faces penalties and interest',
+          'Only a warning is issued'
+        ] as [string, string, string, string],
+        correct: [2],
+        explanation: 'Employers who fail to remit PAYE deductions face penalties, interest charges, and potential legal action from the tax authority.',
+        tags: ['advanced', 'compliance', 'penalties'],
+      },
+    ],
+  };
+
+  // Get templates for the requested level
+  const availableTemplates = levelTemplates[level as 1 | 2 | 3] || levelTemplates[1];
+  
+  // Generate the requested number of questions by cycling through templates
+  for (let i = 0; i < count; i++) {
+    const template = availableTemplates[i % availableTemplates.length];
+    const questionObj: any = {
+      ...template,
+      // Create variation by adding index to make questions unique
+      prompt: i > 0 ? `${template.prompt} (Question ${i + 1})` : template.prompt,
+    };
+    
+    // Only include topic if it has a value
+    if (validated.topic && validated.topic.trim()) {
+      questionObj.topic = validated.topic.trim();
+    }
+    
+    questions.push(questionObj);
+  }
 
   return {
-    questions: selected.map(t => {
-      // Only include topic if it has a value
-      const questionObj: any = { ...t };
-      if (request.topic && request.topic.trim()) {
-        questionObj.topic = request.topic.trim();
-      }
-      return questionObj;
-    }),
+    questions,
   };
 }

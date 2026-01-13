@@ -690,6 +690,24 @@ export const generateQuestions = onCall({ region }, async (request) => {
         count,
       });
       questions = templateResult.questions;
+      source = 'template';
+    }
+
+    // Validate that we have questions
+    if (!questions || questions.length === 0) {
+      logger.error("No questions generated", { level, topic, count, provider });
+      throw new HttpsError("internal", "Failed to generate questions. Please try again or use a different provider.");
+    }
+
+    // Log warning if fewer questions than requested
+    if (questions.length < count) {
+      logger.warn("Generated fewer questions than requested", {
+        requested: count,
+        generated: questions.length,
+        level,
+        topic,
+        provider,
+      });
     }
 
     // Save questions to Firestore
@@ -723,13 +741,27 @@ export const generateQuestions = onCall({ region }, async (request) => {
 
     for (const question of questions) {
       const docRef = db.collection("questions").doc();
-      // Remove undefined values before saving
-      const cleanedQuestion = removeUndefined({
-        ...question,
+      // Build question object, explicitly excluding undefined topic
+      const questionToSave: any = {
+        level: question.level,
+        type: question.type,
+        prompt: question.prompt,
+        options: question.options,
+        correct: question.correct,
+        explanation: question.explanation,
+        tags: question.tags || [],
         createdAt: FieldValue.serverTimestamp(),
         createdBy: uid,
         source: source,
-      });
+      };
+      
+      // Only add topic if it exists and is not empty
+      if (question.topic && typeof question.topic === 'string' && question.topic.trim()) {
+        questionToSave.topic = question.topic.trim();
+      }
+      
+      // Remove any remaining undefined values
+      const cleanedQuestion = removeUndefined(questionToSave);
       batch.set(docRef, cleanedQuestion);
       questionIds.push(docRef.id);
     }
