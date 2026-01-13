@@ -110,6 +110,9 @@ export interface ForumPost {
   isHidden: boolean;
   parentPostId?: string;
   mentionedUids?: string[];
+  moderationReason?: string; // Reason why content was moderated
+  moderatedBy?: string; // UID of moderator
+  moderatedAt?: Timestamp; // When moderation action was taken
 }
 
 export interface ForumVote {

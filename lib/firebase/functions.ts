@@ -237,7 +237,8 @@ export async function reportContent(data: ReportContentRequest): Promise<ReportC
 export interface ModerateContentRequest {
   targetKind: 'thread' | 'post';
   targetId: string;
-  action: 'hide' | 'unhide' | 'lock' | 'unlock' | 'pin' | 'unpin' | 'accept_answer';
+  action: 'hide' | 'unhide' | 'lock' | 'unlock' | 'pin' | 'unpin' | 'accept_answer' | 'delete';
+  reason?: string; // Optional reason for moderation action
 }
 
 export interface ModerateContentResponse {

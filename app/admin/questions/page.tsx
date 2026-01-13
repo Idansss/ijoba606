@@ -72,9 +72,18 @@ export default function AdminQuestionsPage() {
   }, [addToast]);
 
   useEffect(() => {
-    if (!authLoading && user?.role !== 'admin') {
-      addToast({ type: 'error', message: 'Admin access required' });
-      router.push('/admin/login');
+    if (!authLoading) {
+      // Block anonymous users
+      if (user?.anon === true) {
+        addToast({ type: 'error', message: 'Admin access requires a registered account. Please sign in with Google.' });
+        router.push('/');
+        return;
+      }
+      // Block non-admin users
+      if (user?.role !== 'admin') {
+        addToast({ type: 'error', message: 'Admin access required' });
+        router.push('/admin/login');
+      }
     }
   }, [user, authLoading, router, addToast]);
 

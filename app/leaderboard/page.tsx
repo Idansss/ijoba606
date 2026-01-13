@@ -74,7 +74,8 @@ export default function LeaderboardPage() {
   };
 
   const entries = activeTab === 'weekly' ? weeklyEntries : alltimeEntries;
-  const isEnabled = process.env.NEXT_PUBLIC_LEADERBOARD_ENABLED === 'true';
+  // Enable leaderboard by default (remove environment variable check)
+  const isEnabled = true; // process.env.NEXT_PUBLIC_LEADERBOARD_ENABLED === 'true';
 
   const getMedal = (rank: number) => {
     if (rank === 1) return '🥇';

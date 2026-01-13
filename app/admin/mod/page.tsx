@@ -23,9 +23,18 @@ export default function AdminModerationPage() {
   const [filter, setFilter] = useState<'open' | 'actioned'>('open');
 
   useEffect(() => {
-    if (!authLoading && user?.role !== 'moderator' && user?.role !== 'admin') {
-      addToast({ type: 'error', message: 'Moderator access required' });
-      router.push('/admin/login');
+    if (!authLoading) {
+      // Block anonymous users
+      if (user?.anon === true) {
+        addToast({ type: 'error', message: 'Moderator access requires a registered account. Please sign in with Google.' });
+        router.push('/');
+        return;
+      }
+      // Block non-moderator/admin users
+      if (user?.role !== 'moderator' && user?.role !== 'admin') {
+        addToast({ type: 'error', message: 'Moderator access required' });
+        router.push('/admin/login');
+      }
     }
   }, [user, authLoading, router, addToast]);
 
@@ -61,9 +70,12 @@ export default function AdminModerationPage() {
     }
   }, [user, filter, fetchReports]);
 
+  const [moderationReason, setModerationReason] = useState<Record<string, string>>({});
+  const [showReasonInput, setShowReasonInput] = useState<Record<string, boolean>>({});
+
   const handleModerateAction = async (
     report: ForumReport,
-    action: 'hide' | 'unhide' | 'lock' | 'unlock' | 'pin' | 'unpin'
+    action: 'hide' | 'unhide' | 'lock' | 'unlock' | 'pin' | 'unpin' | 'delete'
   ) => {
     try {
       if (!db) {
@@ -73,15 +85,31 @@ export default function AdminModerationPage() {
         });
         return;
       }
+
+      // Require reason for hide and delete actions
+      const requiresReason = ['hide', 'delete'].includes(action);
+      const reason = moderationReason[report.id || ''] || '';
+
+      if (requiresReason && !reason.trim()) {
+        addToast({ type: 'error', message: 'Please provide a reason for this action' });
+        setShowReasonInput({ ...showReasonInput, [report.id || '']: true });
+        return;
+      }
+
       await moderateContent({
         targetKind: report.targetKind,
         targetId: report.targetId,
         action,
+        reason: requiresReason ? reason.trim() : undefined,
       });
 
       // Mark report as actioned
       const reportRef = doc(db, 'forumReports', report.id!);
       await updateDoc(reportRef, { status: 'actioned' });
+
+      // Clear reason input
+      setModerationReason({ ...moderationReason, [report.id || '']: '' });
+      setShowReasonInput({ ...showReasonInput, [report.id || '']: false });
 
       addToast({ type: 'success', message: `Action completed: ${action}` });
       fetchReports();
@@ -264,35 +292,75 @@ export default function AdminModerationPage() {
 
                   {/* Actions */}
                   {report.status === 'open' && (
-                    <div className="flex flex-wrap gap-2 pt-4 border-t-2 border-gray-200">
-                      <button
-                        onClick={() => handleModerateAction(report, 'hide')}
-                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-semibold hover:bg-red-200 transition-all"
-                      >
-                        Hide Content
-                      </button>
-                      {report.targetKind === 'thread' && (
-                        <>
-                          <button
-                            onClick={() => handleModerateAction(report, 'lock')}
-                            className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg text-sm font-semibold hover:bg-orange-200 transition-all"
-                          >
-                            Lock Thread
-                          </button>
-                          <button
-                            onClick={() => handleModerateAction(report, 'pin')}
-                            className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-200 transition-all"
-                          >
-                            Pin Thread
-                          </button>
-                        </>
+                    <div className="pt-4 border-t-2 border-gray-200">
+                      {/* Reason input for hide/delete */}
+                      {(showReasonInput[report.id || ''] || false) && (
+                        <div className="mb-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Reason for moderation (required):
+                          </label>
+                          <textarea
+                            value={moderationReason[report.id || ''] || ''}
+                            onChange={(e) =>
+                              setModerationReason({
+                                ...moderationReason,
+                                [report.id || '']: e.target.value,
+                              })
+                            }
+                            placeholder="Explain why this content is being moderated..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            rows={3}
+                          />
+                        </div>
                       )}
-                      <button
-                        onClick={() => handleDismissReport(report.id!)}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-all"
-                      >
-                        Dismiss Report
-                      </button>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => {
+                            if (!showReasonInput[report.id || '']) {
+                              setShowReasonInput({ ...showReasonInput, [report.id || '']: true });
+                            } else {
+                              handleModerateAction(report, 'hide');
+                            }
+                          }}
+                          className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-semibold hover:bg-red-200 transition-all"
+                        >
+                          {showReasonInput[report.id || ''] ? 'Confirm Hide' : 'Hide Content'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (!showReasonInput[report.id || '']) {
+                              setShowReasonInput({ ...showReasonInput, [report.id || '']: true });
+                            } else {
+                              handleModerateAction(report, 'delete');
+                            }
+                          }}
+                          className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all"
+                        >
+                          {showReasonInput[report.id || ''] ? 'Confirm Delete' : 'Delete Content'}
+                        </button>
+                        {report.targetKind === 'thread' && (
+                          <>
+                            <button
+                              onClick={() => handleModerateAction(report, 'lock')}
+                              className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg text-sm font-semibold hover:bg-orange-200 transition-all"
+                            >
+                              Lock Thread
+                            </button>
+                            <button
+                              onClick={() => handleModerateAction(report, 'pin')}
+                              className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-200 transition-all"
+                            >
+                              Pin Thread
+                            </button>
+                          </>
+                        )}
+                        <button
+                          onClick={() => handleDismissReport(report.id!)}
+                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-all"
+                        >
+                          Dismiss Report
+                        </button>
+                      </div>
                     </div>
                   )}
                 </motion.div>

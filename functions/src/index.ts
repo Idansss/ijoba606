@@ -69,7 +69,8 @@ const ReportContentSchema = z.object({
 const ModerateContentSchema = z.object({
   targetKind: z.enum(["thread", "post"]),
   targetId: z.string().min(1),
-  action: z.enum(["hide", "unhide", "lock", "unlock", "pin", "unpin", "accept_answer"]),
+  action: z.enum(["hide", "unhide", "lock", "unlock", "pin", "unpin", "accept_answer", "delete"]),
+  reason: z.string().optional(), // Reason for moderation action
 });
 
 /* ---------------------------------
@@ -444,7 +445,7 @@ export const moderateContent = onCall({ region }, async (request) => {
     throw new HttpsError("invalid-argument", "Invalid moderation data");
   }
 
-  const { targetKind, targetId, action } = parsed.data;
+  const { targetKind, targetId, action, reason } = parsed.data;
 
   // Determine collection
   const collection = targetKind === "thread" ? "forumThreads" : "forumPosts";
@@ -456,20 +457,40 @@ export const moderateContent = onCall({ region }, async (request) => {
     throw new HttpsError("not-found", `${targetKind} not found`);
   }
 
+  // Prepare moderation metadata
+  const moderationData: any = {
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+  
+  // Add reason and moderator info for actions that modify content
+  if (reason && reason.trim() && ['hide', 'delete'].includes(action)) {
+    moderationData.moderationReason = reason.trim();
+    moderationData.moderatedBy = uid;
+    moderationData.moderatedAt = FieldValue.serverTimestamp();
+  }
+
   // Perform action
   switch (action) {
     case "hide":
       await targetRef.update({
         isHidden: true,
-        updatedAt: FieldValue.serverTimestamp(),
+        ...moderationData,
       });
       break;
     case "unhide":
       await targetRef.update({
         isHidden: false,
+        moderationReason: FieldValue.delete(), // Remove reason when unhiding
+        moderatedBy: FieldValue.delete(),
+        moderatedAt: FieldValue.delete(),
         updatedAt: FieldValue.serverTimestamp(),
       });
       break;
+    case "delete":
+      // Delete the content
+      await targetRef.delete();
+      logger.info("Content deleted", { targetKind, targetId, uid, reason });
+      return { success: true, deleted: true };
     case "lock":
       if (targetKind === "thread") {
         await targetRef.update({
@@ -730,4 +751,143 @@ export const generateQuestions = onCall({ region }, async (request) => {
     logger.error("Error generating questions", { error: error?.message, level, topic });
     throw new HttpsError("internal", `Failed to generate questions: ${error?.message || "Unknown error"}`);
   }
+});
+
+/* ---------------------------------
+   QUIZ: SUBMIT ROUND (SCORING)
+----------------------------------*/
+const SubmitRoundSchema = z.object({
+  level: z.number().int().min(1).max(3),
+  questionIds: z.array(z.string()).length(3),
+  answers: z.array(z.object({
+    questionId: z.string(),
+    selectedOptions: z.array(z.number()),
+    isCorrect: z.boolean(),
+    attempted: z.boolean(),
+  })).length(3),
+});
+
+export const submitRound = onCall({ region }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
+
+  const uid = request.auth.uid;
+
+  // Validate input
+  const parsed = SubmitRoundSchema.safeParse(request.data);
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", "Invalid round data");
+  }
+
+  const { level, questionIds, answers } = parsed.data;
+
+  // Calculate score
+  let correctCount = 0;
+  let attemptCount = 0;
+
+  for (const answer of answers) {
+    if (answer.attempted) attemptCount++;
+    if (answer.isCorrect) correctCount++;
+  }
+
+  const totalScore = correctCount * 10 + attemptCount * 2;
+
+  // Create round document
+  const roundRef = await db.collection("rounds").add({
+    uid,
+    level,
+    questionIds,
+    answers,
+    correctCount,
+    attemptCount,
+    totalScore,
+    startedAt: FieldValue.serverTimestamp(),
+    finishedAt: FieldValue.serverTimestamp(),
+  });
+
+  // Get or create profile
+  const profileRef = db.collection("profiles").doc(uid);
+  const profileSnap = await profileRef.get();
+  const profile = profileSnap.exists ? profileSnap.data() : null;
+
+  // Update streak (Africa/Lagos timezone)
+  const { formatInTimeZone } = await import("date-fns-tz");
+  const today = formatInTimeZone(new Date(), "Africa/Lagos", "yyyy-MM-dd");
+  const lastPlayed = profile?.lastPlayedLagosDate || "";
+
+  let newStreak = 1;
+  if (lastPlayed === today) {
+    newStreak = profile?.streakCount || 1;
+  } else if (lastPlayed) {
+    // Check if consecutive day
+    const prevDate = new Date(lastPlayed);
+    const currDate = new Date(today);
+    const diffTime = currDate.getTime() - prevDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays === 1) {
+      newStreak = (profile?.streakCount || 0) + 1;
+    }
+  }
+
+  const bestStreak = Math.max(newStreak, profile?.bestStreak || 0);
+  const newTotalPoints = (profile?.totalPoints || 0) + totalScore;
+
+  // Update profile
+  await profileRef.set(
+    {
+      uid,
+      totalPoints: newTotalPoints,
+      streakCount: newStreak,
+      bestStreak,
+      lastPlayedLagosDate: today,
+      roundsCompleted: (profile?.roundsCompleted || 0) + 1,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  // Update leaderboards
+  const weeklyRef = db.collection("leaderboards").doc("weekly").collection("entries").doc(uid);
+  const alltimeRef = db.collection("leaderboards").doc("alltime").collection("entries").doc(uid);
+
+  // Get user handle
+  const userRef = db.collection("users").doc(uid);
+  const userSnap = await userRef.get();
+  const handle = userSnap.exists ? userSnap.data()?.handle || "Anonymous" : "Anonymous";
+
+  await weeklyRef.set(
+    {
+      uid,
+      handle,
+      totalPoints: newTotalPoints,
+      bestStreak,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  await alltimeRef.set(
+    {
+      uid,
+      handle,
+      totalPoints: newTotalPoints,
+      bestStreak,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  logger.info("Round submitted", { uid, level, totalScore, newStreak });
+
+  return {
+    round: {
+      id: roundRef.id,
+      totalScore,
+      correctCount,
+      attemptCount,
+    },
+    newBadges: [], // Badge evaluation can be added later
+    streakCount: newStreak,
+  };
 });

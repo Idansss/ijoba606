@@ -68,7 +68,7 @@ export async function generateQuestionsWithOpenAI(
   const prompt = `You MUST generate exactly ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria. Return ALL ${validated.count} questions in the JSON array.
 
 Level: ${validated.level} (${levelDescriptions[levelKey]})
-${validated.topic ? `Topic: ${validated.topic}` : ''}
+${validated.topic && validated.topic.trim() ? `Topic: ${validated.topic}` : 'Topic: General PAYE concepts (no specific topic required - generate diverse questions covering various aspects)'}
 
 Requirements:
 - Generate EXACTLY ${validated.count} questions (not just one)
@@ -108,15 +108,15 @@ IMPORTANT: Return exactly ${validated.count} questions in the array. Only return
         messages: [
           {
             role: 'system',
-            content: 'You are an expert in Nigerian tax law, specifically PAYE (Pay As You Earn) taxation. Generate accurate, educational quiz questions.',
+            content: 'You are an expert in Nigerian tax law, specifically PAYE (Pay As You Earn) taxation. Generate accurate, educational quiz questions. ALWAYS return a JSON array of questions, never a single object. If asked for multiple questions, return ALL of them in the array.',
           },
           {
             role: 'user',
             content: prompt,
           },
         ],
-        temperature: 0.7,
-        response_format: { type: 'json_object' },
+        temperature: 0.9, // Higher temperature for more variety
+        // Don't use json_object format - we need arrays
       }),
     });
 
@@ -136,13 +136,37 @@ IMPORTANT: Return exactly ${validated.count} questions in the array. Only return
     let questions: Omit<Question, 'id'>[];
     try {
       const parsed = JSON.parse(content);
-      // OpenAI might wrap in an object with a "questions" key
-      questions = Array.isArray(parsed) ? parsed : parsed.questions || [];
+      // OpenAI might wrap in an object with a "questions" key, or return array directly
+      if (Array.isArray(parsed)) {
+        questions = parsed;
+      } else if (parsed.questions && Array.isArray(parsed.questions)) {
+        questions = parsed.questions;
+      } else if (parsed.data && Array.isArray(parsed.data)) {
+        questions = parsed.data;
+      } else {
+        // If it's a single object, wrap it in an array
+        questions = [parsed];
+      }
+      
+      // Ensure we have the requested count (if AI returned fewer, log a warning)
+      if (questions.length < validated.count) {
+        console.warn(`OpenAI returned ${questions.length} questions but ${validated.count} were requested`);
+      }
     } catch (parseError) {
       // Try to extract JSON from markdown code blocks
       const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/```\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
-        questions = JSON.parse(jsonMatch[1]);
+        const extracted = JSON.parse(jsonMatch[1]);
+        if (Array.isArray(extracted)) {
+          questions = extracted;
+        } else if (extracted.questions && Array.isArray(extracted.questions)) {
+          questions = extracted.questions;
+        } else {
+          questions = [extracted];
+        }
+        if (questions.length < validated.count) {
+          console.warn(`OpenAI returned ${questions.length} questions but ${validated.count} were requested`);
+        }
       } else {
         throw new Error('Could not parse JSON from response');
       }
@@ -211,20 +235,22 @@ export async function generateQuestionsWithGemini(
     3: 'advanced scenarios and complex tax situations',
   };
 
-  const prompt = `Generate ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria.
+  const prompt = `You MUST generate exactly ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria. Return ALL ${validated.count} questions in the JSON array.
 
 Level: ${validated.level} (${levelDescriptions[levelKey]})
-${validated.topic ? `Topic: ${validated.topic}` : ''}
+${validated.topic ? `Topic: ${validated.topic}` : 'Topic: General PAYE concepts (no specific topic required)'}
 
 Requirements:
+- Generate EXACTLY ${validated.count} questions (not just one)
 - Each question must have exactly 4 options
 - Questions can be single-answer (correct: [0]) or multi-answer (correct: [0, 2])
-- Include a clear explanation
+- Include a clear explanation for each question
 - Make questions practical and relevant to Nigerian PAYE system
 - Use Nigerian Naira (₦) currency
 - Questions should test understanding, not just memorization
+- Vary the questions to cover different aspects${validated.topic ? ` of ${validated.topic}` : ' of PAYE'}
 
-Return a JSON array with this exact structure:
+Return a JSON array with EXACTLY ${validated.count} question objects in this structure:
 [
   {
     "level": ${validated.level},
@@ -234,10 +260,11 @@ Return a JSON array with this exact structure:
     "correct": [0] or [0, 2] (array of correct option indices),
     "explanation": "Clear explanation of the answer",
     "tags": ["tag1", "tag2"]
-  }
+  },
+  ... (repeat for all ${validated.count} questions)
 ]
 
-Only return the JSON array, no other text.`;
+IMPORTANT: Return exactly ${validated.count} questions in the array. Only return the JSON array, no other text.`;
 
   try {
     // Use Gemini API (REST)
@@ -360,20 +387,22 @@ export async function generateQuestionsWithCursor(
     3: 'advanced scenarios and complex tax situations',
   };
 
-  const prompt = `Generate ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria.
+  const prompt = `You MUST generate exactly ${validated.count} multiple-choice quiz question(s) about PAYE (Pay As You Earn) tax in Nigeria. Return ALL ${validated.count} questions in the JSON array.
 
 Level: ${validated.level} (${levelDescriptions[levelKey]})
-${validated.topic ? `Topic: ${validated.topic}` : ''}
+${validated.topic ? `Topic: ${validated.topic}` : 'Topic: General PAYE concepts (no specific topic required)'}
 
 Requirements:
+- Generate EXACTLY ${validated.count} questions (not just one)
 - Each question must have exactly 4 options
 - Questions can be single-answer (correct: [0]) or multi-answer (correct: [0, 2])
-- Include a clear explanation
+- Include a clear explanation for each question
 - Make questions practical and relevant to Nigerian PAYE system
 - Use Nigerian Naira (₦) currency
 - Questions should test understanding, not just memorization
+- Vary the questions to cover different aspects${validated.topic ? ` of ${validated.topic}` : ' of PAYE'}
 
-Return a JSON array with this exact structure:
+Return a JSON array with EXACTLY ${validated.count} question objects in this structure:
 [
   {
     "level": ${validated.level},
@@ -383,10 +412,11 @@ Return a JSON array with this exact structure:
     "correct": [0] or [0, 2] (array of correct option indices),
     "explanation": "Clear explanation of the answer",
     "tags": ["tag1", "tag2"]
-  }
+  },
+  ... (repeat for all ${validated.count} questions)
 ]
 
-Only return the JSON array, no other text.`;
+IMPORTANT: Return exactly ${validated.count} questions in the array. Only return the JSON array, no other text.`;
 
   try {
     // Cursor AI API endpoint
@@ -414,8 +444,8 @@ Only return the JSON array, no other text.`;
             content: prompt,
           },
         ],
-        temperature: 0.7,
-        response_format: { type: 'json_object' },
+        temperature: 0.9, // Higher temperature for more variety
+        // Remove json_object format to allow arrays - wrap in object if needed
       }),
     });
 
