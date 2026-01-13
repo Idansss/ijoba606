@@ -825,23 +825,39 @@ export const submitRound = onCall({ region }, async (request) => {
 
   const totalScore = correctCount * 10 + attemptCount * 2;
 
-  // Create round document
-  const roundRef = await db.collection("rounds").add({
-    uid,
-    level,
-    questionIds,
-    answers,
-    correctCount,
-    attemptCount,
-    totalScore,
-    startedAt: FieldValue.serverTimestamp(),
-    finishedAt: FieldValue.serverTimestamp(),
-  });
-
-  // Get or create profile
+  // Get or create profile FIRST (before creating round)
   const profileRef = db.collection("profiles").doc(uid);
   const profileSnap = await profileRef.get();
   const profile = profileSnap.exists ? profileSnap.data() : null;
+
+  // Calculate average score for level unlocking BEFORE creating new round
+  // Get all existing rounds for this user to calculate average
+  const roundsRef = db.collection("rounds");
+  const roundsQuery = roundsRef.where("uid", "==", uid);
+  const roundsSnapshot = await roundsQuery.get();
+  
+  let totalScoreSum = 0;
+  let roundCount = 0;
+  roundsSnapshot.forEach((doc) => {
+    const roundData = doc.data();
+    totalScoreSum += roundData.totalScore || 0;
+    roundCount++;
+  });
+  
+  // Include current round in average calculation
+  totalScoreSum += totalScore;
+  roundCount++;
+  const averageScore = roundCount > 0 ? totalScoreSum / roundCount : 0;
+
+  // Determine level unlocked based on average score
+  // Level 2: average >= 20/30 (66.7%)
+  // Level 3: average >= 24/30 (80%)
+  let levelUnlocked: 1 | 2 | 3 = profile?.levelUnlocked || 1;
+  if (averageScore >= 24) {
+    levelUnlocked = 3;
+  } else if (averageScore >= 20) {
+    levelUnlocked = 2;
+  }
 
   // Update streak (Africa/Lagos timezone)
   const { formatInTimeZone } = await import("date-fns-tz");
@@ -864,6 +880,49 @@ export const submitRound = onCall({ region }, async (request) => {
 
   const bestStreak = Math.max(newStreak, profile?.bestStreak || 0);
   const newTotalPoints = (profile?.totalPoints || 0) + totalScore;
+  const newRoundsCompleted = (profile?.roundsCompleted || 0) + 1;
+
+  // Create round document
+  const roundRef = await db.collection("rounds").add({
+    uid,
+    level,
+    questionIds,
+    answers,
+    correctCount,
+    attemptCount,
+    totalScore,
+    startedAt: FieldValue.serverTimestamp(),
+    finishedAt: FieldValue.serverTimestamp(),
+  });
+
+  // Evaluate badges
+  const currentBadges = profile?.badges || [];
+  const newBadges: string[] = [];
+  
+  // Tax Rookie: First round
+  if (newRoundsCompleted === 1 && !currentBadges.includes('tax_rookie')) {
+    newBadges.push('tax_rookie');
+  }
+  
+  // PAYE Pro: Score 24+ in a round
+  if (totalScore >= 24 && !currentBadges.includes('paye_pro')) {
+    newBadges.push('paye_pro');
+  }
+  
+  // Streak Starter: 3-day streak
+  if (newStreak >= 3 && !currentBadges.includes('streak_starter')) {
+    newBadges.push('streak_starter');
+  }
+  
+  // Hot Streak: 7-day streak
+  if (newStreak >= 7 && !currentBadges.includes('hot_streak')) {
+    newBadges.push('hot_streak');
+  }
+  
+  // Boss Level: Score 26+ on Level 3
+  if (level === 3 && totalScore >= 26 && !currentBadges.includes('boss_level')) {
+    newBadges.push('boss_level');
+  }
 
   // Update profile
   await profileRef.set(
@@ -873,7 +932,11 @@ export const submitRound = onCall({ region }, async (request) => {
       streakCount: newStreak,
       bestStreak,
       lastPlayedLagosDate: today,
-      roundsCompleted: (profile?.roundsCompleted || 0) + 1,
+      roundsCompleted: newRoundsCompleted,
+      levelUnlocked,
+      badges: newBadges.length > 0 
+        ? [...currentBadges, ...newBadges] 
+        : currentBadges,
       updatedAt: FieldValue.serverTimestamp(),
     },
     { merge: true }
@@ -910,7 +973,15 @@ export const submitRound = onCall({ region }, async (request) => {
     { merge: true }
   );
 
-  logger.info("Round submitted", { uid, level, totalScore, newStreak });
+  logger.info("Round submitted", { 
+    uid, 
+    level, 
+    totalScore, 
+    newStreak, 
+    levelUnlocked,
+    averageScore: averageScore.toFixed(2),
+    newBadges: newBadges.length 
+  });
 
   return {
     round: {
@@ -919,7 +990,7 @@ export const submitRound = onCall({ region }, async (request) => {
       correctCount,
       attemptCount,
     },
-    newBadges: [], // Badge evaluation can be added later
+    newBadges,
     streakCount: newStreak,
   };
 });
