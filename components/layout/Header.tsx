@@ -29,6 +29,7 @@ import {
 import { useToastStore } from '@/lib/store/toast';
 import { cn } from '@/lib/utils/cn';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 const navLinks = [
   { href: '/play', label: 'Learn & Play', icon: Gamepad2 },
@@ -196,7 +197,7 @@ export function Header() {
                     </div>
                     <div className="hidden text-sm md:block">
                       <p className="font-semibold text-slate-900">
-                        {user?.handle}
+                        {user?.handle ? formatHandleForDisplay(user.handle) : 'User'}
                       </p>
                       <p className="text-xs text-slate-500">
                         {profile?.totalPoints?.toLocaleString() ?? 0} pts

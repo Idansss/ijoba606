@@ -10,6 +10,7 @@ import { createConsultantRequest } from '@/lib/firebase/functions';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { ComingSoonBadge } from '@/components/consultants/ComingSoonBadge';
+import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 export default function ConsultantRequestPage() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function ConsultantRequestPage() {
   } = useForm<ConsultantRequestFormData>({
     resolver: zodResolver(consultantRequestSchema),
     defaultValues: {
-      name: user?.handle || '',
+      name: user?.handle ? formatHandleForDisplay(user.handle) : '',
       email: '',
     },
   });

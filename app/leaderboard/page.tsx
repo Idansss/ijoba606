@@ -13,6 +13,7 @@ import { db } from '@/lib/firebase/config';
 import { LeaderboardEntry } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
 import { Trophy } from 'lucide-react';
+import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 type TabType = 'weekly' | 'alltime';
 
@@ -187,7 +188,7 @@ export default function LeaderboardPage() {
                                       : 'text-slate-800'
                                   }`}
                                 >
-                                  {entry.handle || 'Anonymous'}
+                                  {entry.handle ? formatHandleForDisplay(entry.handle) : 'Anonymous'}
                                   {isCurrentUser && (
                                     <span className="ml-2 rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700">
                                       You

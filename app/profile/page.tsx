@@ -20,6 +20,7 @@ import {
 import { db } from '@/lib/firebase/config';
 import { CalcRun } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils/calculator';
+import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -92,7 +93,7 @@ export default function ProfilePage() {
               {user.handle[0]?.toUpperCase() || '?'}
             </div>
             <h1 className="mt-4 text-3xl font-semibold text-slate-900">
-              {user.handle}
+              {formatHandleForDisplay(user.handle)}
             </h1>
             {user.anon && (
               <p className="text-sm uppercase tracking-[0.4em] text-slate-400">
