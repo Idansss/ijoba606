@@ -73,32 +73,77 @@ export default function AdminModerationPage() {
       if (!db) {
         setModeratedThreads([]);
         setModeratedPosts([]);
+        setLoading(false);
         return;
       }
 
-      // Fetch hidden threads
+      // Fetch hidden threads - try query first, fallback to getting all and filtering
       const threadsRef = collection(db, 'forumThreads');
-      const threadsQuery = query(threadsRef, where('isHidden', '==', true));
-      const threadsSnapshot = await getDocs(threadsQuery);
-      const threadsData = threadsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as ForumThread[];
+      let threadsData: ForumThread[] = [];
+      
+      try {
+        const threadsQuery = query(threadsRef, where('isHidden', '==', true));
+        const threadsSnapshot = await getDocs(threadsQuery);
+        threadsData = threadsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as ForumThread[];
+      } catch (queryError: any) {
+        // If query fails (e.g., missing index or permission issue), try getting all and filtering client-side
+        console.warn('Query with isHidden filter failed, trying alternative approach:', queryError);
+        try {
+          const allThreadsSnapshot = await getDocs(threadsRef);
+          threadsData = allThreadsSnapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+            .filter((thread) => thread.isHidden === true) as ForumThread[];
+        } catch (fallbackError) {
+          console.error('Error fetching threads (fallback):', fallbackError);
+          throw fallbackError;
+        }
+      }
 
-      // Fetch hidden posts
+      // Fetch hidden posts - try query first, fallback to getting all and filtering
       const postsRef = collection(db, 'forumPosts');
-      const postsQuery = query(postsRef, where('isHidden', '==', true));
-      const postsSnapshot = await getDocs(postsQuery);
-      const postsData = postsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as ForumPost[];
+      let postsData: ForumPost[] = [];
+      
+      try {
+        const postsQuery = query(postsRef, where('isHidden', '==', true));
+        const postsSnapshot = await getDocs(postsQuery);
+        postsData = postsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as ForumPost[];
+      } catch (queryError: any) {
+        // If query fails, try getting all and filtering client-side
+        console.warn('Query with isHidden filter failed, trying alternative approach:', queryError);
+        try {
+          const allPostsSnapshot = await getDocs(postsRef);
+          postsData = allPostsSnapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+            .filter((post) => post.isHidden === true) as ForumPost[];
+        } catch (fallbackError) {
+          console.error('Error fetching posts (fallback):', fallbackError);
+          throw fallbackError;
+        }
+      }
 
       setModeratedThreads(threadsData);
       setModeratedPosts(postsData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching moderated content:', error);
-      addToast({ type: 'error', message: 'Failed to fetch moderated content' });
+      const errorMessage = error?.code === 'permission-denied' 
+        ? 'Permission denied. Make sure you are logged in as a moderator/admin and Firestore rules are deployed.'
+        : error?.message || 'Failed to fetch moderated content';
+      addToast({ type: 'error', message: errorMessage });
+      // Set empty arrays on error so UI doesn't break
+      setModeratedThreads([]);
+      setModeratedPosts([]);
     } finally {
       setLoading(false);
     }
