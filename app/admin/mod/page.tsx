@@ -93,12 +93,11 @@ export default function AdminModerationPage() {
         console.warn('Query with isHidden filter failed, trying alternative approach:', queryError);
         try {
           const allThreadsSnapshot = await getDocs(threadsRef);
-          threadsData = allThreadsSnapshot.docs
-            .map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            })) as ForumThread[]
-            .filter((thread) => thread.isHidden === true);
+          const allThreads = allThreadsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as ForumThread[];
+          threadsData = allThreads.filter((thread) => thread.isHidden === true);
         } catch (fallbackError) {
           console.error('Error fetching threads (fallback):', fallbackError);
           throw fallbackError;
@@ -121,12 +120,11 @@ export default function AdminModerationPage() {
         console.warn('Query with isHidden filter failed, trying alternative approach:', queryError);
         try {
           const allPostsSnapshot = await getDocs(postsRef);
-          postsData = allPostsSnapshot.docs
-            .map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            })) as ForumPost[]
-            .filter((post) => post.isHidden === true);
+          const allPosts = allPostsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as ForumPost[];
+          postsData = allPosts.filter((post) => post.isHidden === true);
         } catch (fallbackError) {
           console.error('Error fetching posts (fallback):', fallbackError);
           throw fallbackError;
