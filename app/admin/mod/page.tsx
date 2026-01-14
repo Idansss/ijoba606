@@ -8,19 +8,22 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { ForumReport } from '@/lib/types';
+import { ForumReport, ForumThread, ForumPost } from '@/lib/types';
 import { moderateContent } from '@/lib/firebase/functions';
 import { formatDistanceToNow } from 'date-fns';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Trash2 } from 'lucide-react';
 
 export default function AdminModerationPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuthStore();
   const { addToast } = useToastStore();
   const [reports, setReports] = useState<ForumReport[]>([]);
+  const [moderatedThreads, setModeratedThreads] = useState<ForumThread[]>([]);
+  const [moderatedPosts, setModeratedPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'open' | 'actioned'>('open');
+  const [activeTab, setActiveTab] = useState<'reports' | 'moderated'>('reports');
 
   useEffect(() => {
     if (!authLoading) {
@@ -64,11 +67,52 @@ export default function AdminModerationPage() {
     }
   }, [filter, addToast]);
 
+  const fetchModeratedContent = useCallback(async () => {
+    setLoading(true);
+    try {
+      if (!db) {
+        setModeratedThreads([]);
+        setModeratedPosts([]);
+        return;
+      }
+
+      // Fetch hidden threads
+      const threadsRef = collection(db, 'forumThreads');
+      const threadsQuery = query(threadsRef, where('isHidden', '==', true));
+      const threadsSnapshot = await getDocs(threadsQuery);
+      const threadsData = threadsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ForumThread[];
+
+      // Fetch hidden posts
+      const postsRef = collection(db, 'forumPosts');
+      const postsQuery = query(postsRef, where('isHidden', '==', true));
+      const postsSnapshot = await getDocs(postsQuery);
+      const postsData = postsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ForumPost[];
+
+      setModeratedThreads(threadsData);
+      setModeratedPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching moderated content:', error);
+      addToast({ type: 'error', message: 'Failed to fetch moderated content' });
+    } finally {
+      setLoading(false);
+    }
+  }, [addToast]);
+
   useEffect(() => {
     if (user?.role === 'moderator' || user?.role === 'admin') {
-      fetchReports();
+      if (activeTab === 'reports') {
+        fetchReports();
+      } else {
+        fetchModeratedContent();
+      }
     }
-  }, [user, filter, fetchReports]);
+  }, [user, filter, activeTab, fetchReports, fetchModeratedContent]);
 
   const [moderationReason, setModerationReason] = useState<Record<string, string>>({});
   const [showReasonInput, setShowReasonInput] = useState<Record<string, boolean>>({});
@@ -174,27 +218,54 @@ export default function AdminModerationPage() {
             Moderation Dashboard
           </h1>
           <p className="text-gray-600">
-            Review and action reported content
+            Review and action reported content, manage moderated items
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
-              {reports.filter(r => r.status === 'open').length}
-            </div>
-            <div className="text-sm text-gray-600">Open Reports</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              {reports.filter(r => r.status === 'actioned').length}
-            </div>
-            <div className="text-sm text-gray-600">Actioned Reports</div>
-          </div>
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl max-w-md">
+          <button
+            onClick={() => setActiveTab('reports')}
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'reports'
+                ? 'bg-white text-purple-600 shadow-md'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            Reports
+          </button>
+          <button
+            onClick={() => setActiveTab('moderated')}
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'moderated'
+                ? 'bg-white text-purple-600 shadow-md'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            Moderated Content ({moderatedThreads.length + moderatedPosts.length})
+          </button>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Stats - Only show for reports tab */}
+        {activeTab === 'reports' && (
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
+              <div className="text-3xl font-bold text-orange-600 mb-2">
+                {reports.filter(r => r.status === 'open').length}
+              </div>
+              <div className="text-sm text-gray-600">Open Reports</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">
+                {reports.filter(r => r.status === 'actioned').length}
+              </div>
+              <div className="text-sm text-gray-600">Actioned Reports</div>
+            </div>
+          </div>
+        )}
+
+        {/* Filter Tabs - Only show for reports tab */}
+        {activeTab === 'reports' && (
         <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl max-w-md">
           <button
             onClick={() => setFilter('open')}
@@ -217,8 +288,11 @@ export default function AdminModerationPage() {
             Actioned ({reports.filter(r => r.status === 'actioned').length})
           </button>
         </div>
+        )}
 
         {/* Reports List */}
+        {activeTab === 'reports' && (
+        <>
         {reports.length === 0 ? (
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
             <div className="text-6xl mb-4">✅</div>
@@ -365,8 +439,280 @@ export default function AdminModerationPage() {
                   )}
                 </motion.div>
               );
-            })}
+            }            )}
           </div>
+        )}
+        </>
+        )}
+
+        {/* Moderated Content List */}
+        {activeTab === 'moderated' && (
+          <>
+            {moderatedThreads.length === 0 && moderatedPosts.length === 0 ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+                <div className="text-6xl mb-4">✅</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  No moderated content
+                </h3>
+                <p className="text-gray-600">
+                  All content is visible. Hidden items will appear here.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Hidden Threads */}
+                {moderatedThreads.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                      Hidden Threads ({moderatedThreads.length})
+                    </h2>
+                    <div className="space-y-4">
+                      {moderatedThreads.map((thread) => {
+                        const timeAgo = thread.createdAt
+                          ? formatDistanceToNow(new Date(thread.createdAt.seconds * 1000), {
+                              addSuffix: true,
+                            })
+                          : '';
+                        const moderatedTimeAgo = thread.moderatedAt
+                          ? formatDistanceToNow(new Date(thread.moderatedAt.seconds * 1000), {
+                              addSuffix: true,
+                            })
+                          : '';
+
+                        return (
+                          <motion.div
+                            key={thread.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-red-200"
+                          >
+                            <div className="flex items-start justify-between gap-4 mb-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                    THREAD
+                                  </span>
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                    HIDDEN
+                                  </span>
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-800 mb-2">
+                                  {thread.title}
+                                </h3>
+                                <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                                  {thread.bodyMD}
+                                </p>
+                                {thread.moderationReason && (
+                                  <div className="mb-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <p className="text-sm font-semibold text-yellow-800 mb-1">
+                                      Moderation Reason:
+                                    </p>
+                                    <p className="text-sm text-yellow-700">
+                                      {thread.moderationReason}
+                                    </p>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-gray-500">
+                                  <span>Created {timeAgo}</span>
+                                  {moderatedTimeAgo && (
+                                    <>
+                                      <span>•</span>
+                                      <span>Hidden {moderatedTimeAgo}</span>
+                                    </>
+                                  )}
+                                  <span>•</span>
+                                  <Link
+                                    href={`/forum/thread/${thread.id}`}
+                                    className="text-purple-600 hover:text-purple-700 font-semibold"
+                                  >
+                                    View Thread →
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="pt-4 border-t-2 border-gray-200">
+                              <div className="flex flex-wrap gap-2">
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await moderateContent({
+                                        targetKind: 'thread',
+                                        targetId: thread.id!,
+                                        action: 'unhide',
+                                      });
+                                      addToast({ type: 'success', message: 'Thread unhidden' });
+                                      fetchModeratedContent();
+                                    } catch (error) {
+                                      console.error('Error unhiding thread:', error);
+                                      addToast({ type: 'error', message: 'Failed to unhide thread' });
+                                    }
+                                  }}
+                                  className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-200 transition-all flex items-center gap-2"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  Unhide Thread
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    if (!confirm('Are you sure you want to permanently delete this thread?')) {
+                                      return;
+                                    }
+                                    try {
+                                      await moderateContent({
+                                        targetKind: 'thread',
+                                        targetId: thread.id!,
+                                        action: 'delete',
+                                        reason: 'Permanently deleted by admin',
+                                      });
+                                      addToast({ type: 'success', message: 'Thread deleted' });
+                                      fetchModeratedContent();
+                                    } catch (error) {
+                                      console.error('Error deleting thread:', error);
+                                      addToast({ type: 'error', message: 'Failed to delete thread' });
+                                    }
+                                  }}
+                                  className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all flex items-center gap-2"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  Delete Permanently
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Hidden Posts */}
+                {moderatedPosts.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                      Hidden Posts ({moderatedPosts.length})
+                    </h2>
+                    <div className="space-y-4">
+                      {moderatedPosts.map((post) => {
+                        const timeAgo = post.createdAt
+                          ? formatDistanceToNow(new Date(post.createdAt.seconds * 1000), {
+                              addSuffix: true,
+                            })
+                          : '';
+                        const moderatedTimeAgo = post.moderatedAt
+                          ? formatDistanceToNow(new Date(post.moderatedAt.seconds * 1000), {
+                              addSuffix: true,
+                            })
+                          : '';
+
+                        return (
+                          <motion.div
+                            key={post.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-red-200"
+                          >
+                            <div className="flex items-start justify-between gap-4 mb-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                                    POST
+                                  </span>
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                    HIDDEN
+                                  </span>
+                                </div>
+                                <p className="text-gray-600 text-sm mb-2 line-clamp-3">
+                                  {post.bodyMD}
+                                </p>
+                                {post.moderationReason && (
+                                  <div className="mb-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <p className="text-sm font-semibold text-yellow-800 mb-1">
+                                      Moderation Reason:
+                                    </p>
+                                    <p className="text-sm text-yellow-700">
+                                      {post.moderationReason}
+                                    </p>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-gray-500">
+                                  <span>Created {timeAgo}</span>
+                                  {moderatedTimeAgo && (
+                                    <>
+                                      <span>•</span>
+                                      <span>Hidden {moderatedTimeAgo}</span>
+                                    </>
+                                  )}
+                                  <span>•</span>
+                                  <Link
+                                    href={`/forum/thread/${post.tid}`}
+                                    className="text-purple-600 hover:text-purple-700 font-semibold"
+                                  >
+                                    View Thread →
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="pt-4 border-t-2 border-gray-200">
+                              <div className="flex flex-wrap gap-2">
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await moderateContent({
+                                        targetKind: 'post',
+                                        targetId: post.id!,
+                                        action: 'unhide',
+                                      });
+                                      addToast({ type: 'success', message: 'Post unhidden' });
+                                      fetchModeratedContent();
+                                    } catch (error) {
+                                      console.error('Error unhiding post:', error);
+                                      addToast({ type: 'error', message: 'Failed to unhide post' });
+                                    }
+                                  }}
+                                  className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-200 transition-all flex items-center gap-2"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  Unhide Post
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    if (!confirm('Are you sure you want to permanently delete this post?')) {
+                                      return;
+                                    }
+                                    try {
+                                      await moderateContent({
+                                        targetKind: 'post',
+                                        targetId: post.id!,
+                                        action: 'delete',
+                                        reason: 'Permanently deleted by admin',
+                                      });
+                                      addToast({ type: 'success', message: 'Post deleted' });
+                                      fetchModeratedContent();
+                                    } catch (error) {
+                                      console.error('Error deleting post:', error);
+                                      addToast({ type: 'error', message: 'Failed to delete post' });
+                                    }
+                                  }}
+                                  className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all flex items-center gap-2"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  Delete Permanently
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
