@@ -67,37 +67,37 @@ function ForumPageContent() {
         return;
       }
       const threadsRef = collection(db, 'forumThreads');
-      let q;
 
-      // Always exclude hidden threads in public listing
+      // Fetch all threads and filter client-side to handle:
+      // 1. Threads where isHidden doesn't exist (old threads)
+      // 2. Threads where isHidden is false
+      // 3. Avoid Firestore index requirements for isHidden queries
+      let q;
+      
       if (searchQuery) {
         q = query(
           threadsRef,
-          where('isHidden', '==', false),
           orderBy('createdAt', 'desc'),
-          limit(50)
+          limit(100) // Get more to filter client-side
         );
       } else if (activeTab === 'trending') {
         q = query(
           threadsRef,
-          where('isHidden', '==', false),
           orderBy('votes', 'desc'),
-          limit(50)
+          limit(100)
         );
       } else if (activeTab === 'new') {
         q = query(
           threadsRef,
-          where('isHidden', '==', false),
           orderBy('createdAt', 'desc'),
-          limit(50)
+          limit(100)
         );
       } else {
         q = query(
           threadsRef,
-          where('isHidden', '==', false),
           where('replyCount', '==', 0),
           orderBy('createdAt', 'desc'),
-          limit(50)
+          limit(100)
         );
       }
 
@@ -107,6 +107,12 @@ function ForumPageContent() {
         ...doc.data(),
       })) as ForumThread[];
 
+      // Filter out hidden threads client-side
+      // Include threads where isHidden is false or doesn't exist (undefined)
+      threadData = threadData.filter(
+        (thread) => thread.isHidden !== true
+      );
+
       if (searchQuery) {
         const lowerQuery = searchQuery.toLowerCase();
         threadData = threadData.filter(
@@ -115,6 +121,9 @@ function ForumPageContent() {
             thread.bodyMD.toLowerCase().includes(lowerQuery)
         );
       }
+
+      // Limit to 50 after filtering
+      threadData = threadData.slice(0, 50);
 
       setThreads(threadData);
     } catch (error) {
