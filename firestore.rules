@@ -62,7 +62,8 @@ service cloud.firestore {
     
     // Forum Threads
     match /forumThreads/{tid} {
-      allow read: if !('isHidden' in resource.data) || resource.data.isHidden == false;
+      // Regular users can only read non-hidden threads; moderators/admins can read all
+      allow read: if (!('isHidden' in resource.data) || resource.data.isHidden == false) || isModerator();
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.title.size() >= 10 &&
@@ -77,7 +78,8 @@ service cloud.firestore {
     
     // Forum Posts
     match /forumPosts/{pid} {
-      allow read: if !('isHidden' in resource.data) || resource.data.isHidden == false;
+      // Regular users can only read non-hidden posts; moderators/admins can read all
+      allow read: if (!('isHidden' in resource.data) || resource.data.isHidden == false) || isModerator();
       allow create: if isSignedIn() && 
                        request.resource.data.uid == request.auth.uid &&
                        request.resource.data.bodyMD.size() >= 10 &&

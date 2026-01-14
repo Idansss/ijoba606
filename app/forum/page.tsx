@@ -69,15 +69,32 @@ function ForumPageContent() {
       const threadsRef = collection(db, 'forumThreads');
       let q;
 
+      // Always exclude hidden threads in public listing
       if (searchQuery) {
-        q = query(threadsRef, orderBy('createdAt', 'desc'), limit(50));
+        q = query(
+          threadsRef,
+          where('isHidden', '==', false),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        );
       } else if (activeTab === 'trending') {
-        q = query(threadsRef, orderBy('votes', 'desc'), limit(50));
+        q = query(
+          threadsRef,
+          where('isHidden', '==', false),
+          orderBy('votes', 'desc'),
+          limit(50)
+        );
       } else if (activeTab === 'new') {
-        q = query(threadsRef, orderBy('createdAt', 'desc'), limit(50));
+        q = query(
+          threadsRef,
+          where('isHidden', '==', false),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        );
       } else {
         q = query(
           threadsRef,
+          where('isHidden', '==', false),
           where('replyCount', '==', 0),
           orderBy('createdAt', 'desc'),
           limit(50)

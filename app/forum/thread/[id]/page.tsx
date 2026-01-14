@@ -53,13 +53,30 @@ export default function ThreadDetailPage() {
         const threadSnap = await getDoc(threadRef);
         
         if (threadSnap.exists()) {
-          setThread({ id: threadSnap.id, ...threadSnap.data() } as ForumThread);
+          const data = threadSnap.data() as ForumThread;
+          const isModerator = user?.role === 'moderator' || user?.role === 'admin';
+
+          // If thread is hidden and user is not a moderator/admin, redirect back to forum
+          if (data.isHidden && !isModerator) {
+            addToast({ type: 'error', message: 'This thread is no longer available.' });
+            router.push('/forum');
+            return;
+          }
+
+          setThread({ id: threadSnap.id, ...data } as ForumThread);
         } else {
           addToast({ type: 'error', message: 'Thread not found' });
           router.push('/forum');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching thread:', error);
+        if (error.code === 'permission-denied') {
+          addToast({
+            type: 'error',
+            message: 'You do not have permission to view this thread.',
+          });
+          router.push('/forum');
+        }
       } finally {
         setLoading(false);
       }
@@ -72,9 +89,12 @@ export default function ThreadDetailPage() {
     const q = query(postsRef, orderBy('createdAt', 'asc'));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      const isModerator = user?.role === 'moderator' || user?.role === 'admin';
       const postsData = snapshot.docs
         .map((doc) => ({ id: doc.id, ...doc.data() } as ForumPost))
-        .filter((post) => post.tid === threadId);
+        .filter((post) => post.tid === threadId)
+        // Regular users shouldn't see hidden posts
+        .filter((post) => !post.isHidden || isModerator);
       setPosts(postsData);
     });
 
