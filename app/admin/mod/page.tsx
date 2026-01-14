@@ -97,8 +97,8 @@ export default function AdminModerationPage() {
             .map((doc) => ({
               id: doc.id,
               ...doc.data(),
-            }))
-            .filter((thread) => thread.isHidden === true) as ForumThread[];
+            })) as ForumThread[]
+            .filter((thread) => thread.isHidden === true);
         } catch (fallbackError) {
           console.error('Error fetching threads (fallback):', fallbackError);
           throw fallbackError;
@@ -125,8 +125,8 @@ export default function AdminModerationPage() {
             .map((doc) => ({
               id: doc.id,
               ...doc.data(),
-            }))
-            .filter((post) => post.isHidden === true) as ForumPost[];
+            })) as ForumPost[]
+            .filter((post) => post.isHidden === true);
         } catch (fallbackError) {
           console.error('Error fetching posts (fallback):', fallbackError);
           throw fallbackError;
