@@ -147,15 +147,30 @@ export default function AdminModerationPage() {
     }
   }, [addToast]);
 
+  // Fetch reports when on reports tab
   useEffect(() => {
     if (user?.role === 'moderator' || user?.role === 'admin') {
       if (activeTab === 'reports') {
         fetchReports();
-      } else {
+      }
+    }
+  }, [user, filter, activeTab, fetchReports]);
+
+  // Always fetch moderated content on page load to show counter
+  useEffect(() => {
+    if (user?.role === 'moderator' || user?.role === 'admin') {
+      fetchModeratedContent();
+    }
+  }, [user, fetchModeratedContent]);
+
+  // Also fetch moderated content when switching to that tab (in case it was updated)
+  useEffect(() => {
+    if (user?.role === 'moderator' || user?.role === 'admin') {
+      if (activeTab === 'moderated') {
         fetchModeratedContent();
       }
     }
-  }, [user, filter, activeTab, fetchReports, fetchModeratedContent]);
+  }, [activeTab, fetchModeratedContent]);
 
   const [moderationReason, setModerationReason] = useState<Record<string, string>>({});
   const [showReasonInput, setShowReasonInput] = useState<Record<string, boolean>>({});
@@ -200,6 +215,10 @@ export default function AdminModerationPage() {
 
       addToast({ type: 'success', message: `Action completed: ${action}` });
       fetchReports();
+      // Refresh moderated content list to update counter
+      fetchModeratedContent();
+      // Refresh moderated content list to update counter
+      fetchModeratedContent();
     } catch (error) {
       console.error('Moderation error:', error);
       addToast({ type: 'error', message: 'Failed to perform action. Try again.' });
