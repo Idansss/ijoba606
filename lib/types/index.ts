@@ -184,6 +184,82 @@ export interface ConsultantApplication {
   updatedAt: Timestamp;
 }
 
+// Full Consultant Profile (after approval)
+export interface ConsultantProfile {
+  id?: string;
+  uid: string; // Required - must be authenticated user
+  // Basic Info
+  name: string;
+  email: string;
+  phone: string;
+  whatsapp?: string;
+  locationState?: string;
+  profileImageUrl?: string;
+  
+  // Professional Details
+  bio: string;
+  specialties: string[]; // e.g., ['PAYE', 'Reliefs', 'Filing']
+  experienceYears: number;
+  qualifications: ConsultantQualification[];
+  certifications: ConsultantCertification[];
+  
+  // Portfolio/Experience
+  workExperience: ConsultantWorkExperience[];
+  portfolioItems?: ConsultantPortfolioItem[];
+  
+  // Rates & Availability
+  hourlyRate?: number; // in NGN
+  fixedRateRange?: { min: number; max: number }; // in NGN
+  availabilityStatus: 'available' | 'busy' | 'unavailable';
+  
+  // Stats
+  totalClients: number;
+  totalProjects: number;
+  averageRating?: number;
+  reviewsCount: number;
+  
+  // Metadata
+  isVerified: boolean; // Admin verified
+  isActive: boolean;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface ConsultantQualification {
+  id?: string;
+  title: string; // e.g., "B.Sc Accounting"
+  institution: string;
+  year?: number;
+  credentialUrl?: string;
+}
+
+export interface ConsultantCertification {
+  id?: string;
+  name: string; // e.g., "ICAN", "CITN"
+  issuingBody: string;
+  issueDate?: Timestamp;
+  expiryDate?: Timestamp;
+  credentialUrl?: string;
+}
+
+export interface ConsultantWorkExperience {
+  id?: string;
+  title: string; // e.g., "Senior Tax Consultant"
+  company: string;
+  startDate: Timestamp;
+  endDate?: Timestamp; // null if current
+  description?: string;
+}
+
+export interface ConsultantPortfolioItem {
+  id?: string;
+  title: string;
+  description: string;
+  category: string;
+  imageUrl?: string;
+  projectUrl?: string;
+}
+
 export type ConsultantRequestCategory = 'PAYE' | 'Reliefs' | 'Filing' | 'Employment' | 'Other';
 export type ConsultantRequestUrgency = 'ASAP' | 'This week' | 'Later';
 export type ConsultantRequestBudgetRange = 'Under ₦10k' | '₦10k–₦25k' | '₦25k–₦50k' | '₦50k+';
@@ -198,6 +274,231 @@ export interface ConsultantRequest {
   urgency: ConsultantRequestUrgency;
   budgetRange?: ConsultantRequestBudgetRange;
   createdAt: Timestamp;
+}
+
+// Chat System
+export interface ConsultantChat {
+  id?: string;
+  consultantUid: string;
+  customerUid: string;
+  consultantName: string;
+  customerName: string;
+  lastMessage?: string;
+  lastMessageAt?: Timestamp;
+  unreadCountConsultant: number;
+  unreadCountCustomer: number;
+  status: 'active' | 'archived' | 'closed';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface ChatMessage {
+  id?: string;
+  chatId: string;
+  senderUid: string;
+  senderName: string;
+  senderType: 'consultant' | 'customer';
+  content: string;
+  messageType: 'text' | 'invoice' | 'system'; // invoice = invoice shared, system = automated messages
+  invoiceId?: string; // If messageType is 'invoice'
+  isRead: boolean;
+  createdAt: Timestamp;
+}
+
+// Invoice System
+export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+export type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
+
+export interface Invoice {
+  id?: string;
+  invoiceNumber: string; // Auto-generated: INV-YYYYMMDD-XXXX
+  consultantUid: string;
+  customerUid: string;
+  chatId?: string; // Associated chat if created from chat
+  
+  // Invoice Details
+  title: string;
+  description: string;
+  items: InvoiceItem[];
+  subtotal: number;
+  vat?: number; // 7.5% VAT
+  paystackFee?: number; // Paystack fee (1.5% + ₦100, customer bears)
+  tax?: number; // Total tax (VAT + Paystack fee)
+  total: number; // subtotal + vat + paystackFee
+  currency: 'NGN';
+  
+  // Service Status
+  serviceStatus?: 'pending_payment' | 'in_progress' | 'completed' | 'cancelled';
+  
+  // Payment
+  status: InvoiceStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod?: 'paystack' | 'bank_transfer' | 'other';
+  paystackReference?: string; // Paystack transaction reference
+  paidAt?: Timestamp;
+  dueDate: Timestamp;
+  
+  // Metadata
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  sentAt?: Timestamp;
+}
+
+export interface InvoiceItem {
+  id?: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  total: number; // quantity * unitPrice
+}
+
+// Payment Transaction
+export interface PaymentTransaction {
+  id?: string;
+  invoiceId: string;
+  consultantUid: string;
+  customerUid: string;
+  amount: number;
+  currency: 'NGN';
+  status: PaymentStatus;
+  paymentMethod: 'paystack' | 'bank_transfer' | 'other';
+  paystackReference?: string;
+  paystackTransactionId?: string;
+  metadata?: Record<string, any>;
+  createdAt: Timestamp;
+  completedAt?: Timestamp;
+}
+
+// Consultant Wallet
+export interface ConsultantWallet {
+  id?: string;
+  consultantUid: string;
+  balance: number; // Current available balance (in kobo)
+  totalEarnings: number; // All-time gross earnings (in kobo)
+  totalWithdrawn: number; // Total amount withdrawn (in kobo)
+  totalPending: number; // Pending withdrawal requests (in kobo)
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Wallet Transaction
+export type WalletTransactionType = 'credit' | 'debit';
+export type WalletTransactionStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+
+export interface WalletTransaction {
+  id?: string;
+  consultantUid: string;
+  type: WalletTransactionType;
+  amount: number; // in kobo
+  status: WalletTransactionStatus;
+  description: string;
+  invoiceId?: string; // If related to invoice payment
+  withdrawalRequestId?: string; // If related to withdrawal
+  refundRequestId?: string; // If related to refund
+  paystackReference?: string;
+  metadata?: Record<string, any>;
+  // For pending funds
+  fundStatus?: 'pending' | 'pending_release' | 'credited'; // pending = in service, pending_release = waiting for 48h hold, credited = available
+  holdReleaseAt?: Timestamp; // When hold expires
+  createdAt: Timestamp;
+  completedAt?: Timestamp;
+}
+
+// Withdrawal Request
+export type WithdrawalStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+
+export interface WithdrawalRequest {
+  id?: string;
+  consultantUid: string;
+  amount: number; // in kobo
+  status: WithdrawalStatus;
+  bankAccount: {
+    accountNumber: string;
+    accountName: string;
+    bankCode: string;
+    bankName: string;
+  };
+  paystackTransferCode?: string; // Paystack transfer reference
+  failureReason?: string;
+  createdAt: Timestamp;
+  processedAt?: Timestamp;
+  completedAt?: Timestamp;
+}
+
+// Bank Account (for both consultants and users)
+export interface BankAccount {
+  id?: string;
+  uid: string; // User or consultant UID
+  accountType: 'consultant' | 'user';
+  accountNumber: string;
+  accountName: string;
+  bankCode: string;
+  bankName: string;
+  isDefault: boolean;
+  isVerified: boolean;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Refund Request
+export type RefundStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+export type RefundReason = 'service_not_provided' | 'poor_quality' | 'dispute' | 'other';
+
+export interface RefundRequest {
+  id?: string;
+  invoiceId: string;
+  transactionId: string;
+  consultantUid: string;
+  customerUid: string;
+  amount: number; // in kobo
+  reason: RefundReason;
+  reasonDetails?: string;
+  status: RefundStatus;
+  bankAccount?: {
+    accountNumber: string;
+    accountName: string;
+    bankCode: string;
+    bankName: string;
+  }; // User's bank account for refund
+  paystackRefundReference?: string;
+  failureReason?: string;
+  createdAt: Timestamp;
+  processedAt?: Timestamp;
+  completedAt?: Timestamp;
+}
+
+// Service Completion
+export type ServiceCompletionStatus = 'pending_completion' | 'pending_confirmation' | 'confirmed' | 'disputed' | 'completed';
+export type DisputeStatus = 'open' | 'resolved' | 'rejected';
+
+export interface ServiceCompletion {
+  id?: string;
+  invoiceId: string;
+  consultantUid: string;
+  customerUid: string;
+  status: ServiceCompletionStatus;
+  completedAt?: Timestamp; // When consultant marked as done
+  confirmedAt?: Timestamp; // When customer confirmed
+  holdReleaseAt?: Timestamp; // When 48-hour hold expires
+  disputeId?: string; // If disputed
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface Dispute {
+  id?: string;
+  invoiceId: string;
+  serviceCompletionId: string;
+  consultantUid: string;
+  customerUid: string;
+  reason: string;
+  details: string;
+  status: DisputeStatus;
+  resolution?: string;
+  resolvedBy?: string; // Admin UID
+  resolvedAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 // ==================== Calculator ====================

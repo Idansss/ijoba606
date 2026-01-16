@@ -8,6 +8,7 @@ import {
   BookOpen,
   Briefcase,
   Calculator,
+  FileText,
   Gamepad2,
   LogOut,
   Menu,
@@ -226,6 +227,13 @@ export function Header() {
                         >
                           <MessageCircle className="h-4 w-4 text-blue-600" />
                           Forum Activity
+                        </Link>
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                        >
+                          <FileText className="h-4 w-4 text-purple-600" />
+                          My Dashboard
                         </Link>
                         {user?.role === 'admin' && (
                           <Link

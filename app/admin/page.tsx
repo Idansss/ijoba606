@@ -19,7 +19,8 @@ import {
   CheckCircle,
   XCircle,
   Search,
-  Crown
+  Crown,
+  DollarSign
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -227,6 +228,17 @@ export default function AdminDashboard() {
             <AlertTriangle className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Moderation</h3>
             <p className="text-orange-100">Review reports and moderate content</p>
+          </motion.div>
+        </Link>
+
+        <Link href="/admin/transactions">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-br from-emerald-500 to-green-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+          >
+            <DollarSign className="w-8 h-8 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Transactions</h3>
+            <p className="text-emerald-100">Monitor payments, refunds, and disputes</p>
           </motion.div>
         </Link>
       </div>

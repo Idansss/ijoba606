@@ -1,10 +1,13 @@
 import { setGlobalOptions } from "firebase-functions";
-import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onCall, HttpsError, onRequest } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsWithCursor, generateQuestionsFromTemplate } from "./generateQuestion";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 // Note: Secrets set via `firebase functions:secrets:set` are automatically available via process.env
 
@@ -994,3 +997,373 @@ export const submitRound = onCall({ region }, async (request) => {
     streakCount: newStreak,
   };
 });
+
+/* ---------------------------------
+   PAYSTACK WEBHOOK HANDLER
+----------------------------------*/
+
+// Verify Paystack webhook signature
+function verifyPaystackSignature(payload: string, signature: string, secret: string): boolean {
+  const hash = crypto
+    .createHmac("sha512", secret)
+    .update(payload)
+    .digest("hex");
+  return hash === signature;
+}
+
+export const handlePaystackWebhook = onRequest(
+  {
+    region,
+    cors: true,
+  },
+  async (req, res) => {
+    try {
+      const signature = req.headers["x-paystack-signature"] as string;
+      const secret = process.env.PAYSTACK_SECRET_KEY || "";
+
+      if (!signature || !secret) {
+        logger.error("Missing Paystack signature or secret key");
+        res.status(400).send("Missing signature or secret");
+        return;
+      }
+
+      // Verify signature
+      const payload = JSON.stringify(req.body);
+      if (!verifyPaystackSignature(payload, signature, secret)) {
+        logger.error("Invalid Paystack signature");
+        res.status(401).send("Invalid signature");
+        return;
+      }
+
+      const event = req.body;
+      logger.info("Paystack webhook received", { event: event.event });
+
+      // Handle different event types
+      if (event.event === "charge.success") {
+        const { reference, amount, metadata } = event.data;
+
+        // Find invoice by Paystack reference
+        const invoicesRef = db.collection("invoices");
+        const invoiceQuery = await invoicesRef
+          .where("paystackReference", "==", reference)
+          .limit(1)
+          .get();
+
+        if (invoiceQuery.empty) {
+          logger.warn("Invoice not found for reference", { reference });
+          res.status(200).send("Invoice not found");
+          return;
+        }
+
+        const invoiceDoc = invoiceQuery.docs[0];
+        const invoiceData = invoiceDoc.data();
+
+        // Update invoice
+        await invoiceDoc.ref.update({
+          paymentStatus: "completed",
+          status: "paid",
+          paidAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+          serviceStatus: "in_progress", // Start service after payment
+        });
+
+        // Create payment transaction
+        const transactionRef = db.collection("paymentTransactions").doc();
+        await transactionRef.set({
+          invoiceId: invoiceDoc.id,
+          consultantUid: invoiceData.consultantUid,
+          customerUid: invoiceData.customerUid,
+          amount: amount / 100, // Convert from kobo to naira
+          currency: "NGN",
+          status: "completed",
+          paymentMethod: "paystack",
+          paystackReference: reference,
+          paystackTransactionId: event.data.id,
+          metadata: metadata || {},
+          createdAt: FieldValue.serverTimestamp(),
+          completedAt: FieldValue.serverTimestamp(),
+        });
+
+        // Credit consultant wallet
+        const walletRef = db.collection("consultantWallets").doc(invoiceData.consultantUid);
+        const walletDoc = await walletRef.get();
+
+        const invoiceSubtotal = invoiceData.subtotal || 0;
+        const invoiceVAT = invoiceData.vat || 0;
+        const consultantEarnings = invoiceSubtotal + invoiceVAT; // Consultant gets subtotal + VAT, not Paystack fee
+
+        if (walletDoc.exists) {
+          await walletRef.update({
+            balance: FieldValue.increment(consultantEarnings * 100), // Convert to kobo
+            totalEarnings: FieldValue.increment(consultantEarnings * 100),
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+
+          // Create credit transaction
+          const walletTransactionRef = db.collection("walletTransactions").doc();
+          await walletTransactionRef.set({
+            consultantUid: invoiceData.consultantUid,
+            type: "credit",
+            amount: consultantEarnings * 100,
+            status: "completed",
+            description: `Payment received for invoice ${invoiceData.invoiceNumber}`,
+            invoiceId: invoiceDoc.id,
+            paystackReference: reference,
+            createdAt: FieldValue.serverTimestamp(),
+            completedAt: FieldValue.serverTimestamp(),
+          });
+        } else {
+          // Create new wallet
+          await walletRef.set({
+            consultantUid: invoiceData.consultantUid,
+            balance: consultantEarnings * 100,
+            totalEarnings: consultantEarnings * 100,
+            totalWithdrawn: 0,
+            totalPending: 0,
+            createdAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+
+          // Create credit transaction
+          const walletTransactionRef = db.collection("walletTransactions").doc();
+          await walletTransactionRef.set({
+            consultantUid: invoiceData.consultantUid,
+            type: "credit",
+            amount: consultantEarnings * 100,
+            status: "completed",
+            description: `Payment received for invoice ${invoiceData.invoiceNumber}`,
+            invoiceId: invoiceDoc.id,
+            paystackReference: reference,
+            createdAt: FieldValue.serverTimestamp(),
+            completedAt: FieldValue.serverTimestamp(),
+          });
+        }
+
+        // Send notification to customer
+        const customerNotifRef = db
+          .collection("notifications")
+          .doc(invoiceData.customerUid)
+          .collection("items")
+          .doc();
+        await customerNotifRef.set({
+          type: "payment_completed",
+          ref: invoiceDoc.id,
+          title: "Payment Successful",
+          snippet: `Your payment of ₦${(amount / 100).toLocaleString()} for invoice ${invoiceData.invoiceNumber} was successful.`,
+          isRead: false,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+
+        // Send notification to consultant
+        const consultantNotifRef = db
+          .collection("notifications")
+          .doc(invoiceData.consultantUid)
+          .collection("items")
+          .doc();
+        await consultantNotifRef.set({
+          type: "payment_received",
+          ref: invoiceDoc.id,
+          title: "Payment Received",
+          snippet: `You received ₦${consultantEarnings.toLocaleString()} for invoice ${invoiceData.invoiceNumber}.`,
+          isRead: false,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+
+        logger.info("Payment processed successfully", { invoiceId: invoiceDoc.id, reference });
+      }
+
+      res.status(200).send("Webhook processed");
+    } catch (error) {
+      logger.error("Error processing Paystack webhook", error);
+      res.status(500).send("Error processing webhook");
+    }
+  }
+);
+
+/* ---------------------------------
+   CHAT NOTIFICATIONS
+----------------------------------*/
+
+export const sendChatNotification = onCall(
+  {
+    region,
+  },
+  async (request) => {
+    const { chatId, messageId, senderUid, recipientUid, messageContent } = request.data;
+
+    if (!chatId || !messageId || !senderUid || !recipientUid) {
+      throw new HttpsError("invalid-argument", "Missing required fields");
+    }
+
+    try {
+      // Create notification for recipient
+      const notifRef = db
+        .collection("notifications")
+        .doc(recipientUid)
+        .collection("items")
+        .doc();
+
+      await notifRef.set({
+        type: "chat_message",
+        ref: chatId,
+        title: "New Message",
+        snippet: messageContent || "You have a new message",
+        isRead: false,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      // Update chat unread count
+      const chatRef = db.collection("consultantChats").doc(chatId);
+      const chatDoc = await chatRef.get();
+
+      if (chatDoc.exists) {
+        const chatData = chatDoc.data();
+        if (chatData?.consultantUid === recipientUid) {
+          await chatRef.update({
+            unreadCountConsultant: FieldValue.increment(1),
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        } else if (chatData?.customerUid === recipientUid) {
+          await chatRef.update({
+            unreadCountCustomer: FieldValue.increment(1),
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        }
+      }
+
+      logger.info("Chat notification sent", { chatId, recipientUid });
+      return { success: true };
+    } catch (error) {
+      logger.error("Error sending chat notification", error);
+      throw new HttpsError("internal", "Failed to send notification");
+    }
+  }
+);
+
+/* ---------------------------------
+   EMAIL INTEGRATION
+----------------------------------*/
+
+// Initialize email transporter (configure with your email service)
+const getEmailTransporter = () => {
+  // For Gmail, use OAuth2 or App Password
+  // For production, use SendGrid, Mailgun, or AWS SES
+  return nodemailer.createTransport({
+    service: "gmail", // Change to your email service
+    auth: {
+      user: process.env.EMAIL_USER || "",
+      pass: process.env.EMAIL_PASSWORD || "", // Use App Password for Gmail
+    },
+  });
+};
+
+export const sendInvoiceEmail = onCall(
+  {
+    region,
+  },
+  async (request) => {
+    const { invoiceId, customerEmail, consultantName, invoiceNumber, total } = request.data;
+
+    if (!invoiceId || !customerEmail) {
+      throw new HttpsError("invalid-argument", "Missing required fields");
+    }
+
+    try {
+      const transporter = getEmailTransporter();
+      const invoiceUrl = `https://ijoba606.com/consultants/invoices/${invoiceId}`;
+
+      const mailOptions = {
+        from: process.env.EMAIL_FROM || "noreply@ijoba606.com",
+        to: customerEmail,
+        subject: `Invoice ${invoiceNumber} from ${consultantName}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #7c3aed;">Invoice ${invoiceNumber}</h2>
+            <p>Dear Customer,</p>
+            <p>You have received an invoice from <strong>${consultantName}</strong>.</p>
+            <p><strong>Total Amount:</strong> ₦${total.toLocaleString()}</p>
+            <p>Please click the link below to view and pay your invoice:</p>
+            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+              View Invoice
+            </a>
+            <p>If you have any questions, please contact your consultant.</p>
+            <p>Best regards,<br>IJOBA 606 Team</p>
+          </div>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+      logger.info("Invoice email sent", { invoiceId, customerEmail });
+      return { success: true };
+    } catch (error) {
+      logger.error("Error sending invoice email", error);
+      throw new HttpsError("internal", "Failed to send email");
+    }
+  }
+);
+
+/* ---------------------------------
+   48-HOUR HOLD RELEASE SCHEDULER
+----------------------------------*/
+
+// Scheduled function that runs every hour to release funds after 48-hour hold
+export const releaseHeldFunds = onSchedule(
+  {
+    schedule: "every 1 hours", // Runs every hour
+    timeZone: "Africa/Lagos",
+    region,
+  },
+  async (event) => {
+    try {
+      const now = new Date();
+      const transactionsRef = db.collection("walletTransactions");
+      
+      // Find transactions with pending_release status where holdReleaseAt has passed
+      // Note: Firestore Timestamp comparison - we need to convert Date to Timestamp
+      const { Timestamp } = await import("firebase-admin/firestore");
+      const nowTimestamp = Timestamp.fromDate(now);
+      
+      const pendingReleaseQuery = transactionsRef
+        .where("fundStatus", "==", "pending_release")
+        .where("holdReleaseAt", "<=", nowTimestamp);
+
+      const snapshot = await pendingReleaseQuery.get();
+      let releasedCount = 0;
+
+      for (const docSnap of snapshot.docs) {
+        const transaction = docSnap.data();
+        
+        // Update transaction to credited
+        await docSnap.ref.update({
+          fundStatus: "credited",
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+
+        // Update wallet balance (make funds available)
+        const walletRef = db.collection("consultantWallets").doc(transaction.consultantUid);
+        const walletDoc = await walletRef.get();
+
+        if (walletDoc.exists) {
+          // Add funds to balance now that they're credited
+          await walletRef.update({
+            balance: FieldValue.increment(transaction.amount),
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+          
+          logger.info("Funds released", {
+            consultantUid: transaction.consultantUid,
+            amount: transaction.amount,
+            invoiceId: transaction.invoiceId,
+          });
+        }
+
+        releasedCount++;
+      }
+
+      logger.info("Hold release check completed", { releasedCount });
+    } catch (error) {
+      logger.error("Error releasing held funds", error);
+      throw error;
+    }
+  }
+);

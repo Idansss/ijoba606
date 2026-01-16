@@ -33,16 +33,16 @@ export default function ConsultantsPage() {
         className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
       >
         <Link
-          href="/consultants/request"
+          href="/consultants/browse"
           className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-purple-500/30 hover:brightness-110 transition text-center"
         >
-          I need a consultant
+          Browse Consultants
         </Link>
         <Link
           href="/consultants/apply"
           className="rounded-full border-2 border-purple-600 px-8 py-4 text-lg font-semibold text-purple-600 hover:bg-purple-50 transition text-center"
         >
-          I'm a consultant
+          Become a Consultant
         </Link>
       </motion.div>
 
