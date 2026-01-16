@@ -100,7 +100,7 @@ export default function ChatPage() {
         await setDoc(newChatRef, newChat);
         const createdChat = { id: newChatRef.id, ...newChat } as ConsultantChat;
         setChat(createdChat);
-        chatIdRef.current = createdChat.id;
+        chatIdRef.current = createdChat.id || null;
       }
     } catch (error) {
       console.error('Error initializing chat:', error);
