@@ -81,7 +81,7 @@ export default function ChatPage() {
       if (!existingChatSnap.empty) {
         const chatData = { id: existingChatSnap.docs[0].id, ...existingChatSnap.docs[0].data() } as ConsultantChat;
         setChat(chatData);
-        chatIdRef.current = chatData.id;
+        chatIdRef.current = chatData.id || null;
       } else {
         // Create new chat
         const newChatRef = doc(collection(db, 'consultantChats'));
