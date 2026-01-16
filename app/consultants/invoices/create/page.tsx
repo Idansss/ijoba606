@@ -208,6 +208,11 @@ export default function CreateInvoicePage() {
       return;
     }
 
+    if (!db || !firebaseUser) {
+      addToast({ type: 'error', message: 'Database not available' });
+      return;
+    }
+
     setSaving(true);
     try {
       const invoiceNumber = generateInvoiceNumber();
