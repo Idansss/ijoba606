@@ -1,26 +1,6 @@
 {
   "indexes": [
     {
-      "collectionGroup": "forumThreads",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isHidden",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "forumPosts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isHidden",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "walletTransactions",
       "queryScope": "COLLECTION",
       "fields": [
