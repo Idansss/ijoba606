@@ -10,12 +10,7 @@ import { Invoice } from '@/lib/types';
 import { ArrowLeft, CheckCircle2, Clock, XCircle, Download, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import dynamic from 'next/dynamic';
-
-// Dynamically import Paystack button to avoid SSR issues
-const PaystackButton = dynamic(() => import('react-paystack').then(mod => mod.PaystackButton), {
-  ssr: false,
-});
+import { PaystackButton } from '@/components/payments/PaystackButton';
 
 export default function InvoicePage() {
   const params = useParams();
