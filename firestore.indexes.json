@@ -29,16 +29,6 @@
       ]
     },
     {
-      "collectionGroup": "serviceCompletions",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "invoiceId",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "refundRequests",
       "queryScope": "COLLECTION",
       "fields": [
