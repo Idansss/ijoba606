@@ -145,15 +145,19 @@ export default function ChatPage() {
     if (unreadMessages.length === 0) return;
 
     try {
+      // Store db in a const so TypeScript knows it's not null inside the map
+      const firestoreDb = db;
+      const currentChatId = chatIdRef.current;
+      
       const batch = unreadMessages.map(msg => {
-        const msgRef = doc(db, 'chatMessages', msg.id!);
+        const msgRef = doc(firestoreDb, 'chatMessages', msg.id!);
         return updateDoc(msgRef, { isRead: true });
       });
 
       await Promise.all(batch);
 
       // Update chat unread count
-      const chatRef = doc(db, 'consultantChats', chatIdRef.current);
+      const chatRef = doc(firestoreDb, 'consultantChats', currentChatId);
       await updateDoc(chatRef, {
         unreadCountCustomer: 0,
         unreadCountConsultant: 0,
