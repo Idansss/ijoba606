@@ -104,7 +104,7 @@ export default function ConsultantWalletPage() {
       const accounts = bankAccountsSnap.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as BankAccount[];
       setSavedBankAccounts(accounts);
       if (accounts.length > 0) {
         const defaultAccount = accounts.find((a: any) => a.isDefault) || accounts[0];
