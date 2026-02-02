@@ -7,7 +7,7 @@ import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { BankAccount, ConsultantWallet, WalletTransaction, WithdrawalRequest } from '@/lib/types';
-import { DollarSign, ArrowUp, ArrowDown, Plus, TrendingUp, Wallet, CreditCard, Clock } from 'lucide-react';
+import { ArrowUp, ArrowDown, Plus, TrendingUp, Wallet, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
@@ -23,6 +23,7 @@ export default function ConsultantWalletPage() {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [savedBankAccounts, setSavedBankAccounts] = useState<BankAccount[]>([]);
   const [selectedBankAccountId, setSelectedBankAccountId] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
 
   const availableBalance = transactions
     .filter((t) => t.type === 'credit' && t.fundStatus === 'credited')
@@ -222,7 +223,6 @@ export default function ConsultantWalletPage() {
       const balanceInNaira = availableBalance / 100; // Only available funds
       const totalEarningsInNaira = wallet.totalEarnings / 100;
       const totalWithdrawnInNaira = wallet.totalWithdrawn / 100;
-      const totalPendingInNaira = (wallet.totalPending + pendingRelease + inService) / 100;
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl">
