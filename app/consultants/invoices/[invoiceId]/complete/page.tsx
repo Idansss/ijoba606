@@ -31,10 +31,14 @@ export default function CompleteServicePage() {
   }, [firebaseUser, invoiceId, router, addToast]);
 
   const fetchInvoice = async () => {
-    if (!db || !invoiceId) return;
+    if (!db || !invoiceId || !firebaseUser) {
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     try {
+      const currentUser = firebaseUser;
       const invoiceRef = doc(db, 'invoices', invoiceId);
       const invoiceSnap = await getDoc(invoiceRef);
 
@@ -46,7 +50,7 @@ export default function CompleteServicePage() {
 
       const invoiceData = { id: invoiceSnap.id, ...invoiceSnap.data() } as Invoice;
 
-      if (invoiceData.consultantUid !== firebaseUser.uid) {
+      if (invoiceData.consultantUid !== currentUser.uid) {
         addToast({ type: 'error', message: 'You do not have access to this invoice' });
         router.push('/consultants/wallet');
         return;
