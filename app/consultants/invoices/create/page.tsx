@@ -257,7 +257,7 @@ export default function CreateInvoicePage() {
           senderUid: firebaseUser.uid,
           senderName: 'You',
           senderType: 'consultant',
-          content: `Invoice ${invoiceNumber} has been sent. Total: ₦${invoice.total.toLocaleString()}`,
+          content: `Invoice ${invoiceNumber} has been sent. Total: ₦${total.toLocaleString()}`,
           messageType: 'invoice',
           invoiceId: invoiceRef.id,
           isRead: false,
