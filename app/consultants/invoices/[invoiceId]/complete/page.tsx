@@ -102,11 +102,8 @@ export default function CompleteServicePage() {
       await setDoc(completionRef, completion);
 
       // Send notification to customer
-      const customerNotifRef = db
-        .collection('notifications')
-        .doc(invoice.customerUid)
-        .collection('items')
-        .doc();
+      const notifRef = collection(db, 'notifications', invoice.customerUid, 'items');
+      const customerNotifRef = doc(notifRef);
       await setDoc(customerNotifRef, {
         type: 'service_completed',
         ref: invoice.id,
