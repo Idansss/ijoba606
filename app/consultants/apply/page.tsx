@@ -12,6 +12,7 @@ import { useToastStore } from '@/lib/store/toast';
 import { storage } from '@/lib/firebase/config';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { ConsultantDocument } from '@/lib/types';
+import { CloudUpload } from 'lucide-react';
 
 const SPECIALTY_OPTIONS = [
   'PAYE Compliance',
@@ -274,19 +275,31 @@ export default function ConsultantApplyPage() {
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Supporting Documents (CV, certificates, IDs, etc.)
           </label>
+          <label
+            htmlFor="consultant-documents"
+            className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-purple-200 bg-purple-50/40 px-6 py-8 text-center transition hover:border-purple-400 hover:bg-purple-50"
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-purple-600 shadow-sm">
+              <CloudUpload className="h-6 w-6" />
+            </span>
+            <span className="text-sm font-semibold text-gray-700">
+              Click to upload documents
+            </span>
+            <span className="text-xs text-gray-500">
+              PDF, DOC/DOCX, JPG, JPEG, PNG (max 10MB each)
+            </span>
+          </label>
           <input
+            id="consultant-documents"
             type="file"
             multiple
             onChange={(event) => {
               const files = Array.from(event.target.files || []);
               setDocuments(files);
             }}
-            className="block w-full text-sm text-gray-700"
-            accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            className="hidden"
+            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/jpg,image/png"
           />
-          <p className="mt-1 text-xs text-gray-500">
-            Upload up to 10MB per file. Accepted: images, PDF, DOC/DOCX.
-          </p>
           {documents.length > 0 && (
             <ul className="mt-3 space-y-1 text-sm text-gray-700">
               {documents.map((file, index) => (
