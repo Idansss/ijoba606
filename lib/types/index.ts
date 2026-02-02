@@ -166,6 +166,16 @@ export interface Notification {
 // ==================== Consultants ====================
 
 export type ConsultantApplicationStatus = 'pending' | 'approved' | 'rejected';
+export type ConsultantVerificationStatus = 'verified' | 'unverified';
+export type ConsultantActivityStatus = 'active' | 'inactive' | 'suspended';
+
+export interface ConsultantDocument {
+  name: string;
+  url: string;
+  contentType?: string;
+  size?: number;
+  uploadedAt?: Timestamp;
+}
 
 export interface ConsultantApplication {
   id?: string;
@@ -179,7 +189,10 @@ export interface ConsultantApplication {
   specialties: string[];
   bio: string;
   credentialsUrl?: string;
+  documents?: ConsultantDocument[];
   status: ConsultantApplicationStatus;
+  verificationStatus?: ConsultantVerificationStatus;
+  activityStatus?: ConsultantActivityStatus;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -221,6 +234,8 @@ export interface ConsultantProfile {
   // Metadata
   isVerified: boolean; // Admin verified
   isActive: boolean;
+  verificationStatus?: ConsultantVerificationStatus;
+  activityStatus?: ConsultantActivityStatus;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

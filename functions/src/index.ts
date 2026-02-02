@@ -34,6 +34,17 @@ const ConsultantApplicationSchema = z.object({
   experienceYears: z.number().min(0).max(50).optional(),
   specialties: z.array(z.string()).min(1).max(5),
   bio: z.string().min(20).max(1000),
+  credentialsUrl: z.string().url().optional(),
+  documents: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        url: z.string().url(),
+        contentType: z.string().optional(),
+        size: z.number().int().min(1).optional(),
+      })
+    )
+    .optional(),
 });
 
 const ConsultantRequestSchema = z.object({
@@ -83,6 +94,9 @@ export const createConsultantApplication = onCall(
   { region },
   async (request) => {
   const uid = request.auth?.uid ?? null;
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Must be signed in");
+  }
 
   const parsed = ConsultantApplicationSchema.safeParse(request.data);
   if (!parsed.success) {
@@ -91,17 +105,19 @@ export const createConsultantApplication = onCall(
 
   const data = parsed.data;
 
-  await db.collection("consultantApplications").add({
+  await db.collection("consultantApplications").doc(uid).set({
     uid,
     ...data,
     status: "pending",
+    verificationStatus: "unverified",
+    activityStatus: "inactive",
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
-  });
+  }, { merge: true });
 
   logger.info("Consultant application submitted", { email: data.email });
 
-  return { success: true };
+  return { applicationId: uid };
   }
 );
 

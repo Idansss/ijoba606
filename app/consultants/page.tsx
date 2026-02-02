@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { UserCheck, Users, Clock, CheckCircle2 } from 'lucide-react';
-import { ComingSoonBadge } from '@/components/consultants/ComingSoonBadge';
+import { UserCheck, Users, CheckCircle2 } from 'lucide-react';
 
 export default function ConsultantsPage() {
   return (
@@ -18,10 +17,9 @@ export default function ConsultantsPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800">
             Talk to a Tax Consultant
           </h1>
-          <ComingSoonBadge />
         </div>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-4">
-          We're onboarding verified PAYE & Personal Income Tax experts. Join early and we'll notify you when sessions open.
+          Connect with verified PAYE & Personal Income Tax experts for personalized guidance.
         </p>
       </motion.div>
 
@@ -77,9 +75,9 @@ export default function ConsultantsPage() {
             <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">3. You book a session when booking opens</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">3. You book a session with confidence</h3>
             <p className="text-gray-600">
-              Once booking is live, you'll be notified and can schedule your consultation.
+              Choose a consultant, discuss scope, and get started right away.
             </p>
           </div>
         </div>
@@ -96,10 +94,10 @@ export default function ConsultantsPage() {
         <div className="space-y-4">
           <details className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-100">
             <summary className="font-semibold text-gray-800 cursor-pointer">
-              When will booking open?
+              How do I get started?
             </summary>
             <p className="mt-3 text-gray-600">
-              We're currently onboarding verified consultants. Booking will open once we have a qualified network of experts. Join the waitlist to be notified when sessions become available.
+              Browse consultants, start a chat, and agree on the scope of work. Your consultant can send an invoice when you're ready.
             </p>
           </details>
           <details className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-100">

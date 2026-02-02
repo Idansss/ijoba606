@@ -37,14 +37,16 @@ export default function BrowseConsultantsPage() {
         q = query(
           consultantsRef,
           where('specialties', 'array-contains', selectedSpecialty),
-          where('isActive', '==', true),
+          where('activityStatus', '==', 'active'),
+          where('verificationStatus', '==', 'verified'),
           orderBy(sortBy === 'rating' ? 'averageRating' : sortBy === 'experience' ? 'experienceYears' : 'totalClients', 'desc'),
           limit(50)
         );
       } else {
         q = query(
           consultantsRef,
-          where('isActive', '==', true),
+          where('activityStatus', '==', 'active'),
+          where('verificationStatus', '==', 'verified'),
           orderBy(sortBy === 'rating' ? 'averageRating' : sortBy === 'experience' ? 'experienceYears' : 'totalClients', 'desc'),
           limit(50)
         );
@@ -68,7 +70,15 @@ export default function BrowseConsultantsPage() {
           ...doc.data(),
         })) as ConsultantProfile[];
 
-        consultantsData = consultantsData.filter(c => c.isActive !== false);
+        consultantsData = consultantsData.filter(c => {
+          const isVerified = c.verificationStatus
+            ? c.verificationStatus === 'verified'
+            : c.isVerified !== false;
+          const isActive = c.activityStatus
+            ? c.activityStatus === 'active'
+            : c.isActive !== false;
+          return isVerified && isActive;
+        });
         
         if (selectedSpecialty !== 'all') {
           consultantsData = consultantsData.filter(c => 
@@ -177,7 +187,7 @@ export default function BrowseConsultantsPage() {
                   <div>
                     <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                       {consultant.name}
-                      {consultant.isVerified && (
+                      {(consultant.verificationStatus === 'verified' || consultant.isVerified) && (
                         <CheckCircle2 className="w-5 h-5 text-blue-600" />
                       )}
                     </h3>

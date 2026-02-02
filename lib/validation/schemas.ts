@@ -167,6 +167,16 @@ export const consultantApplicationSchema = z.object({
     .max(1000, 'Bio must be less than 1000 characters')
     .refine((val) => !containsBlocklist(val), 'Please provide a valid bio'),
   credentialsUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  documents: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        url: z.string().url(),
+        contentType: z.string().optional(),
+        size: z.number().int().min(1).optional(),
+      })
+    )
+    .optional(),
 });
 
 export type ConsultantApplicationFormData = z.infer<typeof consultantApplicationSchema>;

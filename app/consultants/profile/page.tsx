@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { collection, doc, getDoc, setDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where, limit, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { ConsultantProfile, ConsultantQualification, ConsultantCertification, ConsultantWorkExperience, ConsultantPortfolioItem } from '@/lib/types';
-import { Plus, Trash2, Save, Upload, X } from 'lucide-react';
+import { ConsultantProfile, ConsultantQualification, ConsultantCertification, ConsultantWorkExperience, ConsultantPortfolioItem, ConsultantApplication } from '@/lib/types';
+import { Plus, Trash2, Save } from 'lucide-react';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 export default function ConsultantProfilePage() {
@@ -36,7 +36,9 @@ export default function ConsultantProfilePage() {
     totalProjects: 0,
     reviewsCount: 0,
     isVerified: false,
-    isActive: true,
+    isActive: false,
+    verificationStatus: 'unverified',
+    activityStatus: 'inactive',
   });
 
   useEffect(() => {
@@ -54,11 +56,24 @@ export default function ConsultantProfilePage() {
     if (!db || !firebaseUser) return;
 
     try {
-      // Check if application is approved
+      // Check if application is approved (support legacy random doc IDs)
+      let appData: ConsultantApplication | null = null;
       const appRef = doc(db, 'consultantApplications', firebaseUser.uid);
       const appSnap = await getDoc(appRef);
 
-      if (!appSnap.exists() || appSnap.data().status !== 'approved') {
+      if (appSnap.exists()) {
+        appData = { id: appSnap.id, ...appSnap.data() } as ConsultantApplication;
+      } else {
+        const appsRef = collection(db, 'consultantApplications');
+        const q = query(appsRef, where('uid', '==', firebaseUser.uid), limit(1));
+        const appsSnap = await getDocs(q);
+        if (!appsSnap.empty) {
+          const docSnap = appsSnap.docs[0];
+          appData = { id: docSnap.id, ...docSnap.data() } as ConsultantApplication;
+        }
+      }
+
+      if (!appData || appData.status !== 'approved') {
         addToast({ 
           type: 'info', 
           message: 'Your consultant application is pending approval. Please wait for admin approval.' 
@@ -79,6 +94,8 @@ export default function ConsultantProfilePage() {
           certifications: data.certifications || [],
           workExperience: data.workExperience || [],
           portfolioItems: data.portfolioItems || [],
+          verificationStatus: data.verificationStatus || (data.isVerified ? 'verified' : 'unverified'),
+          activityStatus: data.activityStatus || (data.isActive ? 'active' : 'inactive'),
         });
       } else {
         // Initialize with user data
@@ -86,6 +103,10 @@ export default function ConsultantProfilePage() {
           ...prev,
           name: formatHandleForDisplay(user?.handle || ''),
           email: firebaseUser.email || '',
+          verificationStatus: appData?.verificationStatus || 'unverified',
+          activityStatus: appData?.activityStatus || 'inactive',
+          isVerified: appData?.verificationStatus === 'verified',
+          isActive: appData?.activityStatus === 'active',
         }));
       }
     } catch (error) {
@@ -104,6 +125,8 @@ export default function ConsultantProfilePage() {
       const profileData: Partial<ConsultantProfile> = {
         ...profile,
         uid: firebaseUser.uid,
+        isVerified: profile.verificationStatus === 'verified' || profile.isVerified === true,
+        isActive: profile.activityStatus === 'active' || profile.isActive === true,
         updatedAt: serverTimestamp() as any,
       };
 

@@ -21,6 +21,17 @@ A mobile-first web application for making PAYE (Pay As You Earn) literacy engagi
 - Full-text search across threads
 - Rate limiting and profanity filtering
 
+### 🧑‍💼 Consultant Marketplace
+- Consultant applications with document uploads (CV, certificates, IDs)
+- Admin approval workflow with verification and activity statuses
+- Consultant profiles (experience, specialties, rates, availability)
+- Browse and discover verified, active consultants
+- Real-time chat between users and consultants
+- Invoices with VAT and Paystack fees
+- Paystack payments, wallet credits, withdrawals
+- Service completion workflow with 48-hour hold and dispute support
+- Admin monitoring for transactions, disputes, and refunds
+
 ### 🧮 Personal Income Tax Calculator
 - **Monthly or Annual** calculation modes
 - **Configurable PAYE rules** (admin-editable)
@@ -32,15 +43,16 @@ A mobile-first web application for making PAYE (Pay As You Earn) literacy engagi
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router) + TypeScript
+- **Framework**: Next.js 16 (App Router) + TypeScript
 - **Styling**: Tailwind CSS v4 + class-variance-authority
 - **Animations**: Framer Motion
 - **State Management**: Zustand
-- **Backend**: Firebase (Auth, Firestore, Cloud Functions)
+- **Backend**: Firebase (Auth, Firestore, Storage, Cloud Functions)
 - **Validation**: Zod
 - **Date Handling**: date-fns + date-fns-tz (Africa/Lagos)
 - **Testing**: Vitest + React Testing Library
 - **Markdown**: react-markdown + remark-gfm + rehype-sanitize
+- **Payments**: Paystack
 
 ## Setup Instructions
 
@@ -110,27 +122,31 @@ firebase login
 # Initialize Firebase (select Firestore, Functions, Hosting)
 firebase init
 
-# Deploy rules
-firebase deploy --only firestore:rules
+# Deploy Firestore rules, indexes, and Storage rules
+firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
 
 ### 5. Set Up Cloud Functions
 
-The Cloud Functions are not included in this repository skeleton. You'll need to create them based on the interfaces in `lib/firebase/functions.ts`:
+Cloud Functions are included in `functions/` and handle:
 
-- `submitRound` - Validate and score quiz rounds
-- `createThread`, `createPost` - Forum content creation
-- `voteThread`, `votePost` - Voting system
-- `reportContent`, `moderateContent` - Moderation
-- `searchForum` - Full-text search
-- `saveCalcRun` - Save calculator results
-- `adminSetPayeRules` - Update tax rules (admin only)
-- Scheduled: `rollWeeklyLeaderboards` (Mondays 00:05 Africa/Lagos)
+- Quiz round scoring and badge awarding
+- Forum CRUD, voting, reports, and moderation
+- Consultant applications and requests
+- Paystack webhooks, invoice emails, chat notifications
+- Scheduled funds release for consultant wallets
 
 Deploy functions:
 ```bash
 firebase deploy --only functions
 ```
+
+Functions require the following secrets (set via Firebase Functions secrets):
+
+- `PAYSTACK_SECRET_KEY`
+- `EMAIL_USER`
+- `EMAIL_PASSWORD`
+- `EMAIL_FROM`
 
 ### 6. Seed Initial Data
 
@@ -212,9 +228,11 @@ ijoba606/
 │   ├── profile/                  # User profile & badges
 │   ├── calculator/               # Tax calculator
 │   │   └── result/               # Calculator results
-│   ├── forum/                    # Forum pages (to be implemented)
-│   ├── admin/                    # Admin pages (to be implemented)
-│   ├── legal/                    # Legal pages (to be implemented)
+│   ├── forum/                    # Forum pages
+│   ├── admin/                    # Admin pages (users, moderation, consultants, transactions)
+│   ├── consultants/              # Consultant marketplace
+│   ├── dashboard/                # User dashboard (invoices, services)
+│   ├── legal/                    # Legal pages
 │   └── layout.tsx                # Root layout
 ├── components/
 │   ├── layout/                   # Header, Footer
@@ -230,6 +248,7 @@ ijoba606/
 │   ├── utils/                    # Utilities (badges, scoring, streak, calculator, etc.)
 │   └── validation/               # Zod schemas
 ├── firestore.rules               # Firestore security rules
+├── storage.rules                 # Firebase Storage rules
 ├── vitest.config.ts              # Test configuration
 └── package.json
 ```
@@ -249,7 +268,14 @@ npm run test:coverage
 
 ## Deployment
 
-### Vercel (Recommended)
+### Netlify (Recommended)
+
+1. Push your code to GitHub
+2. Import project on Netlify
+3. Set environment variables from `.env.local`
+4. Build command: `npm run build`, publish dir: `.next`
+
+### Vercel
 
 1. Push your code to GitHub
 2. Import project on [Vercel](https://vercel.com)
@@ -270,19 +296,13 @@ To make a user an admin:
 1. Go to Firestore console
 2. Navigate to `users/{uid}`
 3. Update `role` field to `"admin"`
-4. User can now access `/admin/questions` and `/admin/rules`
+4. User can now access `/admin` and management pages
 
-## Features to Implement
+## Future Enhancements
 
-This is a comprehensive skeleton. The following features need full implementation:
-
-- **Forum pages**: `/forum`, `/forum/new`, `/forum/thread/[id]`, etc.
-- **Forum components**: ThreadCard, MarkdownEditor, Post, VoteBar, etc.
-- **Cloud Functions**: All backend logic for quiz, forum, calculator
-- **Admin pages**: Question CRUD, Rules editor, Moderation dashboard
-- **Share/OG images**: Social sharing with custom images
-- **Unit tests**: Comprehensive test coverage
-- **Legal pages**: Privacy policy and Terms of Service
+- Social sharing with custom OG images
+- Expanded test coverage
+- Additional legal/compliance content
 
 ## Contributing
 

@@ -9,7 +9,9 @@ import { consultantApplicationSchema, ConsultantApplicationFormData } from '@/li
 import { createConsultantApplication } from '@/lib/firebase/functions';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { ComingSoonBadge } from '@/components/consultants/ComingSoonBadge';
+import { storage } from '@/lib/firebase/config';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { ConsultantDocument } from '@/lib/types';
 
 const SPECIALTY_OPTIONS = [
   'PAYE Compliance',
@@ -27,6 +29,8 @@ export default function ConsultantApplyPage() {
   const { firebaseUser } = useAuthStore();
   const { addToast } = useToastStore();
   const [submitting, setSubmitting] = useState(false);
+  const [documents, setDocuments] = useState<File[]>([]);
+  const [uploadingDocs, setUploadingDocs] = useState(false);
 
   const {
     register,
@@ -51,12 +55,48 @@ export default function ConsultantApplyPage() {
 
     setSubmitting(true);
     try {
-      await createConsultantApplication(data);
+      let uploadedDocs: ConsultantDocument[] = [];
+
+      if (documents.length > 0) {
+        if (!storage) {
+          addToast({ type: 'error', message: 'File upload is unavailable right now. Please try again later.' });
+          setSubmitting(false);
+          return;
+        }
+
+        setUploadingDocs(true);
+        uploadedDocs = [];
+        for (const file of documents) {
+          if (file.size > 10 * 1024 * 1024) {
+            throw new Error(`${file.name} is larger than 10MB. Please upload a smaller file.`);
+          }
+          const fileRef = ref(
+            storage,
+            `consultantApplications/${firebaseUser.uid}/${Date.now()}-${file.name}`
+          );
+          await uploadBytes(fileRef, file);
+          const url = await getDownloadURL(fileRef);
+          uploadedDocs.push({
+            name: file.name,
+            url,
+            contentType: file.type || undefined,
+            size: file.size,
+          });
+        }
+        setUploadingDocs(false);
+      }
+
+      await createConsultantApplication({
+        ...data,
+        credentialsUrl: data.credentialsUrl?.trim() ? data.credentialsUrl.trim() : undefined,
+        documents: uploadedDocs.length > 0 ? uploadedDocs : undefined,
+      });
       router.push('/consultants/thanks?type=apply');
     } catch (error) {
       console.error('Error submitting application:', error);
       const message = error instanceof Error ? error.message : 'Failed to submit application. Please try again.';
       addToast({ type: 'error', message });
+      setUploadingDocs(false);
       setSubmitting(false);
     }
   };
@@ -70,10 +110,9 @@ export default function ConsultantApplyPage() {
       >
         <div className="flex items-center gap-3 mb-4">
           <h1 className="text-4xl font-bold text-gray-800">Consultant Application</h1>
-          <ComingSoonBadge />
         </div>
         <p className="text-gray-600">
-          Join our network of verified tax consultants. We're onboarding experts now and will notify you when sessions open.
+          Join our network of verified tax consultants. Upload supporting documents so our team can review and approve your application.
         </p>
       </motion.div>
 
@@ -231,12 +270,47 @@ export default function ConsultantApplyPage() {
           )}
         </div>
 
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Supporting Documents (CV, certificates, IDs, etc.)
+          </label>
+          <input
+            type="file"
+            multiple
+            onChange={(event) => {
+              const files = Array.from(event.target.files || []);
+              setDocuments(files);
+            }}
+            className="block w-full text-sm text-gray-700"
+            accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Upload up to 10MB per file. Accepted: images, PDF, DOC/DOCX.
+          </p>
+          {documents.length > 0 && (
+            <ul className="mt-3 space-y-1 text-sm text-gray-700">
+              {documents.map((file, index) => (
+                <li key={`${file.name}-${index}`} className="flex items-center justify-between">
+                  <span>{file.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setDocuments((prev) => prev.filter((_, i) => i !== index))}
+                    className="text-xs text-rose-600 hover:text-rose-700"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || uploadingDocs}
           className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitting ? 'Submitting...' : 'Submit Application'}
+          {uploadingDocs ? 'Uploading documents...' : submitting ? 'Submitting...' : 'Submit Application'}
         </button>
       </motion.form>
     </div>

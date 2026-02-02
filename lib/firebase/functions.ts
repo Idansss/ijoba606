@@ -348,6 +348,12 @@ export interface CreateConsultantApplicationRequest {
   specialties: string[];
   bio: string;
   credentialsUrl?: string;
+  documents?: Array<{
+    name: string;
+    url: string;
+    contentType?: string;
+    size?: number;
+  }>;
 }
 
 export interface CreateConsultantApplicationResponse {

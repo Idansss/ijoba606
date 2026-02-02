@@ -20,7 +20,8 @@ import {
   XCircle,
   Search,
   Crown,
-  DollarSign
+  DollarSign,
+  Briefcase
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -239,6 +240,16 @@ export default function AdminDashboard() {
             <DollarSign className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Transactions</h3>
             <p className="text-emerald-100">Monitor payments, refunds, and disputes</p>
+          </motion.div>
+        </Link>
+        <Link href="/admin/consultants">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+          >
+            <Briefcase className="w-8 h-8 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Consultants</h3>
+            <p className="text-indigo-100">Approve applications and manage status</p>
           </motion.div>
         </Link>
       </div>
