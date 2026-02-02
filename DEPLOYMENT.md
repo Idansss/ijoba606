@@ -202,7 +202,24 @@ Click "Deploy"
 
 Your app will be live at: `https://your-project.vercel.app`
 
-### 6.5 Add Custom Domain (Optional)
+### 6.5 Deploy to Netlify (Alternative)
+
+If you prefer Netlify over Vercel:
+
+1. **Import Project**:
+   - Log in to Netlify
+   - "Add new site" > "Import an existing project"
+   - Select your GitHub repository
+
+2. **Build Settings**:
+   - **Build Command:** `npm run build`
+   - **Publish Directory:** `.next`
+
+3. **Environment Variables**:
+   - Go to Site Configuration > Environment Variables
+   - Add all variables from `.env.local`
+
+### 6.6 Add Custom Domain (Optional)
 
 1. Go to Project Settings > Domains
 2. Add your domain
@@ -364,5 +381,3 @@ Most small-to-medium projects stay within free tiers.
 ---
 
 **Last Updated:** January 2025
-
-
