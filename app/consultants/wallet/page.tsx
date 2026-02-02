@@ -23,16 +23,10 @@ export default function ConsultantWalletPage() {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [savedBankAccounts, setSavedBankAccounts] = useState<BankAccount[]>([]);
   const [selectedBankAccountId, setSelectedBankAccountId] = useState<string>('');
-  const [
-  useEffect(() => {
-    if (!firebaseUser) {
-      addToast({ type: 'error', message: 'Please sign in to view your wallet' });
-      router.push('/consultants');
-      return;
-    }
 
-    fetchWalletData();
-  }, [firebaseUser, router, addToast]);
+  const availableBalance = transactions
+    .filter((t) => t.type === 'credit' && t.fundStatus === 'credited')
+    .reduce((sum, t) => sum + t.amount, 0);
 
   const fetchWalletData = async () => {
     if (!db || !firebaseUser) return;
@@ -110,6 +104,16 @@ export default function ConsultantWalletPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!firebaseUser) {
+      addToast({ type: 'error', message: 'Please sign in to view your wallet' });
+      router.push('/consultants');
+      return;
+    }
+
+    fetchWalletData();
+  }, [firebaseUser, router, addToast]);
 
   const handleWithdraw = async () => {
     if (!db || !firebaseUser || !wallet) return;
