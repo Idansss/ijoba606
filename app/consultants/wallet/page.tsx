@@ -23,14 +23,7 @@ export default function ConsultantWalletPage() {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [savedBankAccounts, setSavedBankAccounts] = useState<BankAccount[]>([]);
   const [selectedBankAccountId, setSelectedBankAccountId] = useState<string>('');
-  const [bankAccount, setBankAccount] = useState({
-    accountNumber: '',
-    accountName: '',
-    bankCode: '',
-    bankName: '',
-  });
-  const [submitting, setSubmitting] = useState(false);
-
+  const [
   useEffect(() => {
     if (!firebaseUser) {
       addToast({ type: 'error', message: 'Please sign in to view your wallet' });
@@ -108,7 +101,7 @@ export default function ConsultantWalletPage() {
       setSavedBankAccounts(accounts);
       if (accounts.length > 0) {
         const defaultAccount = accounts.find((a: any) => a.isDefault) || accounts[0];
-        setSelectedBankAccountId(defaultAccount.id);
+        setSelectedBankAccountId(defaultAccount.id || '');
       }
     } catch (error) {
       console.error('Error fetching wallet data:', error);
@@ -183,7 +176,7 @@ export default function ConsultantWalletPage() {
         type: 'debit',
         amount,
         status: 'pending',
-        description: `Withdrawal request to ${bankAccount.accountName} (${bankAccount.accountNumber})`,
+        description: `Withdrawal request to ${selectedAccount.accountName} (${selectedAccount.accountNumber})`,
         withdrawalRequestId: withdrawalRef.id,
         createdAt: serverTimestamp(),
       });
@@ -214,11 +207,6 @@ export default function ConsultantWalletPage() {
     return null;
   }
 
-      // Calculate available balance (only credited funds)
-      const availableBalance = transactions
-        .filter(t => t.type === 'credit' && t.fundStatus === 'credited')
-        .reduce((sum, t) => sum + t.amount, 0);
-      
       const pendingRelease = transactions
         .filter(t => t.type === 'credit' && t.fundStatus === 'pending_release')
         .reduce((sum, t) => sum + t.amount, 0);
