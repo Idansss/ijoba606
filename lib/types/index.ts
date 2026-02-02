@@ -343,7 +343,15 @@ export interface Invoice {
   currency: 'NGN';
   
   // Service Status
-  serviceStatus?: 'pending_payment' | 'in_progress' | 'completed' | 'cancelled';
+  serviceStatus?:
+    | 'pending_payment'
+    | 'in_progress'
+    | 'pending_completion'
+    | 'pending_confirmation'
+    | 'pending_release'
+    | 'completed'
+    | 'cancelled'
+    | 'disputed';
   
   // Payment
   status: InvoiceStatus;
