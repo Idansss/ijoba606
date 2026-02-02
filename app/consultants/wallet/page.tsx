@@ -6,7 +6,7 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, setDoc,
 import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { ConsultantWallet, WalletTransaction, WithdrawalRequest } from '@/lib/types';
+import { BankAccount, ConsultantWallet, WalletTransaction, WithdrawalRequest } from '@/lib/types';
 import { DollarSign, ArrowUp, ArrowDown, Plus, TrendingUp, Wallet, CreditCard, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
@@ -21,6 +21,8 @@ export default function ConsultantWalletPage() {
   const [loading, setLoading] = useState(true);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [savedBankAccounts, setSavedBankAccounts] = useState<BankAccount[]>([]);
+  const [selectedBankAccountId, setSelectedBankAccountId] = useState<string>('');
   const [bankAccount, setBankAccount] = useState({
     accountNumber: '',
     accountName: '',
