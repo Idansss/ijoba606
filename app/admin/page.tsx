@@ -20,7 +20,6 @@ import {
   XCircle,
   Search,
   Crown,
-  DollarSign,
   Briefcase
 } from 'lucide-react';
 
