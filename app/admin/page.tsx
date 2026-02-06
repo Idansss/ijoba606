@@ -20,7 +20,8 @@ import {
   XCircle,
   Search,
   Crown,
-  Briefcase
+  Briefcase,
+  DollarSign
 } from 'lucide-react';
 
 export default function AdminDashboard() {
