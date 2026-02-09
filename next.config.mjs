@@ -6,9 +6,6 @@ const nextConfig = {
     // Ignoring build errors allows the frontend to deploy while functions are managed separately.
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 export default nextConfig;
