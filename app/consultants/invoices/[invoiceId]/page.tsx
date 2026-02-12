@@ -11,6 +11,7 @@ import { ArrowLeft, CheckCircle2, Clock, XCircle, Download, Share2 } from 'lucid
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { PaystackButton } from '@/components/payments/PaystackButton';
+import { FlutterwaveButton } from '@/components/payments/FlutterwaveButton';
 
 export default function InvoicePage() {
   const params = useParams();
@@ -21,6 +22,11 @@ export default function InvoicePage() {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const paystackPublicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
+  const flutterwavePublicKey = process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '';
+  const preferredProvider = (process.env.NEXT_PUBLIC_PAYMENT_PROVIDER as 'paystack' | 'flutterwave' | undefined) || 'paystack';
+  const canUsePaystack = !!paystackPublicKey;
+  const canUseFlutterwave = !!flutterwavePublicKey;
 
   useEffect(() => {
     if (!firebaseUser) {
@@ -71,19 +77,32 @@ export default function InvoicePage() {
   const isConsultant = invoice?.consultantUid === firebaseUser?.uid;
   const isCustomer = invoice?.customerUid === firebaseUser?.uid;
 
-  const handlePaystackSuccess = async (reference: any) => {
-    if (!db || !invoice) return;
+  const handlePaymentSuccess = async (
+    provider: 'paystack' | 'flutterwave',
+    reference: string,
+    transactionId?: string
+  ) => {
+    if (!db || !invoice?.id) return;
 
     setProcessingPayment(true);
     try {
       // Update invoice
-      const invoiceRef = doc(db, 'invoices', invoice.id!);
-      await updateDoc(invoiceRef, {
+      const invoiceRef = doc(db, 'invoices', invoice.id);
+      const paymentUpdate: Partial<Invoice> = {
         paymentStatus: 'completed',
-        paystackReference: reference.reference,
         paidAt: serverTimestamp(),
         status: 'paid',
+        paymentMethod: provider,
         updatedAt: serverTimestamp(),
+      };
+      if (provider === 'paystack') {
+        paymentUpdate.paystackReference = reference;
+      } else {
+        paymentUpdate.flutterwaveReference = reference;
+        paymentUpdate.flutterwaveTransactionId = transactionId;
+      }
+      await updateDoc(invoiceRef, {
+        ...paymentUpdate,
       });
 
       // Create payment transaction record
@@ -96,9 +115,10 @@ export default function InvoicePage() {
         amount: invoice.total,
         currency: 'NGN',
         status: 'completed',
-        paymentMethod: 'paystack',
-        paystackReference: reference.reference,
-        paystackTransactionId: reference.transaction,
+        paymentMethod: provider,
+        ...(provider === 'paystack'
+          ? { paystackReference: reference, paystackTransactionId: transactionId }
+          : { flutterwaveReference: reference, flutterwaveTransactionId: transactionId }),
         createdAt: serverTimestamp(),
         completedAt: serverTimestamp(),
       });
@@ -115,7 +135,7 @@ export default function InvoicePage() {
     }
   };
 
-  const handlePaystackClose = () => {
+  const handlePaymentClose = () => {
     addToast({ type: 'info', message: 'Payment cancelled' });
   };
 
@@ -250,21 +270,108 @@ export default function InvoicePage() {
         {isCustomer && invoice.status !== 'paid' && invoice.paymentStatus !== 'completed' && (
           <div className="border-t pt-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">Make Payment</h3>
-            <PaystackButton
-              publicKey={process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ''}
-              email={firebaseUser?.email || ''}
-              amount={invoice.total * 100} // Paystack expects amount in kobo
-              metadata={{
-                invoiceId: invoice.id,
-                invoiceNumber: invoice.invoiceNumber,
-                customerUid: invoice.customerUid,
-                consultantUid: invoice.consultantUid,
-              }}
-              text="Pay Now"
-              onSuccess={handlePaystackSuccess}
-              onClose={handlePaystackClose}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
-            />
+            <div className="flex flex-wrap gap-3 items-center">
+              {preferredProvider === 'flutterwave' ? (
+                <>
+                  {canUseFlutterwave && (
+                    <FlutterwaveButton
+                      publicKey={flutterwavePublicKey}
+                      email={firebaseUser?.email || ''}
+                      amount={invoice.total}
+                      metadata={{
+                        invoiceId: invoice.id,
+                        invoiceNumber: invoice.invoiceNumber,
+                        customerUid: invoice.customerUid,
+                        consultantUid: invoice.consultantUid,
+                      }}
+                      text="Pay with Flutterwave"
+                      onSuccess={(response) =>
+                        handlePaymentSuccess(
+                          'flutterwave',
+                          response.tx_ref,
+                          response.transaction_id?.toString()
+                        )
+                      }
+                      onClose={handlePaymentClose}
+                      disabled={processingPayment}
+                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
+                    />
+                  )}
+                  {canUsePaystack && (
+                    <PaystackButton
+                      publicKey={paystackPublicKey}
+                      email={firebaseUser?.email || ''}
+                      amount={invoice.total * 100}
+                      metadata={{
+                        invoiceId: invoice.id,
+                        invoiceNumber: invoice.invoiceNumber,
+                        customerUid: invoice.customerUid,
+                        consultantUid: invoice.consultantUid,
+                      }}
+                      text="Pay with Paystack"
+                      onSuccess={(response) =>
+                        handlePaymentSuccess('paystack', response.reference, response.transaction)
+                      }
+                      onClose={handlePaymentClose}
+                      disabled={processingPayment}
+                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {canUsePaystack && (
+                    <PaystackButton
+                      publicKey={paystackPublicKey}
+                      email={firebaseUser?.email || ''}
+                      amount={invoice.total * 100}
+                      metadata={{
+                        invoiceId: invoice.id,
+                        invoiceNumber: invoice.invoiceNumber,
+                        customerUid: invoice.customerUid,
+                        consultantUid: invoice.consultantUid,
+                      }}
+                      text="Pay with Paystack"
+                      onSuccess={(response) =>
+                        handlePaymentSuccess('paystack', response.reference, response.transaction)
+                      }
+                      onClose={handlePaymentClose}
+                      disabled={processingPayment}
+                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
+                    />
+                  )}
+                  {canUseFlutterwave && (
+                    <FlutterwaveButton
+                      publicKey={flutterwavePublicKey}
+                      email={firebaseUser?.email || ''}
+                      amount={invoice.total}
+                      metadata={{
+                        invoiceId: invoice.id,
+                        invoiceNumber: invoice.invoiceNumber,
+                        customerUid: invoice.customerUid,
+                        consultantUid: invoice.consultantUid,
+                      }}
+                      text="Pay with Flutterwave"
+                      onSuccess={(response) =>
+                        handlePaymentSuccess(
+                          'flutterwave',
+                          response.tx_ref,
+                          response.transaction_id?.toString()
+                        )
+                      }
+                      onClose={handlePaymentClose}
+                      disabled={processingPayment}
+                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                    />
+                  )}
+                </>
+              )}
+              {!canUsePaystack && !canUseFlutterwave && (
+                <p className="text-sm text-red-600">
+                  Payment provider is not configured. Please contact support.
+                </p>
+              )}
+            </div>
           </div>
         )}
 

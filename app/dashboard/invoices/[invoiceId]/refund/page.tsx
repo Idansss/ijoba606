@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { doc, getDoc, setDoc, collection, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
@@ -168,11 +168,9 @@ export default function RequestRefundPage() {
       });
 
       // Send notification to consultant
-      const consultantNotifRef = db
-        .collection('notifications')
-        .doc(invoice.consultantUid)
-        .collection('items')
-        .doc();
+      const consultantNotifRef = doc(
+        collection(db, 'notifications', invoice.consultantUid, 'items')
+      );
       await setDoc(consultantNotifRef, {
         type: 'refund_requested',
         ref: invoice.id,

@@ -356,8 +356,10 @@ export interface Invoice {
   // Payment
   status: InvoiceStatus;
   paymentStatus: PaymentStatus;
-  paymentMethod?: 'paystack' | 'bank_transfer' | 'other';
+  paymentMethod?: 'paystack' | 'flutterwave' | 'bank_transfer' | 'other';
   paystackReference?: string; // Paystack transaction reference
+  flutterwaveReference?: string; // Flutterwave tx_ref
+  flutterwaveTransactionId?: string; // Flutterwave transaction id
   paidAt?: Timestamp;
   dueDate: Timestamp;
   
@@ -384,9 +386,11 @@ export interface PaymentTransaction {
   amount: number;
   currency: 'NGN';
   status: PaymentStatus;
-  paymentMethod: 'paystack' | 'bank_transfer' | 'other';
+  paymentMethod: 'paystack' | 'flutterwave' | 'bank_transfer' | 'other';
   paystackReference?: string;
   paystackTransactionId?: string;
+  flutterwaveReference?: string;
+  flutterwaveTransactionId?: string;
   metadata?: Record<string, any>;
   createdAt: Timestamp;
   completedAt?: Timestamp;
