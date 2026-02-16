@@ -78,11 +78,7 @@ export default function InvoicePage() {
   const isConsultant = invoice?.consultantUid === firebaseUser?.uid;
   const isCustomer = invoice?.customerUid === firebaseUser?.uid;
 
-  const handlePaystackSuccess = async (
-    provider: 'paystack' | 'flutterwave',
-    reference: string,
-    transactionId?: string
-  ) => {
+  const handlePaystackSuccess = async (reference: string, transactionId?: string) => {
     if (!db || !invoice?.id) return;
 
     setProcessingPayment(true);
@@ -93,15 +89,10 @@ export default function InvoicePage() {
         paymentStatus: 'completed',
         paidAt: serverTimestamp(),
         status: 'paid',
-        paymentMethod: provider,
+        paymentMethod: 'paystack',
         updatedAt: serverTimestamp(),
       };
-      if (provider === 'paystack') {
-        paymentUpdate.paystackReference = reference;
-      } else {
-        paymentUpdate.flutterwaveReference = reference;
-        paymentUpdate.flutterwaveTransactionId = transactionId;
-      }
+      paymentUpdate.paystackReference = reference;
       await updateDoc(invoiceRef, {
         ...paymentUpdate,
       });
@@ -116,10 +107,9 @@ export default function InvoicePage() {
         amount: invoice.total,
         currency: 'NGN',
         status: 'completed',
-        paymentMethod: provider,
-        ...(provider === 'paystack'
-          ? { paystackReference: reference, paystackTransactionId: transactionId }
-          : { flutterwaveReference: reference, flutterwaveTransactionId: transactionId }),
+        paymentMethod: 'paystack',
+        paystackReference: reference,
+        paystackTransactionId: transactionId,
         createdAt: serverTimestamp(),
         completedAt: serverTimestamp(),
       });
@@ -333,7 +323,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Paystack"
                       onSuccess={(response) =>
-                        handlePaystackSuccess('paystack', response.reference, response.transaction)
+                        handlePaystackSuccess(response.reference, response.transaction)
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
@@ -356,7 +346,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Paystack"
                       onSuccess={(response) =>
-                        handlePaystackSuccess('paystack', response.reference, response.transaction)
+                        handlePaystackSuccess(response.reference, response.transaction)
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
