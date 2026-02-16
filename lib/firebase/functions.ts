@@ -397,3 +397,26 @@ export async function createConsultantRequest(
   return result.data;
 }
 
+// ==================== Payments ====================
+export interface VerifyFlutterwavePaymentRequest {
+  txRef?: string;
+  transactionId?: string;
+}
+
+export interface VerifyFlutterwavePaymentResponse {
+  verified: boolean;
+  status?: string;
+  invoiceId?: string;
+}
+
+export async function verifyFlutterwavePayment(
+  data: VerifyFlutterwavePaymentRequest
+): Promise<VerifyFlutterwavePaymentResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<VerifyFlutterwavePaymentRequest, VerifyFlutterwavePaymentResponse>(
+    fns,
+    'verifyFlutterwavePayment'
+  );
+  const result = await fn(data);
+  return result.data;
+}
