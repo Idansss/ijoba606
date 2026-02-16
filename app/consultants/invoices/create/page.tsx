@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { collection, doc, getDoc, setDoc, updateDoc, query, where, getDocs, serverTimestamp, Timestamp, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -11,6 +11,22 @@ import { Plus, Trash2, Save, Send, Search, X } from 'lucide-react';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 export default function CreateInvoicePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        </div>
+      }
+    >
+      <CreateInvoicePageContent />
+    </Suspense>
+  );
+}
+
+function CreateInvoicePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');

@@ -1027,6 +1027,175 @@ function verifyPaystackSignature(payload: string, signature: string, secret: str
   return hash === signature;
 }
 
+function verifyFlutterwaveSignature(signature: string, secret: string): boolean {
+  return !!signature && !!secret && signature === secret;
+}
+
+const getFlutterwaveMetadata = (data: any) => data?.meta || data?.metadata || {};
+
+const toNumber = (value: any) => {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+};
+
+async function processFlutterwavePayment({
+  txRef,
+  transactionId,
+  amount,
+  currency,
+  metadata,
+}: {
+  txRef?: string;
+  transactionId?: string;
+  amount?: number;
+  currency?: string;
+  metadata?: Record<string, any>;
+}) {
+  if (!txRef && !metadata?.invoiceId && !metadata?.invoice_id) {
+    return { status: "missing_reference" as const };
+  }
+
+  const invoicesRef = db.collection("invoices");
+  let invoiceDoc: FirebaseFirestore.QueryDocumentSnapshot | FirebaseFirestore.DocumentSnapshot | null = null;
+
+  if (txRef) {
+    const invoiceQuery = await invoicesRef
+      .where("flutterwaveReference", "==", txRef)
+      .limit(1)
+      .get();
+
+    if (!invoiceQuery.empty) {
+      invoiceDoc = invoiceQuery.docs[0];
+    }
+  }
+
+  const metadataInvoiceId = metadata?.invoiceId || metadata?.invoice_id;
+  if (!invoiceDoc && metadataInvoiceId) {
+    const invoiceSnap = await invoicesRef.doc(metadataInvoiceId).get();
+    if (invoiceSnap.exists) {
+      invoiceDoc = invoiceSnap;
+    }
+  }
+
+  if (!invoiceDoc || !invoiceDoc.exists) {
+    return { status: "invoice_not_found" as const };
+  }
+
+  const invoiceData = invoiceDoc.data() as any;
+
+  if (invoiceData.paymentStatus === "completed" || invoiceData.status === "paid") {
+    return { status: "already_processed" as const, invoiceId: invoiceDoc.id };
+  }
+
+  if (txRef) {
+    const existingTx = await db
+      .collection("paymentTransactions")
+      .where("flutterwaveReference", "==", txRef)
+      .limit(1)
+      .get();
+
+    if (!existingTx.empty) {
+      return { status: "already_processed" as const, invoiceId: invoiceDoc.id };
+    }
+  }
+
+  const amountInNaira = toNumber(amount) || toNumber(invoiceData.total);
+  const invoiceSubtotal = toNumber(invoiceData.subtotal);
+  const invoiceVAT = toNumber(invoiceData.vat);
+  const consultantEarnings = invoiceSubtotal + invoiceVAT;
+
+  await invoiceDoc.ref.update({
+    paymentStatus: "completed",
+    status: "paid",
+    paidAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    serviceStatus: "in_progress",
+    paymentMethod: "flutterwave",
+    flutterwaveReference: txRef || invoiceData.flutterwaveReference,
+    flutterwaveTransactionId: transactionId || invoiceData.flutterwaveTransactionId,
+  });
+
+  const transactionRef = db.collection("paymentTransactions").doc();
+  await transactionRef.set({
+    invoiceId: invoiceDoc.id,
+    consultantUid: invoiceData.consultantUid,
+    customerUid: invoiceData.customerUid,
+    amount: amountInNaira,
+    currency: currency || invoiceData.currency || "NGN",
+    status: "completed",
+    paymentMethod: "flutterwave",
+    flutterwaveReference: txRef,
+    flutterwaveTransactionId: transactionId,
+    metadata: metadata || {},
+    createdAt: FieldValue.serverTimestamp(),
+    completedAt: FieldValue.serverTimestamp(),
+  });
+
+  const walletRef = db.collection("consultantWallets").doc(invoiceData.consultantUid);
+  const walletDoc = await walletRef.get();
+
+  if (walletDoc.exists) {
+    await walletRef.update({
+      balance: FieldValue.increment(consultantEarnings * 100),
+      totalEarnings: FieldValue.increment(consultantEarnings * 100),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  } else {
+    await walletRef.set({
+      consultantUid: invoiceData.consultantUid,
+      balance: consultantEarnings * 100,
+      totalEarnings: consultantEarnings * 100,
+      totalWithdrawn: 0,
+      totalPending: 0,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  }
+
+  const walletTransactionRef = db.collection("walletTransactions").doc();
+  await walletTransactionRef.set({
+    consultantUid: invoiceData.consultantUid,
+    type: "credit",
+    amount: consultantEarnings * 100,
+    status: "completed",
+    description: `Payment received for invoice ${invoiceData.invoiceNumber}`,
+    invoiceId: invoiceDoc.id,
+    flutterwaveReference: txRef,
+    createdAt: FieldValue.serverTimestamp(),
+    completedAt: FieldValue.serverTimestamp(),
+  });
+
+  const customerNotifRef = db
+    .collection("notifications")
+    .doc(invoiceData.customerUid)
+    .collection("items")
+    .doc();
+  await customerNotifRef.set({
+    type: "payment_completed",
+    ref: invoiceDoc.id,
+    title: "Payment Successful",
+    snippet: `Your payment of ₦${amountInNaira.toLocaleString()} for invoice ${invoiceData.invoiceNumber} was successful.`,
+    isRead: false,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+
+  const consultantNotifRef = db
+    .collection("notifications")
+    .doc(invoiceData.consultantUid)
+    .collection("items")
+    .doc();
+  await consultantNotifRef.set({
+    type: "payment_received",
+    ref: invoiceDoc.id,
+    title: "Payment Received",
+    snippet: `You received ₦${consultantEarnings.toLocaleString()} for invoice ${invoiceData.invoiceNumber}.`,
+    isRead: false,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+
+  return { status: "processed" as const, invoiceId: invoiceDoc.id };
+}
+
 export const handlePaystackWebhook = onRequest(
   {
     region,
@@ -1193,6 +1362,123 @@ export const handlePaystackWebhook = onRequest(
       logger.error("Error processing Paystack webhook", error);
       res.status(500).send("Error processing webhook");
     }
+  }
+);
+
+/* ---------------------------------
+   FLUTTERWAVE WEBHOOK + VERIFY
+----------------------------------*/
+export const handleFlutterwaveWebhook = onRequest(
+  {
+    region,
+    cors: true,
+  },
+  async (req, res) => {
+    try {
+      if (req.method !== "POST") {
+        res.status(405).send("Method not allowed");
+        return;
+      }
+
+      const signature = req.headers["verif-hash"] as string;
+      const secret = process.env.FLUTTERWAVE_WEBHOOK_SECRET || "";
+
+      if (!verifyFlutterwaveSignature(signature, secret)) {
+        logger.error("Invalid Flutterwave signature");
+        res.status(401).send("Invalid signature");
+        return;
+      }
+
+      const event = req.body;
+      const eventType = event?.event;
+      const eventData = event?.data;
+      logger.info("Flutterwave webhook received", { event: eventType });
+
+      if (eventType !== "charge.completed") {
+        res.status(200).send("Event ignored");
+        return;
+      }
+
+      if (eventData?.status !== "successful") {
+        res.status(200).send("Charge not successful");
+        return;
+      }
+
+      const metadata = getFlutterwaveMetadata(eventData);
+      const result = await processFlutterwavePayment({
+        txRef: eventData?.tx_ref,
+        transactionId: eventData?.id ? String(eventData.id) : undefined,
+        amount: toNumber(eventData?.amount),
+        currency: eventData?.currency,
+        metadata,
+      });
+
+      logger.info("Flutterwave webhook processed", result);
+      res.status(200).send("Webhook processed");
+    } catch (error) {
+      logger.error("Error processing Flutterwave webhook", error);
+      res.status(500).send("Error processing webhook");
+    }
+  }
+);
+
+export const verifyFlutterwavePayment = onCall(
+  { region },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be signed in");
+    }
+
+    const { txRef, transactionId } = request.data || {};
+    if (!txRef && !transactionId) {
+      throw new HttpsError("invalid-argument", "Missing txRef or transactionId");
+    }
+
+    const secret = process.env.FLUTTERWAVE_SECRET_KEY || "";
+    if (!secret) {
+      throw new HttpsError("failed-precondition", "Missing Flutterwave secret key");
+    }
+
+    const endpoint = transactionId
+      ? `https://api.flutterwave.com/v3/transactions/${transactionId}/verify`
+      : `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${encodeURIComponent(txRef)}`;
+
+    const fetchFn = (globalThis as any).fetch;
+    if (!fetchFn) {
+      throw new HttpsError("failed-precondition", "Fetch API is not available in this runtime");
+    }
+
+    const response = await fetchFn(endpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${secret}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new HttpsError("internal", `Flutterwave verify failed: ${text}`);
+    }
+
+    const payload = await response.json();
+    const status = payload?.status;
+    const data = payload?.data;
+
+    if (status !== "success" || data?.status !== "successful") {
+      return { verified: false, status: data?.status || status };
+    }
+
+    const metadata = getFlutterwaveMetadata(data);
+    const result = await processFlutterwavePayment({
+      txRef: data?.tx_ref || txRef,
+      transactionId: data?.id ? String(data.id) : transactionId,
+      amount: toNumber(data?.amount),
+      currency: data?.currency,
+      metadata,
+    });
+
+    return { verified: true, ...result };
   }
 );
 
