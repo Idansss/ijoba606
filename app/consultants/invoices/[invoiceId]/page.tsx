@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { PaystackButton } from '@/components/payments/PaystackButton';
 import { FlutterwaveButton } from '@/components/payments/FlutterwaveButton';
+import { verifyFlutterwavePayment } from '@/lib/firebase/functions';
 
 export default function InvoicePage() {
   const params = useParams();
@@ -77,7 +78,7 @@ export default function InvoicePage() {
   const isConsultant = invoice?.consultantUid === firebaseUser?.uid;
   const isCustomer = invoice?.customerUid === firebaseUser?.uid;
 
-  const handlePaymentSuccess = async (
+  const handlePaystackSuccess = async (
     provider: 'paystack' | 'flutterwave',
     reference: string,
     transactionId?: string
@@ -130,6 +131,29 @@ export default function InvoicePage() {
     } catch (error) {
       console.error('Error processing payment:', error);
       addToast({ type: 'error', message: 'Payment recorded but verification failed. Please contact support.' });
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
+
+  const handleFlutterwaveSuccess = async (txRef: string, transactionId?: string) => {
+    setProcessingPayment(true);
+    try {
+      const result = await verifyFlutterwavePayment({
+        txRef,
+        transactionId,
+      });
+
+      if (!result.verified) {
+        addToast({ type: 'error', message: 'Payment verification failed. Please contact support.' });
+        return;
+      }
+
+      addToast({ type: 'success', message: 'Payment verified successfully.' });
+      fetchInvoice();
+    } catch (error) {
+      console.error('Error verifying Flutterwave payment:', error);
+      addToast({ type: 'error', message: 'Payment verification failed. Please contact support.' });
     } finally {
       setProcessingPayment(false);
     }
@@ -286,8 +310,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Flutterwave"
                       onSuccess={(response) =>
-                        handlePaymentSuccess(
-                          'flutterwave',
+                        handleFlutterwaveSuccess(
                           response.tx_ref,
                           response.transaction_id?.toString()
                         )
@@ -310,7 +333,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Paystack"
                       onSuccess={(response) =>
-                        handlePaymentSuccess('paystack', response.reference, response.transaction)
+                        handlePaystackSuccess('paystack', response.reference, response.transaction)
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
@@ -333,7 +356,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Paystack"
                       onSuccess={(response) =>
-                        handlePaymentSuccess('paystack', response.reference, response.transaction)
+                        handlePaystackSuccess('paystack', response.reference, response.transaction)
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
@@ -353,8 +376,7 @@ export default function InvoicePage() {
                       }}
                       text="Pay with Flutterwave"
                       onSuccess={(response) =>
-                        handlePaymentSuccess(
-                          'flutterwave',
+                        handleFlutterwaveSuccess(
                           response.tx_ref,
                           response.transaction_id?.toString()
                         )
