@@ -25,6 +25,23 @@ const SPECIALTY_OPTIONS = [
   'Other',
 ];
 
+const withTimeout = async <T,>(promise: Promise<T>, ms: number, label: string): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`${label} timed out. Please try again.`));
+    }, ms);
+
+    promise
+      .then((value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
+
 export default function ConsultantApplyPage() {
   const router = useRouter();
   const { firebaseUser } = useAuthStore();
@@ -67,24 +84,31 @@ export default function ConsultantApplyPage() {
 
         setUploadingDocs(true);
         uploadedDocs = [];
-        for (const file of documents) {
-          if (file.size > 10 * 1024 * 1024) {
-            throw new Error(`${file.name} is larger than 10MB. Please upload a smaller file.`);
+        try {
+          for (const file of documents) {
+            if (file.size > 10 * 1024 * 1024) {
+              throw new Error(`${file.name} is larger than 10MB. Please upload a smaller file.`);
+            }
+            const fileRef = ref(
+              storage,
+              `consultantApplications/${firebaseUser.uid}/${Date.now()}-${file.name}`
+            );
+            await withTimeout(uploadBytes(fileRef, file), 45000, `Uploading ${file.name}`);
+            const url = await withTimeout(
+              getDownloadURL(fileRef),
+              15000,
+              `Fetching download URL for ${file.name}`
+            );
+            uploadedDocs.push({
+              name: file.name,
+              url,
+              contentType: file.type || undefined,
+              size: file.size,
+            });
           }
-          const fileRef = ref(
-            storage,
-            `consultantApplications/${firebaseUser.uid}/${Date.now()}-${file.name}`
-          );
-          await uploadBytes(fileRef, file);
-          const url = await getDownloadURL(fileRef);
-          uploadedDocs.push({
-            name: file.name,
-            url,
-            contentType: file.type || undefined,
-            size: file.size,
-          });
+        } finally {
+          setUploadingDocs(false);
         }
-        setUploadingDocs(false);
       }
 
       await createConsultantApplication({
@@ -97,7 +121,6 @@ export default function ConsultantApplyPage() {
       console.error('Error submitting application:', error);
       const message = error instanceof Error ? error.message : 'Failed to submit application. Please try again.';
       addToast({ type: 'error', message });
-      setUploadingDocs(false);
       setSubmitting(false);
     }
   };

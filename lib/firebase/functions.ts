@@ -32,6 +32,24 @@ function requireFunctions(): FirebaseFunctions {
   return functions;
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`${label} timed out. Please try again.`));
+    }, ms);
+
+    promise
+      .then((value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
+}
+
 // ==================== Quiz Functions ====================
 
 export interface SubmitRoundRequest {
@@ -363,13 +381,104 @@ export interface CreateConsultantApplicationResponse {
 export async function createConsultantApplication(
   data: CreateConsultantApplicationRequest
 ): Promise<CreateConsultantApplicationResponse> {
-  const fns = requireFunctions();
-  const fn = httpsCallable<CreateConsultantApplicationRequest, CreateConsultantApplicationResponse>(
-    fns,
-    'createConsultantApplication'
-  );
-  const result = await fn(data);
-  return result.data;
+  // Try Cloud Function first
+  try {
+    const fns = requireFunctions();
+    const fn = httpsCallable<CreateConsultantApplicationRequest, CreateConsultantApplicationResponse>(
+      fns,
+      'createConsultantApplication'
+    );
+    const result = await withTimeout(fn(data), 20000, 'Consultant application submission');
+    return result.data;
+  } catch (error: unknown) {
+    // Fallback to direct Firestore write if Cloud Functions are not available
+    const errorObj = error as any;
+    const errorCode = errorObj?.code || '';
+    const errorMessage = errorObj?.message || '';
+    const errorString = JSON.stringify(error);
+    const errorName = errorObj?.name || '';
+
+    // Log error for debugging
+    console.log('createConsultantApplication error:', {
+      errorCode,
+      errorMessage,
+      errorName,
+      error: errorObj,
+    });
+
+    const isCorsError =
+      errorMessage.includes('CORS') ||
+      errorMessage.includes('Access-Control-Allow-Origin') ||
+      errorString.includes('CORS') ||
+      errorString.includes('Access-Control-Allow-Origin');
+
+    const isFunctionUnavailable =
+      errorCode === 'functions/not-found' ||
+      errorCode === 'functions/unavailable' ||
+      errorCode === 'deadline-exceeded' ||
+      errorCode === 'internal' ||
+      errorCode === 'unavailable' ||
+      errorCode === 'cancelled' ||
+      errorMessage.includes('timed out') ||
+      (!isCorsError &&
+        (errorMessage.includes('Failed to fetch') ||
+          errorMessage.includes('network') ||
+          errorMessage.includes('ERR_FAILED') ||
+          errorString.includes('Failed to fetch') ||
+          errorString.includes('ERR_FAILED') ||
+          errorString.includes('cloudfunctions.net')));
+
+    if (isCorsError) {
+      console.error(
+        'CORS error detected. Make sure the function is deployed and the region matches:',
+        error
+      );
+      throw new Error(
+        'CORS error: The Cloud Function may not be deployed or the region configuration is incorrect. Please deploy functions with: firebase deploy --only functions'
+      );
+    }
+
+    if (isFunctionUnavailable) {
+      console.log('Cloud Functions unavailable, using Firestore fallback');
+
+      try {
+        const { doc, serverTimestamp, setDoc } = await import('firebase/firestore');
+        const { db } = await import('./config');
+        const { getCurrentUser } = await import('./auth');
+
+        const user = getCurrentUser();
+        if (!user || !db) {
+          throw new Error('User must be signed in and Firestore must be initialized');
+        }
+
+        const sanitizedData = Object.fromEntries(
+          Object.entries(data).filter(([, value]) => value !== undefined)
+        );
+
+        await setDoc(
+          doc(db, 'consultantApplications', user.uid),
+          {
+            uid: user.uid,
+            ...sanitizedData,
+            status: 'pending',
+            verificationStatus: 'unverified',
+            activityStatus: 'inactive',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true }
+        );
+
+        return { applicationId: user.uid };
+      } catch (fallbackError) {
+        console.error('Firestore fallback also failed:', fallbackError);
+        throw error;
+      }
+    }
+
+    console.error('createConsultantApplication error (not caught by fallback):', error);
+    throw error;
+  }
 }
 
 export interface CreateConsultantRequestRequest {
