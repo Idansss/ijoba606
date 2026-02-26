@@ -30,6 +30,7 @@ export default function AdminConsultantsPage() {
   const [applications, setApplications] = useState<ConsultantApplication[]>([]);
   const [profiles, setProfiles] = useState<ConsultantProfile[]>([]);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [selectedApplication, setSelectedApplication] = useState<ConsultantApplication | null>(null);
 
   // Admin access guard
   useEffect(() => {
@@ -160,12 +161,21 @@ export default function AdminConsultantsPage() {
       const profileRef = doc(db, 'consultantProfiles', profileId);
       const verificationStatus = updates.verificationStatus;
       const activityStatus = updates.activityStatus;
-      await updateDoc(profileRef, {
-        ...updates,
-        isVerified: verificationStatus ? verificationStatus === 'verified' : undefined,
-        isActive: activityStatus ? activityStatus === 'active' : undefined,
+      const updatePayload: Partial<ConsultantProfile> & { updatedAt: ReturnType<typeof serverTimestamp> } = {
         updatedAt: serverTimestamp(),
-      });
+      };
+
+      if (verificationStatus) {
+        updatePayload.verificationStatus = verificationStatus;
+        updatePayload.isVerified = verificationStatus === 'verified';
+      }
+
+      if (activityStatus) {
+        updatePayload.activityStatus = activityStatus;
+        updatePayload.isActive = activityStatus === 'active';
+      }
+
+      await updateDoc(profileRef, updatePayload);
       setProfiles((prev) =>
         prev.map((profile) =>
           profile.id === profileId
@@ -291,6 +301,13 @@ export default function AdminConsultantsPage() {
                           : 'Unknown'}
                       </td>
                       <td className="py-3 px-4">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedApplication(app)}
+                          className="mr-3 text-xs font-semibold text-purple-700 hover:underline"
+                        >
+                          View
+                        </button>
                         <select
                           value={app.status}
                           onChange={(e) =>
@@ -378,6 +395,95 @@ export default function AdminConsultantsPage() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {selectedApplication && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Application Details</h2>
+                <p className="text-sm text-gray-500">{selectedApplication.email}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedApplication(null)}
+                className="text-sm font-semibold text-gray-500 hover:text-gray-700"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="grid gap-4 text-sm text-gray-700">
+              <div>
+                <p className="font-semibold text-gray-900">Name</p>
+                <p>{selectedApplication.name}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">Phone</p>
+                <p>{selectedApplication.phone}</p>
+              </div>
+              {selectedApplication.whatsapp && (
+                <div>
+                  <p className="font-semibold text-gray-900">WhatsApp</p>
+                  <p>{selectedApplication.whatsapp}</p>
+                </div>
+              )}
+              {selectedApplication.locationState && (
+                <div>
+                  <p className="font-semibold text-gray-900">Location / State</p>
+                  <p>{selectedApplication.locationState}</p>
+                </div>
+              )}
+              <div>
+                <p className="font-semibold text-gray-900">Experience</p>
+                <p>{selectedApplication.experienceYears ?? 0} years</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">Specialties</p>
+                <p>{selectedApplication.specialties?.join(', ') || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">Bio</p>
+                <p className="whitespace-pre-line text-gray-600">{selectedApplication.bio}</p>
+              </div>
+              {selectedApplication.credentialsUrl && (
+                <div>
+                  <p className="font-semibold text-gray-900">Credentials URL</p>
+                  <a
+                    href={selectedApplication.credentialsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-purple-700 hover:underline"
+                  >
+                    {selectedApplication.credentialsUrl}
+                  </a>
+                </div>
+              )}
+              <div>
+                <p className="font-semibold text-gray-900">Documents</p>
+                {selectedApplication.documents && selectedApplication.documents.length > 0 ? (
+                  <ul className="mt-2 space-y-1">
+                    {selectedApplication.documents.map((docItem, idx) => (
+                      <li key={`${docItem.url}-${idx}`}>
+                        <a
+                          href={docItem.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-purple-700 hover:underline"
+                        >
+                          {docItem.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No documents</p>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
