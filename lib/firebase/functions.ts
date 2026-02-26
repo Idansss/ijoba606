@@ -428,6 +428,10 @@ export async function createConsultantApplication(
           errorString.includes('ERR_FAILED') ||
           errorString.includes('cloudfunctions.net')));
 
+    const isSchemaMismatch =
+      errorCode === 'functions/invalid-argument' ||
+      errorMessage.toLowerCase().includes('invalid application data');
+
     if (isCorsError) {
       console.error(
         'CORS error detected. Make sure the function is deployed and the region matches:',
@@ -438,8 +442,12 @@ export async function createConsultantApplication(
       );
     }
 
-    if (isFunctionUnavailable) {
-      console.log('Cloud Functions unavailable, using Firestore fallback');
+    if (isFunctionUnavailable || isSchemaMismatch) {
+      console.log(
+        isSchemaMismatch
+          ? 'Cloud Function rejected data, using Firestore fallback'
+          : 'Cloud Functions unavailable, using Firestore fallback'
+      );
 
       try {
         const { doc, serverTimestamp, setDoc } = await import('firebase/firestore');

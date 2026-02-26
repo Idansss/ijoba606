@@ -73,6 +73,20 @@ export default function ConsultantApplyPage() {
 
     setSubmitting(true);
     try {
+      const sanitizedData: ConsultantApplicationFormData = {
+        ...data,
+        name: data.name.trim(),
+        email: data.email.trim(),
+        phone: data.phone.trim(),
+        whatsapp: data.whatsapp?.trim() ? data.whatsapp.trim() : undefined,
+        locationState: data.locationState?.trim() ? data.locationState.trim() : undefined,
+        bio: data.bio.trim(),
+        credentialsUrl: data.credentialsUrl?.trim() ? data.credentialsUrl.trim() : undefined,
+        experienceYears:
+          typeof data.experienceYears === 'number' && Number.isFinite(data.experienceYears)
+            ? data.experienceYears
+            : undefined,
+      };
       let uploadedDocs: ConsultantDocument[] = [];
 
       if (documents.length > 0) {
@@ -112,14 +126,24 @@ export default function ConsultantApplyPage() {
       }
 
       await createConsultantApplication({
-        ...data,
-        credentialsUrl: data.credentialsUrl?.trim() ? data.credentialsUrl.trim() : undefined,
+        ...sanitizedData,
         documents: uploadedDocs.length > 0 ? uploadedDocs : undefined,
       });
       router.push('/consultants/thanks?type=apply');
     } catch (error) {
       console.error('Error submitting application:', error);
-      const message = error instanceof Error ? error.message : 'Failed to submit application. Please try again.';
+      const errorCode = (error as { code?: string })?.code;
+      let message = error instanceof Error ? error.message : 'Failed to submit application. Please try again.';
+
+      if (errorCode === 'storage/unauthorized' || errorCode === 'storage/unauthenticated') {
+        message =
+          'Storage access denied. Please sign in and ensure Storage rules are deployed to the correct Firebase project.';
+      }
+
+      if (errorCode === 'functions/invalid-argument' && !message.includes('Invalid application data')) {
+        message =
+          'Invalid application data. Please double-check required fields and ensure optional fields are valid.';
+      }
       addToast({ type: 'error', message });
       setSubmitting(false);
     }

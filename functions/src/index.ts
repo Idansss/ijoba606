@@ -30,11 +30,12 @@ const ConsultantApplicationSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   phone: z.string().min(7),
+  whatsapp: z.string().min(7).max(20).optional(),
   locationState: z.string().optional(),
   experienceYears: z.number().min(0).max(50).optional(),
   specialties: z.array(z.string()).min(1).max(5),
   bio: z.string().min(20).max(1000),
-  credentialsUrl: z.string().url().optional(),
+  credentialsUrl: z.string().url().optional().or(z.literal("")),
   documents: z
     .array(
       z.object({
