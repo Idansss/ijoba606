@@ -2,7 +2,17 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, doc, getDocs, orderBy, query, updateDoc, limit, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  limit,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { ConsultantApplication, ConsultantProfile } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
@@ -81,12 +91,48 @@ export default function AdminConsultantsPage() {
     if (!db) return;
     setUpdatingId(appId);
     try {
+      const application = applications.find((app) => app.id === appId);
       const appRef = doc(db, 'consultantApplications', appId);
       await updateDoc(appRef, {
         status,
         verificationStatus: status === 'approved' ? 'verified' : 'unverified',
         updatedAt: serverTimestamp(),
       });
+
+      if (status === 'approved' && application) {
+        const profileId = application.uid || appId;
+        const profileRef = doc(db, 'consultantProfiles', profileId);
+        await setDoc(
+          profileRef,
+          {
+            uid: profileId,
+            name: application.name,
+            email: application.email,
+            phone: application.phone,
+            whatsapp: application.whatsapp,
+            locationState: application.locationState,
+            bio: application.bio,
+            specialties: application.specialties || [],
+            experienceYears: application.experienceYears ?? 0,
+            qualifications: [],
+            certifications: [],
+            workExperience: [],
+            portfolioItems: [],
+            availabilityStatus: 'unavailable',
+            totalClients: 0,
+            totalProjects: 0,
+            reviewsCount: 0,
+            isVerified: true,
+            isActive: false,
+            verificationStatus: 'verified',
+            activityStatus: 'inactive',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true }
+        );
+      }
+
       setApplications((prev) =>
         prev.map((app) =>
           app.id === appId
@@ -94,6 +140,7 @@ export default function AdminConsultantsPage() {
             : app
         )
       );
+      await fetchData();
       addToast({ type: 'success', message: `Application updated to ${status}` });
     } catch (error) {
       console.error('Error updating application status:', error);
