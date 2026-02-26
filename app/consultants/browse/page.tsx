@@ -15,7 +15,7 @@ export default function BrowseConsultantsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'rating' | 'experience' | 'clients'>('rating');
+  const [sortBy, setSortBy] = useState<'rating' | 'experience' | 'clients'>('experience');
 
   useEffect(() => {
     fetchConsultants();
@@ -53,10 +53,15 @@ export default function BrowseConsultantsPage() {
       }
 
       const snapshot = await getDocs(q);
-      const consultantsData = snapshot.docs.map((doc) => ({
+      let consultantsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as ConsultantProfile[];
+
+      // If query returned empty, use fallback (e.g. profiles missing orderBy field get excluded)
+      if (consultantsData.length === 0) {
+        throw new Error('Use fallback');
+      }
 
       setConsultants(consultantsData);
     } catch (error) {
@@ -100,6 +105,7 @@ export default function BrowseConsultantsPage() {
         setConsultants(consultantsData);
       } catch (fallbackError) {
         console.error('Fallback fetch error:', fallbackError);
+        setConsultants([]);
       }
     } finally {
       setLoading(false);

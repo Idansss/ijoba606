@@ -122,6 +122,7 @@ export default function AdminConsultantsPage() {
             availabilityStatus: 'unavailable',
             totalClients: 0,
             totalProjects: 0,
+            averageRating: 0,
             reviewsCount: 0,
             isVerified: true,
             isActive: false,
