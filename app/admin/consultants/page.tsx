@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   collection,
   doc,
@@ -18,6 +19,8 @@ import { ConsultantApplication, ConsultantProfile } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { formatDistanceToNow } from 'date-fns';
+import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { ArrowLeft, Briefcase, UserCheck, FileText, X } from 'lucide-react';
 
 type Tab = 'applications' | 'consultants';
 
@@ -216,44 +219,72 @@ export default function AdminConsultantsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Consultant Management</h1>
-        <p className="text-gray-600">Review applications, verify consultants, and manage activity status.</p>
-      </div>
+      <div className="max-w-6xl mx-auto">
+        <AdminBreadcrumb items={[{ label: 'Consultant Management' }]} />
 
-      <div className="flex gap-3 mb-6">
-        <button
-          onClick={() => setActiveTab('applications')}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            activeTab === 'applications'
-              ? 'bg-purple-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-200'
-          }`}
-        >
-          Applications ({applications.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('consultants')}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            activeTab === 'consultants'
-              ? 'bg-purple-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-200'
-          }`}
-        >
-          Consultants ({profiles.length})
-        </button>
-      </div>
+        <div className="mb-6">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-semibold">Back to Dashboard</span>
+          </Link>
+        </div>
+
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Consultant
+            </span>{' '}
+            <span className="text-gray-900">Management</span>
+          </h1>
+          <p className="text-gray-600">
+            Review applications, verify consultants, and manage activity status.
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            Total: {applications.length} application(s), {profiles.length} consultant(s)
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3 mb-6 p-1 bg-gray-100 rounded-xl">
+          <button
+            onClick={() => setActiveTab('applications')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
+              activeTab === 'applications'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            Applications ({applications.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('consultants')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
+              activeTab === 'consultants'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Briefcase className="w-4 h-4" />
+            Consultants ({profiles.length})
+          </button>
+        </div>
 
       {loading ? (
         <div className="text-center py-12">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
         </div>
       ) : activeTab === 'applications' ? (
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {applications.length === 0 ? (
-            <p className="text-gray-500 text-center py-6">No applications yet.</p>
+            <div className="p-12 text-center">
+              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">No applications yet.</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto p-6">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
@@ -295,7 +326,19 @@ export default function AdminConsultantsPage() {
                           'No documents'
                         )}
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600 capitalize">{app.status}</td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            app.status === 'approved'
+                              ? 'bg-green-100 text-green-800'
+                              : app.status === 'rejected'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {app.status}
+                        </span>
+                      </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         {app.createdAt?.toDate
                           ? formatDistanceToNow(app.createdAt.toDate(), { addSuffix: true })
@@ -333,11 +376,15 @@ export default function AdminConsultantsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {profiles.length === 0 ? (
-            <p className="text-gray-500 text-center py-6">No consultant profiles yet.</p>
+            <div className="p-12 text-center">
+              <UserCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">No consultant profiles yet.</p>
+              <p className="text-sm text-gray-400 mt-1">Approve an application to create a profile.</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto p-6">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
@@ -399,9 +446,11 @@ export default function AdminConsultantsPage() {
         </div>
       )}
 
+      </div>
+
       {selectedApplication && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Application Details</h2>
@@ -410,9 +459,10 @@ export default function AdminConsultantsPage() {
               <button
                 type="button"
                 onClick={() => setSelectedApplication(null)}
-                className="text-sm font-semibold text-gray-500 hover:text-gray-700"
+                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition"
+                aria-label="Close"
               >
-                Close
+                <X className="w-5 h-5" />
               </button>
             </div>
 

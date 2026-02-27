@@ -17,8 +17,9 @@ export interface NewsArticle {
   sourceUrl?: string;
   category?: string;
   publishedAt: { toDate: () => Date };
-  createdAt: { toDate: () => Date };
+  createdAt?: { toDate: () => Date };
   imageUrl?: string;
+  isActive?: boolean;
 }
 
 export default function NewsPage() {
@@ -33,17 +34,12 @@ export default function NewsPage() {
       }
       try {
         const ref = collection(db, 'newsArticles');
-        const q = query(
-          ref,
-          orderBy('publishedAt', 'desc'),
-          limit(50)
-        );
+        const q = query(ref, orderBy('publishedAt', 'desc'), limit(50));
         const snap = await getDocs(q);
-        const data = snap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as NewsArticle[];
-        setArticles(data);
+        const data = snap.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() })) as NewsArticle[];
+        const active = data.filter((a) => a.isActive !== false);
+        setArticles(active);
       } catch (error) {
         console.error('Error fetching news:', error);
       } finally {
