@@ -39,6 +39,7 @@ const navLinks = [
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/glossary', label: 'Glossary', icon: BookOpen },
   { href: '/consultants', label: 'Consultants', icon: Briefcase },
+  { href: '/news', label: 'News', icon: FileText },
 ];
 
 export function Header() {

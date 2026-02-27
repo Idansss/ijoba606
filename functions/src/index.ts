@@ -1,6 +1,7 @@
 import { setGlobalOptions } from "firebase-functions";
 import { onCall, HttpsError, onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
@@ -1539,6 +1540,117 @@ export const sendChatNotification = onCall(
     } catch (error) {
       logger.error("Error sending chat notification", error);
       throw new HttpsError("internal", "Failed to send notification");
+    }
+  }
+);
+
+/* ---------------------------------
+   CHAT MESSAGE TRIGGER (auto-notify + email)
+----------------------------------*/
+export const onChatMessageCreated = onDocumentCreated(
+  {
+    document: "chatMessages/{messageId}",
+    region,
+  },
+  async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) return;
+
+    const messageData = snapshot.data();
+    const chatId = messageData?.chatId;
+    const senderUid = messageData?.senderUid;
+    const senderName = messageData?.senderName || "Someone";
+    const content = (messageData?.content || "").slice(0, 100);
+
+    if (!chatId || !senderUid) return;
+
+    try {
+      const chatDoc = await db.collection("consultantChats").doc(chatId).get();
+      if (!chatDoc.exists) return;
+
+      const chat = chatDoc.data();
+      const consultantUid = chat?.consultantUid;
+      const customerUid = chat?.customerUid;
+
+      const recipientUid =
+        senderUid === consultantUid ? customerUid : consultantUid;
+      if (!recipientUid) return;
+
+      // Create in-app notification
+      const notifRef = db
+        .collection("notifications")
+        .doc(recipientUid)
+        .collection("items")
+        .doc();
+
+      await notifRef.set({
+        type: "chat_message",
+        ref: chatId,
+        title: "New Message",
+        snippet: content || `${senderName} sent you a message`,
+        isRead: false,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      // Update chat unread count
+      const chatRef = db.collection("consultantChats").doc(chatId);
+      if (consultantUid === recipientUid) {
+        await chatRef.update({
+          unreadCountConsultant: FieldValue.increment(1),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      } else {
+        await chatRef.update({
+          unreadCountCustomer: FieldValue.increment(1),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      }
+
+      // Send email notification
+      let recipientEmail: string | null = null;
+      const userDoc = await db.collection("users").doc(recipientUid).get();
+      if (userDoc.exists && userDoc.data()?.email) {
+        recipientEmail = userDoc.data()?.email;
+      }
+      if (!recipientEmail) {
+        const profileDoc = await db
+          .collection("consultantProfiles")
+          .doc(recipientUid)
+          .get();
+        if (profileDoc.exists && profileDoc.data()?.email) {
+          recipientEmail = profileDoc.data()?.email;
+        }
+      }
+
+      if (recipientEmail && process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+        const transporter = getEmailTransporter();
+        // Customer: /consultants/chat/{consultantUid}; Consultant: /consultants (chat list)
+        const chatUrl =
+          recipientUid === consultantUid
+            ? "https://ijoba606.com/consultants"
+            : `https://ijoba606.com/consultants/chat/${consultantUid}`;
+        await transporter.sendMail({
+          from: process.env.EMAIL_FROM || "noreply@ijoba606.com",
+          to: recipientEmail,
+          subject: `New message from ${senderName} on IJOBA 606`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #7c3aed;">New Chat Message</h2>
+              <p><strong>${senderName}</strong> sent you a message:</p>
+              <p style="background: #f3f4f6; padding: 12px; border-radius: 6px;">${content || "..."}</p>
+              <a href="${chatUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+                Reply to chat
+              </a>
+              <p style="color: #6b7280; font-size: 12px;">You're receiving this because you have an active chat on IJOBA 606.</p>
+            </div>
+          `,
+        });
+        logger.info("Chat email sent", { recipientEmail });
+      }
+
+      logger.info("Chat message trigger completed", { chatId, recipientUid });
+    } catch (error) {
+      logger.error("Error in onChatMessageCreated", error);
     }
   }
 );

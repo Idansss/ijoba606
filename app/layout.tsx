@@ -8,9 +8,37 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "ijoba 606 · Learn PAYE, Play Quizzes & Calculate Tax",
+  title: {
+    default: "IJOBA 606 · Learn PAYE, Play Quizzes & Calculate Tax | Nigeria",
+    template: "%s | IJOBA 606",
+  },
   description:
-    "Make PAYE literacy engaging with quick quizzes, a warm community forum, and a practical PAYE calculator built for Nigeria.",
+    "Make PAYE literacy engaging with quick quizzes, a warm community forum, tax consultants, and a practical PAYE calculator built for Nigeria.",
+  keywords: ["PAYE", "Nigeria tax", "tax calculator", "tax quiz", "FIRS", "tax consultant", "income tax"],
+  authors: [{ name: "IJOBA 606" }],
+  openGraph: {
+    type: "website",
+    locale: "en_NG",
+    siteName: "IJOBA 606",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "IJOBA 606",
+  description: "Make PAYE literacy engaging with quick quizzes, a warm community forum, tax consultants, and a practical PAYE calculator built for Nigeria.",
+  url: "https://ijoba606.com",
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
 };
 
 export default function RootLayout({
@@ -21,6 +49,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-gradient-to-br from-purple-50 via-blue-50 to-green-50 min-h-screen">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-KZZCMZDJTE"
@@ -46,7 +78,7 @@ export default function RootLayout({
             <ToastContainer />
           </AuthProvider>
         </ThemeProvider>
-      </body>
+        </body>
     </html>
   );
 }

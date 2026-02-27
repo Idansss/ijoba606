@@ -13,8 +13,6 @@ import {
   Briefcase,
   MessageCircle,
   CheckCircle2,
-  Mail,
-  Phone,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -248,26 +246,15 @@ export default function ConsultantProfileViewPage() {
             </section>
           )}
 
-          {/* Contact */}
-          <section className="pt-6 border-t border-gray-200">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Contact</h2>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href={`mailto:${consultant.email}`}
-                className="flex items-center gap-2 text-purple-600 hover:underline"
-              >
-                <Mail className="w-4 h-4" />
-                {consultant.email}
-              </a>
-              <a
-                href={`tel:${consultant.phone}`}
-                className="flex items-center gap-2 text-purple-600 hover:underline"
-              >
-                <Phone className="w-4 h-4" />
-                {consultant.phone}
-              </a>
-            </div>
-          </section>
+          {/* Contact via chat only */}
+          {firebaseUser && (
+            <section className="pt-6 border-t border-gray-200">
+              <p className="text-gray-600 text-sm">
+                To connect with this consultant, use the <strong>Chat</strong> button above. All
+                communication happens through our platform to protect both parties.
+              </p>
+            </section>
+          )}
         </div>
       </div>
     </div>
