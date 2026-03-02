@@ -1,0 +1,265 @@
+/**
+ * Fetches tax-related news from RSS feeds and summarizes with AI.
+ * Used by the scheduled fetchTaxNews Cloud Function.
+ */
+
+import * as logger from "firebase-functions/logger";
+
+const TAX_KEYWORDS = [
+  "tax",
+  "paye",
+  "firs",
+  "vat",
+  "revenue",
+  "income tax",
+  "cac",
+  "taxation",
+  "budget",
+  "fiscal",
+  "compliance",
+  "penalty",
+  "audit",
+];
+
+const RSS_FEEDS = [
+  { url: "https://nairametrics.com/feed/", name: "Nairametrics" },
+  { url: "https://www.premiumtimesng.com/feed/", name: "Premium Times" },
+  { url: "https://www.thecable.ng/feed/", name: "TheCable" },
+  { url: "https://businessday.ng/feed/", name: "BusinessDay" },
+];
+
+export interface RawFeedItem {
+  title: string;
+  link: string;
+  content?: string;
+  contentSnippet?: string;
+  pubDate?: string;
+  isoDate?: string;
+}
+
+export interface ProcessedArticle {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  source: string;
+  sourceUrl: string;
+  category: string;
+  publishedAt: Date;
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim()
+    .slice(0, 80);
+}
+
+function isTaxRelated(title: string, snippet: string): boolean {
+  const combined = `${title} ${snippet}`.toLowerCase();
+  return TAX_KEYWORDS.some((kw) => combined.includes(kw));
+}
+
+async function summarizeWithGemini(
+  title: string,
+  rawContent: string,
+  sourceUrl: string,
+  sourceName: string
+): Promise<{ excerpt: string; content: string }> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
+
+  const textToSummarize = rawContent?.slice(0, 4000) || title;
+  const prompt = `You are summarizing a Nigerian news article for a tax/PAYE education website.
+
+Original title: ${title}
+Source: ${sourceName}
+Source URL: ${sourceUrl}
+
+Raw content (may be HTML or plain text):
+${textToSummarize}
+
+Return a JSON object with exactly two fields:
+1. "excerpt": A 1-2 sentence summary (max 200 chars) suitable for a news listing.
+2. "content": HTML content for the full article. Use <p> tags for paragraphs. Include key facts. If the raw content is HTML, clean it and simplify. Make it readable and relevant to Nigerian tax/PAYE context. Max 800 words equivalent.
+
+Return ONLY valid JSON, no markdown or extra text.`;
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 2048,
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Gemini API error: ${response.status} ${err}`);
+  }
+
+  const data = await response.json();
+  const text =
+    data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "{}";
+
+  // Extract JSON (handle markdown code blocks)
+  let jsonStr = text;
+  const match = text.match(/\{[\s\S]*\}/);
+  if (match) jsonStr = match[0];
+
+  const parsed = JSON.parse(jsonStr) as { excerpt?: string; content?: string };
+  return {
+    excerpt: parsed.excerpt || title.slice(0, 150),
+    content: parsed.content || `<p>${title}</p><p><a href="${sourceUrl}">Read original</a></p>`,
+  };
+}
+
+async function summarizeWithOpenAI(
+  title: string,
+  rawContent: string,
+  sourceUrl: string,
+  sourceName: string
+): Promise<{ excerpt: string; content: string }> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OPENAI_API_KEY not set");
+
+  const textToSummarize = rawContent?.slice(0, 4000) || title;
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You summarize Nigerian news for a tax education site. Return only valid JSON with 'excerpt' and 'content' keys.",
+        },
+        {
+          role: "user",
+          content: `Summarize this article for our tax news page.
+
+Title: ${title}
+Source: ${sourceName}
+URL: ${sourceUrl}
+
+Raw content:
+${textToSummarize}
+
+Return JSON: { "excerpt": "1-2 sentence summary, max 200 chars", "content": "HTML paragraphs, cleaned and relevant, max 800 words" }`,
+        },
+      ],
+      temperature: 0.3,
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`OpenAI API error: ${response.status} ${err}`);
+  }
+
+  const data = await response.json();
+  const text = data.choices?.[0]?.message?.content?.trim() || "{}";
+  const match = text.match(/\{[\s\S]*\}/);
+  const jsonStr = match ? match[0] : text;
+  const parsed = JSON.parse(jsonStr) as { excerpt?: string; content?: string };
+
+  return {
+    excerpt: parsed.excerpt || title.slice(0, 150),
+    content:
+      parsed.content ||
+      `<p>${title}</p><p><a href="${sourceUrl}">Read original</a></p>`,
+  };
+}
+
+async function summarize(
+  title: string,
+  rawContent: string,
+  sourceUrl: string,
+  sourceName: string
+): Promise<{ excerpt: string; content: string }> {
+  if (process.env.GEMINI_API_KEY) {
+    return summarizeWithGemini(title, rawContent, sourceUrl, sourceName);
+  }
+  if (process.env.OPENAI_API_KEY) {
+    return summarizeWithOpenAI(title, rawContent, sourceUrl, sourceName);
+  }
+  throw new Error("Set GEMINI_API_KEY or OPENAI_API_KEY for AI summarization");
+}
+
+export async function fetchAndProcessTaxNews(
+  maxArticles: number = 5
+): Promise<ProcessedArticle[]> {
+  const Parser = (await import("rss-parser")).default;
+  const parser = new Parser({ timeout: 10000 });
+
+  const allItems: { item: RawFeedItem; source: string }[] = [];
+
+  for (const feed of RSS_FEEDS) {
+    try {
+      const result = await parser.parseURL(feed.url);
+      const items = (result.items || []) as RawFeedItem[];
+      for (const item of items) {
+        const snippet = item.contentSnippet || item.content || "";
+        if (isTaxRelated(item.title || "", snippet)) {
+          allItems.push({ item, source: feed.name });
+        }
+      }
+    } catch (err) {
+      logger.warn(`Failed to fetch RSS ${feed.url}`, err);
+    }
+  }
+
+  // Sort by date (newest first)
+  allItems.sort((a, b) => {
+    const dateA = a.item.isoDate || a.item.pubDate || "";
+    const dateB = b.item.isoDate || b.item.pubDate || "";
+    return dateB.localeCompare(dateA);
+  });
+
+  const processed: ProcessedArticle[] = [];
+  const toProcess = allItems.slice(0, maxArticles);
+
+  for (const { item, source } of toProcess) {
+    try {
+      const rawContent = item.content || item.contentSnippet || item.title || "";
+      const { excerpt, content } = await summarize(
+        item.title || "Untitled",
+        rawContent,
+        item.link || "",
+        source
+      );
+
+      const pubDate = item.isoDate || item.pubDate;
+      const publishedAt = pubDate ? new Date(pubDate) : new Date();
+
+      processed.push({
+        title: item.title || "Untitled",
+        slug: slugify(item.title || `article-${Date.now()}`),
+        excerpt,
+        content,
+        source,
+        sourceUrl: item.link || "",
+        category: "Tax & Compliance",
+        publishedAt,
+      });
+    } catch (err) {
+      logger.warn("Failed to process article", { title: item.title, err });
+    }
+  }
+
+  return processed;
+}

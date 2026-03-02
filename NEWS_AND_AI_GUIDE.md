@@ -1,48 +1,61 @@
-# News/Blog & AI Auto-Fetch Guide
+# Tax News Auto-Fetch — Setup Guide
 
-## News Page
+The news section can automatically fetch and summarize tax-related articles from Nigerian sources using AI.
 
-The `/news` page displays articles from the Firestore collection `newsArticles`.
+---
 
-### Adding Articles Manually (Admin)
+## Quick Start (3 steps)
 
-1. Go to Firebase Console → Firestore
-2. Create collection `newsArticles` (if it doesn't exist)
-3. Add a document with fields:
-   - `title` (string)
-   - `slug` (string, URL-friendly, e.g. `firs-tax-update-2025`)
-   - `excerpt` (string, short summary)
-   - `content` (string, HTML content)
-   - `source` (optional, e.g. "FIRS")
-   - `sourceUrl` (optional, link to original)
-   - `category` (optional, e.g. "PAYE", "Compliance")
-   - `publishedAt` (Timestamp)
-   - `createdAt` (Timestamp)
-   - `imageUrl` (optional)
+### Step 1: Get an API key
 
-### Auto-Fetch with AI (Cloud Function)
+Choose **one** of these (Gemini is free and recommended):
 
-To automatically fetch and publish tax news, you can add a scheduled Cloud Function:
+| Provider | Get key | Cost |
+|----------|---------|------|
+| **Gemini** (recommended) | [Google AI Studio](https://aistudio.google.com/apikey) | Free tier |
+| **OpenAI** | [OpenAI API keys](https://platform.openai.com/api-keys) | Pay per use |
 
-1. **RSS/API sources**: FIRS, Nairametrics, Punch, etc. often have tax news
-2. **Scheduled function**: Run daily (e.g. `onSchedule` every 6 hours)
-3. **AI summarization**: Use your existing OpenAI/Gemini integration to:
-   - Fetch raw content from RSS or a news API
-   - Summarize and format for your audience
-   - Write to `newsArticles` with `content`, `excerpt`, `title`, etc.
+### Step 2: Add the key to Firebase
 
-Example structure for a `fetchTaxNews` scheduled function:
+```bash
+# If using Gemini (recommended):
+firebase functions:secrets:set GEMINI_API_KEY
+# Paste your key when prompted
 
-```typescript
-// In functions/src/index.ts
-export const fetchTaxNews = onSchedule(
-  { schedule: "every 6 hours", timeZone: "Africa/Lagos", region },
-  async () => {
-    // 1. Fetch from RSS (e.g. https://nairametrics.com/feed/)
-    // 2. For each new item, call OpenAI/Gemini to summarize
-    // 3. Add to newsArticles if not duplicate
-  }
-);
+# OR if using OpenAI:
+firebase functions:secrets:set OPENAI_API_KEY
+# Paste your key when prompted
 ```
 
-You'll need to add an RSS parser (e.g. `rss-parser`) and wire your AI keys.
+### Step 3: Deploy functions
+
+```bash
+firebase deploy --only functions
+```
+
+---
+
+## How it works
+
+| Feature | Description |
+|---------|-------------|
+| **Fetch from AI** | One-click button in Admin → News. Fetches up to 5 new articles immediately. |
+| **Scheduled job** | Runs once daily (midnight Lagos time) to fetch new articles automatically. |
+| **Sources** | Nairametrics, Premium Times, TheCable, BusinessDay |
+| **Filter** | Only tax-related articles (tax, PAYE, FIRS, VAT, revenue, etc.) |
+| **AI** | Summarizes each article for your news page |
+
+---
+
+## Troubleshooting
+
+**"Set GEMINI_API_KEY or OPENAI_API_KEY"**
+- Run `firebase functions:secrets:set GEMINI_API_KEY` and paste your key
+- Redeploy: `firebase deploy --only functions`
+
+**"Admin only"**
+- Only users with `role: 'admin'` in Firestore can use Fetch from AI
+
+**No articles added**
+- Feeds may have no tax-related items at that moment
+- Try again later or add articles manually

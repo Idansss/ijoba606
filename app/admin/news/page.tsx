@@ -19,6 +19,7 @@ import {
 import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
+import { fetchTaxNewsNow } from '@/lib/firebase/functions';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
 import {
   ArrowLeft,
@@ -28,6 +29,7 @@ import {
   Trash2,
   X,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -63,6 +65,7 @@ export default function AdminNewsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
+  const [fetching, setFetching] = useState(false);
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -191,6 +194,24 @@ export default function AdminNewsPage() {
     }
   };
 
+  const handleFetchFromAI = async () => {
+    setFetching(true);
+    try {
+      const { fetched, added } = await fetchTaxNewsNow();
+      addToast({
+        type: 'success',
+        message: `Fetched ${fetched} articles, added ${added} new.`,
+      });
+      fetchArticles();
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      const msg = error instanceof Error ? error.message : 'Failed to fetch news';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setFetching(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this article?')) return;
     if (!db) return;
@@ -241,14 +262,32 @@ export default function AdminNewsPage() {
               Create and manage tax news articles for the public news page.
             </p>
             <p className="text-sm text-gray-500 mt-1">Total: {articles.length} article(s)</p>
+            <details className="mt-2 text-xs text-gray-500">
+              <summary className="cursor-pointer hover:text-gray-700">Setup Fetch from AI</summary>
+              <ol className="mt-2 ml-4 list-decimal space-y-1">
+                <li>Get a free key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-purple-600 hover:underline">Google AI Studio</a></li>
+                <li>Run: <code className="bg-gray-100 px-1 rounded">firebase functions:secrets:set GEMINI_API_KEY</code></li>
+                <li>Deploy: <code className="bg-gray-100 px-1 rounded">firebase deploy --only functions</code></li>
+              </ol>
+            </details>
           </div>
-          <button
-            onClick={() => openModal()}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition"
-          >
-            <Plus className="w-5 h-5" />
-            Add Article
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={handleFetchFromAI}
+              disabled={fetching}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition disabled:opacity-50"
+            >
+              <Sparkles className="w-5 h-5" />
+              {fetching ? 'Fetching…' : 'Fetch from AI'}
+            </button>
+            <button
+              onClick={() => openModal()}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition"
+            >
+              <Plus className="w-5 h-5" />
+              Add Article
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -260,15 +299,25 @@ export default function AdminNewsPage() {
             <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-800 mb-2">No articles yet</h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Add your first tax news article to display on the public news page.
+              Add articles manually or use AI to fetch tax news from Nigerian sources.
             </p>
-            <button
-              onClick={() => openModal()}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700"
-            >
-              <Plus className="w-5 h-5" />
-              Add Article
-            </button>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={handleFetchFromAI}
+                disabled={fetching}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 disabled:opacity-50"
+              >
+                <Sparkles className="w-5 h-5" />
+                {fetching ? 'Fetching…' : 'Fetch from AI'}
+              </button>
+              <button
+                onClick={() => openModal()}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700"
+              >
+                <Plus className="w-5 h-5" />
+                Add Article
+              </button>
+            </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">

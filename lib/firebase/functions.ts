@@ -526,6 +526,21 @@ export interface VerifyFlutterwavePaymentResponse {
   invoiceId?: string;
 }
 
+export interface FetchTaxNewsResponse {
+  fetched: number;
+  added: number;
+}
+
+export async function fetchTaxNewsNow(): Promise<FetchTaxNewsResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<Record<string, never>, FetchTaxNewsResponse>(
+    fns,
+    'fetchTaxNewsNow'
+  );
+  const result = await fn({});
+  return result.data;
+}
+
 export async function verifyFlutterwavePayment(
   data: VerifyFlutterwavePaymentRequest
 ): Promise<VerifyFlutterwavePaymentResponse> {

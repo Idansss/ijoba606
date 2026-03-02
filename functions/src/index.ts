@@ -7,6 +7,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsWithCursor, generateQuestionsFromTemplate } from "./generateQuestion";
+import { fetchAndProcessTaxNews } from "./fetchTaxNews";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -1779,6 +1780,85 @@ export const releaseHeldFunds = onSchedule(
     } catch (error) {
       logger.error("Error releasing held funds", error);
       throw error;
+    }
+  }
+);
+
+/* ---------------------------------
+   TAX NEWS AUTO-FETCH (AI + RSS)
+----------------------------------*/
+
+async function runFetchTaxNews(maxArticles: number): Promise<{ fetched: number; added: number }> {
+  const { Timestamp } = await import("firebase-admin/firestore");
+  const hasGemini = !!process.env.GEMINI_API_KEY;
+  const hasOpenAI = !!process.env.OPENAI_API_KEY;
+  if (!hasGemini && !hasOpenAI) {
+    throw new HttpsError(
+      "failed-precondition",
+      "Set GEMINI_API_KEY or OPENAI_API_KEY in Firebase Functions config"
+    );
+  }
+
+  const articles = await fetchAndProcessTaxNews(maxArticles);
+  let added = 0;
+
+  for (const article of articles) {
+    const existing = await db
+      .collection("newsArticles")
+      .where("sourceUrl", "==", article.sourceUrl)
+      .limit(1)
+      .get();
+
+    if (!existing.empty) continue;
+
+    await db.collection("newsArticles").add({
+      title: article.title,
+      slug: article.slug,
+      excerpt: article.excerpt,
+      content: article.content,
+      source: article.source,
+      sourceUrl: article.sourceUrl,
+      category: article.category,
+      publishedAt: Timestamp.fromDate(article.publishedAt),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      isActive: true,
+    });
+    added++;
+    logger.info("Added tax news article", { title: article.title });
+  }
+
+  return { fetched: articles.length, added };
+}
+
+export const fetchTaxNewsNow = onCall(
+  { region },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be signed in");
+    }
+    const uid = request.auth.uid;
+    const userDoc = await db.collection("users").doc(uid).get();
+    const role = userDoc.data()?.role;
+    if (role !== "admin") {
+      throw new HttpsError("permission-denied", "Admin only");
+    }
+    const { fetched, added } = await runFetchTaxNews(5);
+    return { fetched, added };
+  }
+);
+
+export const fetchTaxNews = onSchedule(
+  {
+    schedule: "every 24 hours",
+    timeZone: "Africa/Lagos",
+    region,
+  },
+  async () => {
+    try {
+      await runFetchTaxNews(5);
+    } catch (error) {
+      logger.error("Error in fetchTaxNews", error);
     }
   }
 );
