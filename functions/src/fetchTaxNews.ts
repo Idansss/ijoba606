@@ -19,6 +19,16 @@ const TAX_KEYWORDS = [
   "compliance",
   "penalty",
   "audit",
+  "economy",
+  "finance",
+  "government",
+  "naira",
+  "inflation",
+  "expenditure",
+  "tariff",
+  "customs",
+  "duty",
+  "remittance",
 ];
 
 const RSS_FEEDS = [
@@ -211,7 +221,9 @@ export async function fetchAndProcessTaxNews(
   const Parser = (await import("rss-parser")).default;
   const parser = new Parser({ timeout: 10000 });
 
+  const taxItems: { item: RawFeedItem; source: string }[] = [];
   const allItems: { item: RawFeedItem; source: string }[] = [];
+  const businessFeeds = ["Nairametrics", "BusinessDay", "Punch Business"];
 
   for (const feed of RSS_FEEDS) {
     try {
@@ -219,8 +231,10 @@ export async function fetchAndProcessTaxNews(
       const items = (result.items || []) as RawFeedItem[];
       for (const item of items) {
         const snippet = item.contentSnippet || item.content || "";
+        const entry = { item, source: feed.name };
+        allItems.push(entry);
         if (isTaxRelated(item.title || "", snippet)) {
-          allItems.push({ item, source: feed.name });
+          taxItems.push(entry);
         }
       }
     } catch (err) {
@@ -228,15 +242,23 @@ export async function fetchAndProcessTaxNews(
     }
   }
 
-  // Sort by date (newest first)
-  allItems.sort((a, b) => {
+  const sortByDate = (a: { item: RawFeedItem }, b: { item: RawFeedItem }) => {
     const dateA = a.item.isoDate || a.item.pubDate || "";
     const dateB = b.item.isoDate || b.item.pubDate || "";
     return dateB.localeCompare(dateA);
-  });
+  };
+  taxItems.sort(sortByDate);
+  allItems.sort(sortByDate);
+
+  // Prefer tax-related; if none, use top items from business feeds
+  let toProcess = taxItems.slice(0, maxArticles);
+  if (toProcess.length === 0) {
+    logger.info("No tax-filtered articles; using fallback from business feeds");
+    const fallback = allItems.filter((x) => businessFeeds.includes(x.source));
+    toProcess = fallback.slice(0, Math.min(maxArticles, 5));
+  }
 
   const processed: ProcessedArticle[] = [];
-  const toProcess = allItems.slice(0, maxArticles);
 
   for (const { item, source } of toProcess) {
     try {

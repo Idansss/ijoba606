@@ -2188,7 +2188,7 @@ export const fetchTaxNewsNow = onCall(
     if (role !== "admin") {
       throw new HttpsError("permission-denied", "Admin only");
     }
-    const { fetched, added } = await runFetchTaxNews(5);
+    const { fetched, added } = await runFetchTaxNews(10);
     return { fetched, added };
   }
 );
