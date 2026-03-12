@@ -4,10 +4,11 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getMessaging } from "firebase-admin/messaging";
 import { z } from "zod";
 import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuestionsWithCursor, generateQuestionsFromTemplate } from "./generateQuestion";
-import { fetchAndProcessTaxNews } from "./fetchTaxNews";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -1196,6 +1197,17 @@ async function processFlutterwavePayment({
     createdAt: FieldValue.serverTimestamp(),
   });
 
+  await sendPaymentEmailsAndPush(
+    {
+      customerUid: invoiceData.customerUid,
+      consultantUid: invoiceData.consultantUid,
+      invoiceNumber: invoiceData.invoiceNumber,
+    },
+    amountInNaira,
+    consultantEarnings,
+    invoiceDoc.id
+  );
+
   return { status: "processed" as const, invoiceId: invoiceDoc.id };
 }
 
@@ -1356,6 +1368,18 @@ export const handlePaystackWebhook = onRequest(
           isRead: false,
           createdAt: FieldValue.serverTimestamp(),
         });
+
+        // Send email + push to customer and consultant
+        await sendPaymentEmailsAndPush(
+          {
+            customerUid: invoiceData.customerUid,
+            consultantUid: invoiceData.consultantUid,
+            invoiceNumber: invoiceData.invoiceNumber,
+          },
+          amount / 100,
+          consultantEarnings,
+          invoiceDoc.id
+        );
 
         logger.info("Payment processed successfully", { invoiceId: invoiceDoc.id, reference });
       }
@@ -1607,19 +1631,23 @@ export const onChatMessageCreated = onDocumentCreated(
         });
       }
 
+      // Send push notification
+      await sendPushToUser(
+        recipientUid,
+        "New Message",
+        content || `${senderName} sent you a message`,
+        { type: "chat_message", chatId, url: recipientUid === consultantUid ? "/consultants" : `/consultants/chat/${consultantUid}` }
+      );
+
       // Send email notification
       let recipientEmail: string | null = null;
-      const userDoc = await db.collection("users").doc(recipientUid).get();
-      if (userDoc.exists && userDoc.data()?.email) {
-        recipientEmail = userDoc.data()?.email;
-      }
-      if (!recipientEmail) {
-        const profileDoc = await db
-          .collection("consultantProfiles")
-          .doc(recipientUid)
-          .get();
+      try {
+        const authUser = await getAuth().getUser(recipientUid);
+        recipientEmail = authUser.email || null;
+      } catch {
+        const profileDoc = await db.collection("consultantProfiles").doc(recipientUid).get();
         if (profileDoc.exists && profileDoc.data()?.email) {
-          recipientEmail = profileDoc.data()?.email;
+          recipientEmail = profileDoc.data()!.email;
         }
       }
 
@@ -1657,21 +1685,323 @@ export const onChatMessageCreated = onDocumentCreated(
 );
 
 /* ---------------------------------
-   EMAIL INTEGRATION
+   EMAIL INTEGRATION (iPage / Network Solutions / Gmail)
 ----------------------------------*/
 
-// Initialize email transporter (configure with your email service)
+// Supports iPage (smtp.ipage.com), Gmail (service: "gmail"), or custom SMTP
 const getEmailTransporter = () => {
-  // For Gmail, use OAuth2 or App Password
-  // For production, use SendGrid, Mailgun, or AWS SES
+  const user = process.env.EMAIL_USER || "";
+  const pass = process.env.EMAIL_PASSWORD || "";
+  const host = process.env.EMAIL_HOST; // e.g. smtp.ipage.com for iPage
+  const port = process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT, 10) : undefined;
+  const secure = process.env.EMAIL_SECURE === "true";
+
+  if (host) {
+    // Custom SMTP (iPage, Network Solutions, etc.)
+    return nodemailer.createTransport({
+      host,
+      port: port || (secure ? 465 : 587),
+      secure: secure ?? true,
+      auth: { user, pass },
+    });
+  }
+  // Default: Gmail
   return nodemailer.createTransport({
-    service: "gmail", // Change to your email service
-    auth: {
-      user: process.env.EMAIL_USER || "",
-      pass: process.env.EMAIL_PASSWORD || "", // Use App Password for Gmail
-    },
+    service: "gmail",
+    auth: { user, pass },
   });
 };
+
+// Send push notification to user's FCM tokens
+async function sendPushToUser(
+  uid: string,
+  title: string,
+  body: string,
+  data?: Record<string, string>
+): Promise<void> {
+  try {
+    const tokensSnap = await db.collection("users").doc(uid).collection("fcmTokens").get();
+    const tokens = tokensSnap.docs.map((d) => d.id).filter(Boolean);
+    if (tokens.length === 0) return;
+
+    const messaging = getMessaging();
+    const message = {
+      notification: { title, body },
+      data: data || {},
+      tokens,
+    };
+    const result = await messaging.sendEachForMulticast(message);
+    if (result.failureCount > 0) {
+      result.responses.forEach((resp, i) => {
+        if (!resp.success && resp.error?.code === "messaging/registration-token-not-registered") {
+          db.collection("users").doc(uid).collection("fcmTokens").doc(tokens[i]).delete();
+        }
+      });
+    }
+    logger.info("Push sent", { uid, successCount: result.successCount, failureCount: result.failureCount });
+  } catch (err) {
+    logger.warn("Push send failed", { uid, err });
+  }
+}
+
+// Send payment confirmation emails and push to customer + consultant
+async function sendPaymentEmailsAndPush(
+  invoiceData: { customerUid: string; consultantUid: string; invoiceNumber: string },
+  amountInNaira: number,
+  consultantEarnings: number,
+  invoiceId: string
+): Promise<void> {
+  const { customerUid, consultantUid, invoiceNumber } = invoiceData;
+  const hasEmail = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD;
+
+  // Push to customer
+  await sendPushToUser(
+    customerUid,
+    "Payment Successful",
+    `Your payment of ₦${amountInNaira.toLocaleString()} for invoice ${invoiceNumber} was successful.`,
+    { type: "payment_completed", ref: invoiceId, url: `/consultants/invoices/${invoiceId}` }
+  );
+  // Push to consultant
+  await sendPushToUser(
+    consultantUid,
+    "Payment Received",
+    `You received ₦${consultantEarnings.toLocaleString()} for invoice ${invoiceNumber}.`,
+    { type: "payment_received", ref: invoiceId, url: `/consultants/invoices/${invoiceId}` }
+  );
+
+  if (!hasEmail) return;
+
+  try {
+    const transporter = getEmailTransporter();
+    const from = process.env.EMAIL_FROM || "noreply@ijoba606.com";
+    const invoiceUrl = `https://ijoba606.com/consultants/invoices/${invoiceId}`;
+
+    let customerEmail: string | null = null;
+    let consultantEmail: string | null = null;
+    try {
+      const [custAuth, consAuth] = await Promise.all([
+        getAuth().getUser(customerUid).catch(() => null),
+        getAuth().getUser(consultantUid).catch(() => null),
+      ]);
+      customerEmail = custAuth?.email || null;
+      consultantEmail = consAuth?.email || null;
+    } catch {
+      // Fallback to consultant profile for consultant email
+      const profileSnap = await db.collection("consultantProfiles").doc(consultantUid).get();
+      if (profileSnap.exists) consultantEmail = profileSnap.data()?.email || null;
+    }
+
+    const baseHtml = (title: string, body: string) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #7c3aed;">${title}</h2>${body}
+        <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">View Invoice</a>
+        <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
+      </div>`;
+
+    if (customerEmail) {
+      await transporter.sendMail({
+        from,
+        to: customerEmail,
+        subject: `Payment Successful – Invoice ${invoiceNumber}`,
+        html: baseHtml(
+          "Payment Successful",
+          `<p>Your payment of <strong>₦${amountInNaira.toLocaleString()}</strong> for invoice ${invoiceNumber} was successful.</p>`
+        ),
+      });
+      logger.info("Payment email sent to customer", { customerEmail });
+    }
+    if (consultantEmail) {
+      await transporter.sendMail({
+        from,
+        to: consultantEmail,
+        subject: `Payment Received – Invoice ${invoiceNumber}`,
+        html: baseHtml(
+          "Payment Received",
+          `<p>You received <strong>₦${consultantEarnings.toLocaleString()}</strong> for invoice ${invoiceNumber}.</p>`
+        ),
+      });
+      logger.info("Payment email sent to consultant", { consultantEmail });
+    }
+  } catch (err) {
+    logger.warn("Payment emails failed", { invoiceId, err });
+  }
+}
+
+/* ---------------------------------
+   WELCOME EMAIL (new users with email)
+----------------------------------*/
+export const onUserCreated = onDocumentCreated(
+  { document: "users/{uid}", region },
+  async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) return;
+
+    const uid = snapshot.id;
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) return;
+
+    try {
+      const authUser = await getAuth().getUser(uid);
+      const email = authUser.email;
+      if (!email) return; // Skip anonymous users
+
+      const handle = snapshot.data()?.handle || authUser.displayName || "there";
+      const displayName = typeof handle === "string" ? handle.replace(/_/g, " ") : "there";
+
+      const transporter = getEmailTransporter();
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM || "noreply@ijoba606.com",
+        to: email,
+        subject: "Welcome to IJOBA 606 – Learn PAYE, Play Quizzes & Connect with Tax Experts",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #7c3aed;">Welcome to IJOBA 606, ${displayName}!</h2>
+            <p>Thanks for joining. We're here to help you understand Nigerian PAYE tax in a simple, engaging way.</p>
+            <p><strong>What you can do:</strong></p>
+            <ul>
+              <li>Play quizzes to test your tax knowledge</li>
+              <li>Use the PAYE calculator for quick estimates</li>
+              <li>Browse the forum and ask questions</li>
+              <li>Connect with verified tax consultants</li>
+              <li>Stay updated with tax news</li>
+            </ul>
+            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+              Get Started
+            </a>
+            <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
+          </div>
+        `,
+      });
+      logger.info("Welcome email sent", { uid, email });
+    } catch (err) {
+      logger.warn("Welcome email failed", { uid, err });
+    }
+  }
+);
+
+/* ---------------------------------
+   TEST EMAIL (admin-only, for verifying email config)
+----------------------------------*/
+export const sendTestWelcomeEmail = onCall(
+  { region },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be signed in");
+    }
+    const uid = request.auth.uid;
+    const userDoc = await db.collection("users").doc(uid).get();
+    const role = userDoc.data()?.role;
+    if (role !== "admin") {
+      throw new HttpsError("permission-denied", "Admin only");
+    }
+
+    const email = (request.data?.email as string) || "";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new HttpsError("invalid-argument", "Valid email required");
+    }
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      throw new HttpsError("failed-precondition", "EMAIL_USER and EMAIL_PASSWORD must be set");
+    }
+
+    try {
+      const transporter = getEmailTransporter();
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM || "noreply@ijoba606.com",
+        to: email,
+        subject: "Welcome to IJOBA 606 – Learn PAYE, Play Quizzes & Connect with Tax Experts",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #7c3aed;">Welcome to IJOBA 606!</h2>
+            <p>Thanks for joining. We're here to help you understand Nigerian PAYE tax in a simple, engaging way.</p>
+            <p><strong>What you can do:</strong></p>
+            <ul>
+              <li>Play quizzes to test your tax knowledge</li>
+              <li>Use the PAYE calculator for quick estimates</li>
+              <li>Browse the forum and ask questions</li>
+              <li>Connect with verified tax consultants</li>
+              <li>Stay updated with tax news</li>
+            </ul>
+            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+              Get Started
+            </a>
+            <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
+            <p style="color: #9ca3af; font-size: 11px; margin-top: 24px;">This is a test email to verify your email configuration.</p>
+          </div>
+        `,
+      });
+      logger.info("Test welcome email sent", { to: email });
+      return { success: true, message: `Test welcome email sent to ${email}` };
+    } catch (err: any) {
+      logger.error("Test welcome email failed", { email, err });
+      throw new HttpsError("internal", `Failed to send: ${err?.message || "Unknown error"}`);
+    }
+  }
+);
+
+/* ---------------------------------
+   INVOICE CREATED TRIGGER (auto-send email when invoice is sent)
+----------------------------------*/
+export const onInvoiceCreated = onDocumentCreated(
+  { document: "invoices/{invoiceId}", region },
+  async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) return;
+
+    const data = snapshot.data();
+    if (data?.status !== "sent") return;
+
+    const invoiceId = snapshot.id;
+    const customerUid = data.customerUid;
+    const consultantUid = data.consultantUid;
+    const invoiceNumber = data.invoiceNumber || `INV-${invoiceId.slice(0, 8)}`;
+    const total = data.total || 0;
+
+    if (!customerUid || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) return;
+
+    try {
+      let customerEmail: string | null = null;
+      try {
+        const authUser = await getAuth().getUser(customerUid);
+        customerEmail = authUser.email || null;
+      } catch {
+        // User may not exist or be anonymous
+      }
+
+      if (!customerEmail) return;
+
+      let consultantName = "Your Consultant";
+      const profileSnap = await db.collection("consultantProfiles").doc(consultantUid).get();
+      if (profileSnap.exists && profileSnap.data()?.name) {
+        consultantName = profileSnap.data()!.name;
+      }
+
+      const transporter = getEmailTransporter();
+      const invoiceUrl = `https://ijoba606.com/consultants/invoices/${invoiceId}`;
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM || "noreply@ijoba606.com",
+        to: customerEmail,
+        subject: `Invoice ${invoiceNumber} from ${consultantName} – IJOBA 606`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #7c3aed;">Invoice ${invoiceNumber}</h2>
+            <p>Dear Customer,</p>
+            <p>You have received an invoice from <strong>${consultantName}</strong> on IJOBA 606.</p>
+            <p><strong>Total Amount:</strong> ₦${Number(total).toLocaleString()}</p>
+            <p>Please click the link below to view and pay your invoice:</p>
+            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+              View & Pay Invoice
+            </a>
+            <p>If you have any questions, please contact your consultant via chat.</p>
+            <p>Best regards,<br>IJOBA 606 Team</p>
+          </div>
+        `,
+      });
+      logger.info("Invoice email sent (trigger)", { invoiceId, customerEmail });
+    } catch (error) {
+      logger.error("Error sending invoice email (trigger)", { invoiceId, error });
+    }
+  }
+);
 
 export const sendInvoiceEmail = onCall(
   {
@@ -1799,6 +2129,7 @@ async function runFetchTaxNews(maxArticles: number): Promise<{ fetched: number; 
     );
   }
 
+  const { fetchAndProcessTaxNews } = await import("./fetchTaxNews.js");
   const articles = await fetchAndProcessTaxNews(maxArticles);
   let added = 0;
 

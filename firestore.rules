@@ -32,6 +32,11 @@ service cloud.firestore {
       allow update: if isSelf(uid) || isAdmin();
     }
     
+    // FCM tokens for push notifications (users/{uid}/fcmTokens/{token})
+    match /users/{uid}/fcmTokens/{token} {
+      allow read, write: if isSelf(uid);
+    }
+    
     // Profiles collection
     match /profiles/{uid} {
       allow read: if isSignedIn();

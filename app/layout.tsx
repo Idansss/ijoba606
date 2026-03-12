@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ToastContainer } from "@/components/ui/Toast";
+import { FCMProvider } from "@/components/FCMProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -68,6 +69,7 @@ export default function RootLayout({
         </Script>
         <ThemeProvider>
           <AuthProvider>
+            <FCMProvider />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex-1">

@@ -22,8 +22,10 @@ import {
   Crown,
   DollarSign,
   Briefcase,
-  Newspaper
+  Newspaper,
+  Mail
 } from 'lucide-react';
+import { sendTestWelcomeEmail } from '@/lib/firebase/functions';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -34,6 +36,8 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'user' | 'moderator' | 'admin'>('all');
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [testEmail, setTestEmail] = useState('bolagbemi@gmail.com');
+  const [sendingTest, setSendingTest] = useState(false);
 
   // Admin access guard - block anonymous users and non-admins
   useEffect(() => {
@@ -98,6 +102,23 @@ export default function AdminDashboard() {
       addToast({ type: 'error', message: 'Failed to update user role' });
     } finally {
       setUpdatingRole(null);
+    }
+  };
+
+  const handleSendTestEmail = async () => {
+    if (!testEmail.trim()) {
+      addToast({ type: 'error', message: 'Enter an email address' });
+      return;
+    }
+    setSendingTest(true);
+    try {
+      await sendTestWelcomeEmail(testEmail.trim());
+      addToast({ type: 'success', message: `Test welcome email sent to ${testEmail}` });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to send test email';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setSendingTest(false);
     }
   };
 
@@ -196,6 +217,31 @@ export default function AdminDashboard() {
             <Users className="w-12 h-12 text-green-500" />
           </div>
         </motion.div>
+      </div>
+
+      {/* Test Email */}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-2 border-amber-200">
+        <div className="flex items-center gap-2 mb-4">
+          <Mail className="w-6 h-6 text-amber-600" />
+          <h2 className="text-xl font-bold text-gray-900">Test Welcome Email</h2>
+        </div>
+        <p className="text-gray-600 mb-4">Send a test welcome email to verify your email configuration.</p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="email"
+            value={testEmail}
+            onChange={(e) => setTestEmail(e.target.value)}
+            placeholder="email@example.com"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+          <button
+            onClick={handleSendTestEmail}
+            disabled={sendingTest}
+            className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {sendingTest ? 'Sending...' : 'Send Test Email'}
+          </button>
+        </div>
       </div>
 
       {/* Quick Links */}

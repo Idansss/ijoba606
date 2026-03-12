@@ -552,3 +552,18 @@ export async function verifyFlutterwavePayment(
   const result = await fn(data);
   return result.data;
 }
+
+export interface SendTestWelcomeEmailResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function sendTestWelcomeEmail(email: string): Promise<SendTestWelcomeEmailResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<{ email: string }, SendTestWelcomeEmailResponse>(
+    fns,
+    'sendTestWelcomeEmail'
+  );
+  const result = await fn({ email });
+  return result.data;
+}
