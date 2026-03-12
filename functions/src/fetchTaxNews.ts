@@ -26,6 +26,11 @@ const RSS_FEEDS = [
   { url: "https://www.premiumtimesng.com/feed/", name: "Premium Times" },
   { url: "https://www.thecable.ng/feed/", name: "TheCable" },
   { url: "https://businessday.ng/feed/", name: "BusinessDay" },
+  { url: "https://rss.punchng.com/v1/category/latest_news", name: "Punch" },
+  { url: "https://rss.punchng.com/v1/category/business", name: "Punch Business" },
+  { url: "https://www.vanguardngr.com/feed/", name: "Vanguard" },
+  { url: "https://guardian.ng/feed/", name: "Guardian" },
+  { url: "https://www.thisdaylive.com/index.php?feed=rss", name: "ThisDay" },
 ];
 
 export interface RawFeedItem {
