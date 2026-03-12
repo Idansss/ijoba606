@@ -1,4 +1,5 @@
 import { setGlobalOptions } from "firebase-functions";
+import { defineSecret } from "firebase-functions/params";
 import { onCall, HttpsError, onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
@@ -12,7 +13,19 @@ import { generateQuestionsWithOpenAI, generateQuestionsWithGemini, generateQuest
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
-// Note: Secrets set via `firebase functions:secrets:set` are automatically available via process.env
+// Declare secrets so they're injected at runtime (required for Firebase Functions v2)
+const emailUser = defineSecret("EMAIL_USER");
+const emailPassword = defineSecret("EMAIL_PASSWORD");
+const emailFrom = defineSecret("EMAIL_FROM");
+const geminiApiKey = defineSecret("GEMINI_API_KEY");
+const openaiApiKey = defineSecret("OPENAI_API_KEY");
+
+// Include optional iPage secrets if you've set them (EMAIL_HOST, EMAIL_PORT, EMAIL_SECURE)
+const emailHost = defineSecret("EMAIL_HOST");
+const emailPort = defineSecret("EMAIL_PORT");
+const emailSecure = defineSecret("EMAIL_SECURE");
+const emailSecrets = [emailUser, emailPassword, emailFrom, emailHost, emailPort, emailSecure];
+const aiSecrets = [geminiApiKey, openaiApiKey];
 
 // Note: CORS is automatically handled for onCall (callable) functions in v2
 // Region configuration for v2 functions
@@ -1215,6 +1228,7 @@ export const handlePaystackWebhook = onRequest(
   {
     region,
     cors: true,
+    secrets: emailSecrets,
   },
   async (req, res) => {
     try {
@@ -1399,6 +1413,7 @@ export const handleFlutterwaveWebhook = onRequest(
   {
     region,
     cors: true,
+    secrets: emailSecrets,
   },
   async (req, res) => {
     try {
@@ -1450,7 +1465,7 @@ export const handleFlutterwaveWebhook = onRequest(
 );
 
 export const verifyFlutterwavePayment = onCall(
-  { region },
+  { region, secrets: emailSecrets },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
@@ -1576,6 +1591,7 @@ export const onChatMessageCreated = onDocumentCreated(
   {
     document: "chatMessages/{messageId}",
     region,
+    secrets: emailSecrets,
   },
   async (event) => {
     const snapshot = event.data;
@@ -1831,7 +1847,7 @@ async function sendPaymentEmailsAndPush(
    WELCOME EMAIL (new users with email)
 ----------------------------------*/
 export const onUserCreated = onDocumentCreated(
-  { document: "users/{uid}", region },
+  { document: "users/{uid}", region, secrets: emailSecrets },
   async (event) => {
     const snapshot = event.data;
     if (!snapshot) return;
@@ -1882,7 +1898,7 @@ export const onUserCreated = onDocumentCreated(
    TEST EMAIL (admin-only, for verifying email config)
 ----------------------------------*/
 export const sendTestWelcomeEmail = onCall(
-  { region },
+  { region, secrets: emailSecrets },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
@@ -1942,7 +1958,7 @@ export const sendTestWelcomeEmail = onCall(
    INVOICE CREATED TRIGGER (auto-send email when invoice is sent)
 ----------------------------------*/
 export const onInvoiceCreated = onDocumentCreated(
-  { document: "invoices/{invoiceId}", region },
+  { document: "invoices/{invoiceId}", region, secrets: emailSecrets },
   async (event) => {
     const snapshot = event.data;
     if (!snapshot) return;
@@ -2004,9 +2020,7 @@ export const onInvoiceCreated = onDocumentCreated(
 );
 
 export const sendInvoiceEmail = onCall(
-  {
-    region,
-  },
+  { region, secrets: emailSecrets },
   async (request) => {
     const { invoiceId, customerEmail, consultantName, invoiceNumber, total } = request.data;
 
@@ -2163,7 +2177,7 @@ async function runFetchTaxNews(maxArticles: number): Promise<{ fetched: number; 
 }
 
 export const fetchTaxNewsNow = onCall(
-  { region },
+  { region, secrets: aiSecrets },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
@@ -2184,6 +2198,7 @@ export const fetchTaxNews = onSchedule(
     schedule: "every 24 hours",
     timeZone: "Africa/Lagos",
     region,
+    secrets: aiSecrets,
   },
   async () => {
     try {
