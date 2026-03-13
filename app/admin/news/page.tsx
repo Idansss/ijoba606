@@ -66,6 +66,7 @@ export default function AdminNewsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
   const [fetching, setFetching] = useState(false);
+  const [searching2026, setSearching2026] = useState(false);
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -209,6 +210,24 @@ export default function AdminNewsPage() {
       addToast({ type: 'error', message: msg });
     } finally {
       setFetching(false);
+    }
+  };
+
+  const handleSearchTaxLaw2026 = async () => {
+    setSearching2026(true);
+    try {
+      const { fetched, added } = await searchTaxLaw2026Now(5);
+      addToast({
+        type: 'success',
+        message: `Found ${fetched} articles on Tax Law 2026, added ${added} new.`,
+      });
+      fetchArticles();
+    } catch (error) {
+      console.error('Error searching Tax Law 2026:', error);
+      const msg = error instanceof Error ? error.message : 'Failed to search';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setSearching2026(false);
     }
   };
 
