@@ -296,6 +296,12 @@ export async function fetchAndProcessTaxNews(
   return processed;
 }
 
+const SEARCH_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+] as const;
+
 /**
  * Search the web via Gemini Google Search grounding for Nigerian Tax Law 2026 and related content.
  * Returns articles found from web search (not limited to RSS feeds).
@@ -326,58 +332,71 @@ Return a JSON array of exactly ${maxArticles} articles (or fewer if not enough f
 Return ONLY the JSON array, no other text. Example format:
 [{"title":"...","excerpt":"...","content":"<p>...</p>","source":"Punch","sourceUrl":"https://...","publishedAt":"2026-01-15"}]`;
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ google_search: {} }],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 8192,
-          responseMimeType: "application/json",
-        },
-      }),
+  let lastError: Error | null = null;
+  for (const model of SEARCH_MODELS) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            tools: [{ google_search: {} }],
+            generationConfig: {
+              temperature: 0.3,
+              maxOutputTokens: 8192,
+              responseMimeType: "application/json",
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.text();
+        lastError = new Error(`Gemini ${model}: ${response.status} ${err.slice(0, 300)}`);
+        logger.warn("Gemini search model failed, trying next", { model, status: response.status });
+        continue;
+      }
+
+      const data = await response.json();
+      const text =
+        data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "[]";
+
+      let jsonStr = text;
+      const match = text.match(/\[[\s\S]*\]/);
+      if (match) jsonStr = match[0];
+
+      const parsed = JSON.parse(jsonStr) as Array<{
+        title?: string;
+        excerpt?: string;
+        content?: string;
+        source?: string;
+        sourceUrl?: string;
+        publishedAt?: string;
+      }>;
+
+      const processed: ProcessedArticle[] = [];
+      for (const p of parsed) {
+        if (!p.title || !p.sourceUrl) continue;
+        processed.push({
+          title: p.title,
+          slug: slugify(p.title),
+          excerpt: p.excerpt || p.title.slice(0, 150),
+          content: p.content || `<p>${p.title}</p><p><a href="${p.sourceUrl}">Read original</a></p>`,
+          source: p.source || "Web",
+          sourceUrl: p.sourceUrl,
+          category: "Tax Law 2026",
+          publishedAt: p.publishedAt ? new Date(p.publishedAt) : new Date(),
+        });
+      }
+      logger.info("Tax Law 2026 search succeeded", { model, count: processed.length });
+      return processed;
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      logger.warn("Gemini search failed, trying next model", { model, err: String(lastError) });
     }
-  );
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Gemini API error: ${response.status} ${err}`);
   }
 
-  const data = await response.json();
-  const text =
-    data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "[]";
-
-  let jsonStr = text;
-  const match = text.match(/\[[\s\S]*\]/);
-  if (match) jsonStr = match[0];
-
-  const parsed = JSON.parse(jsonStr) as Array<{
-    title?: string;
-    excerpt?: string;
-    content?: string;
-    source?: string;
-    sourceUrl?: string;
-    publishedAt?: string;
-  }>;
-
-  const processed: ProcessedArticle[] = [];
-  for (const p of parsed) {
-    if (!p.title || !p.sourceUrl) continue;
-    processed.push({
-      title: p.title,
-      slug: slugify(p.title),
-      excerpt: p.excerpt || p.title.slice(0, 150),
-      content: p.content || `<p>${p.title}</p><p><a href="${p.sourceUrl}">Read original</a></p>`,
-      source: p.source || "Web",
-      sourceUrl: p.sourceUrl,
-      category: "Tax Law 2026",
-      publishedAt: p.publishedAt ? new Date(p.publishedAt) : new Date(),
-    });
-  }
-  return processed;
+  throw lastError ?? new Error("All Gemini models failed for web search");
 }

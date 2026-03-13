@@ -2264,7 +2264,19 @@ export const searchTaxLaw2026Now = onCall(
       throw new HttpsError("permission-denied", "Admin only");
     }
     const maxArticles = (request.data?.maxArticles as number) || 5;
-    const { fetched, added } = await runSearchTaxLaw2026(maxArticles);
-    return { fetched, added };
+    try {
+      const { fetched, added } = await runSearchTaxLaw2026(maxArticles);
+      return { fetched, added };
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logger.error("searchTaxLaw2026Now failed", { error: msg });
+      if (msg.includes("GEMINI_API_KEY")) {
+        throw new HttpsError(
+          "failed-precondition",
+          "GEMINI_API_KEY required. Run: firebase functions:secrets:set GEMINI_API_KEY"
+        );
+      }
+      throw new HttpsError("failed-precondition", `Search failed: ${msg.slice(0, 180)}`);
+    }
   }
 );
