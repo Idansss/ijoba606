@@ -2,30 +2,30 @@
 
 import { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/lib/store/auth';
-import { registerFCMToken, isPushSupported } from '@/lib/firebase/messaging';
 
 /**
  * Registers FCM token for push notifications when user is signed in.
- * Mount once in the app layout.
+ * Uses dynamic import to avoid SSR errors (firebase/messaging requires browser APIs).
  */
 export function FCMProvider() {
   const { firebaseUser } = useAuthStore();
   const registered = useRef(false);
 
   useEffect(() => {
-    if (!firebaseUser?.uid) {
+    if (!firebaseUser?.uid || typeof window === 'undefined') {
       registered.current = false;
       return;
     }
 
     const init = async () => {
-      const supported = await isPushSupported();
-      if (!supported) return;
-
-      if (registered.current) return;
-      registered.current = true;
-
       try {
+        const { isPushSupported, registerFCMToken } = await import('@/lib/firebase/messaging');
+        const supported = await isPushSupported();
+        if (!supported) return;
+
+        if (registered.current) return;
+        registered.current = true;
+
         await registerFCMToken(firebaseUser.uid);
       } catch (err) {
         console.warn('FCM registration failed:', err);

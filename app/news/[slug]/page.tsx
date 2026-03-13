@@ -8,6 +8,21 @@ import { db } from '@/lib/firebase/config';
 import { ArrowLeft, Calendar, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 
+function formatArticleDate(publishedAt?: { toDate?: () => Date; seconds?: number }): string {
+  if (!publishedAt) return '—';
+  try {
+    if (typeof publishedAt.toDate === 'function') {
+      return format(publishedAt.toDate(), 'MMMM d, yyyy');
+    }
+    if (typeof publishedAt.seconds === 'number') {
+      return format(new Date(publishedAt.seconds * 1000), 'MMMM d, yyyy');
+    }
+  } catch {
+    // ignore
+  }
+  return '—';
+}
+
 export default function NewsArticlePage() {
   const params = useParams();
   const slug = params?.slug as string;
@@ -104,8 +119,12 @@ export default function NewsArticlePage() {
           <div className="flex items-center gap-4 mt-4 text-gray-500">
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
-              {article.publishedAt?.toDate
-                ? format(article.publishedAt.toDate(), 'MMMM d, yyyy')
+              {article.publishedAt
+                ? typeof article.publishedAt.toDate === 'function'
+                  ? format(article.publishedAt.toDate(), 'MMMM d, yyyy')
+                  : typeof (article.publishedAt as { seconds?: number }).seconds === 'number'
+                    ? format(new Date((article.publishedAt as { seconds: number }).seconds * 1000), 'MMMM d, yyyy')
+                    : '—'
                 : '—'}
             </span>
             {article.source && (

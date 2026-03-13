@@ -16,10 +16,25 @@ export interface NewsArticle {
   source?: string;
   sourceUrl?: string;
   category?: string;
-  publishedAt: { toDate: () => Date };
-  createdAt?: { toDate: () => Date };
+  publishedAt?: { toDate?: () => Date; seconds?: number };
+  createdAt?: { toDate?: () => Date };
   imageUrl?: string;
   isActive?: boolean;
+}
+
+function formatArticleDate(publishedAt: NewsArticle['publishedAt']): string {
+  if (!publishedAt) return '—';
+  try {
+    if (typeof publishedAt.toDate === 'function') {
+      return format(publishedAt.toDate(), 'MMM d, yyyy');
+    }
+    if (typeof publishedAt.seconds === 'number') {
+      return format(new Date(publishedAt.seconds * 1000), 'MMM d, yyyy');
+    }
+  } catch {
+    // ignore
+  }
+  return '—';
 }
 
 export default function NewsPage() {
@@ -104,9 +119,7 @@ export default function NewsPage() {
                   <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {article.publishedAt?.toDate
-                        ? format(article.publishedAt.toDate(), 'MMM d, yyyy')
-                        : '—'}
+                      {formatArticleDate(article.publishedAt)}
                     </span>
                     {article.source && (
                       <span className="text-gray-400">{article.source}</span>
