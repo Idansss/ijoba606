@@ -19,7 +19,7 @@ import {
 import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { fetchTaxNewsNow } from '@/lib/firebase/functions';
+import { fetchTaxNewsNow, searchTaxLaw2026Now } from '@/lib/firebase/functions';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
 import {
   ArrowLeft,
@@ -309,6 +309,14 @@ export default function AdminNewsPage() {
               >
                 <Sparkles className="w-5 h-5" />
                 {fetching ? 'Fetching…' : 'Fetch from AI'}
+              </button>
+              <button
+                onClick={handleSearchTaxLaw2026}
+                disabled={searching2026}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 disabled:opacity-50"
+              >
+                <Sparkles className="w-5 h-5" />
+                {searching2026 ? 'Searching…' : 'Search Tax Law 2026'}
               </button>
               <button
                 onClick={() => openModal()}

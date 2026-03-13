@@ -2208,3 +2208,63 @@ export const fetchTaxNews = onSchedule(
     }
   }
 );
+
+/* ---------------------------------
+   SEARCH WEB FOR TAX LAW 2026 (Gemini Google Search grounding)
+----------------------------------*/
+async function runSearchTaxLaw2026(maxArticles: number): Promise<{ fetched: number; added: number }> {
+  const { Timestamp } = await import("firebase-admin/firestore");
+  if (!process.env.GEMINI_API_KEY) {
+    throw new HttpsError("failed-precondition", "GEMINI_API_KEY required for web search");
+  }
+
+  const { searchWebForTaxLaw2026 } = await import("./fetchTaxNews.js");
+  const articles = await searchWebForTaxLaw2026(maxArticles);
+  let added = 0;
+
+  for (const article of articles) {
+    const existing = await db
+      .collection("newsArticles")
+      .where("sourceUrl", "==", article.sourceUrl)
+      .limit(1)
+      .get();
+
+    if (!existing.empty) continue;
+
+    await db.collection("newsArticles").add({
+      title: article.title,
+      slug: article.slug,
+      excerpt: article.excerpt,
+      content: article.content,
+      source: article.source,
+      sourceUrl: article.sourceUrl,
+      category: article.category,
+      publishedAt: Timestamp.fromDate(article.publishedAt),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      isActive: true,
+    });
+    added++;
+    logger.info("Added Tax Law 2026 article", { title: article.title });
+  }
+
+  return { fetched: articles.length, added };
+}
+
+export const searchTaxLaw2026Now = onCall(
+  { region, secrets: aiSecrets },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be signed in");
+    }
+    const uid = request.auth.uid;
+    const userDoc = await db.collection("users").doc(uid).get();
+    const role = userDoc.data()?.role;
+    if (role !== "admin") {
+      throw new HttpsError("permission-denied", "Admin only");
+    }
+    const maxArticles = (request.data?.maxArticles as number) || 5;
+    const { fetched, added } = await runSearchTaxLaw2026(maxArticles);
+    return { fetched, added };
+  }
+);

@@ -531,6 +531,11 @@ export interface FetchTaxNewsResponse {
   added: number;
 }
 
+export interface SearchTaxLaw2026Response {
+  fetched: number;
+  added: number;
+}
+
 export async function fetchTaxNewsNow(): Promise<FetchTaxNewsResponse> {
   const fns = requireFunctions();
   const fn = httpsCallable<Record<string, never>, FetchTaxNewsResponse>(
@@ -538,6 +543,16 @@ export async function fetchTaxNewsNow(): Promise<FetchTaxNewsResponse> {
     'fetchTaxNewsNow'
   );
   const result = await fn({});
+  return result.data;
+}
+
+export async function searchTaxLaw2026Now(maxArticles?: number): Promise<SearchTaxLaw2026Response> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<{ maxArticles?: number }, SearchTaxLaw2026Response>(
+    fns,
+    'searchTaxLaw2026Now'
+  );
+  const result = await fn({ maxArticles: maxArticles ?? 5 });
   return result.data;
 }
 

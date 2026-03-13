@@ -29,6 +29,11 @@ const TAX_KEYWORDS = [
   "customs",
   "duty",
   "remittance",
+  // Nigerian Tax Law 2026 (effective Jan 1, 2026)
+  "tax law 2026",
+  "finance act 2025",
+  "finance act 2026",
+  "tax reform 2026",
 ];
 
 const RSS_FEEDS = [
@@ -288,5 +293,91 @@ export async function fetchAndProcessTaxNews(
     }
   }
 
+  return processed;
+}
+
+/**
+ * Search the web via Gemini Google Search grounding for Nigerian Tax Law 2026 and related content.
+ * Returns articles found from web search (not limited to RSS feeds).
+ */
+export async function searchWebForTaxLaw2026(
+  maxArticles: number = 5
+): Promise<ProcessedArticle[]> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
+
+  const prompt = `Search the web for recent news and articles about:
+1. Nigerian Tax Law 2026 (effective January 1, 2026)
+2. Finance Act 2025 or 2026 Nigeria
+3. PAYE changes 2026 Nigeria
+4. Nigerian tax reforms 2026
+5. FIRS tax updates 2026
+
+Find articles from trusted Nigerian sources (Punch, Vanguard, Guardian, ThisDay, BusinessDay, Nairametrics, Premium Times, TheCable, etc.).
+
+Return a JSON array of exactly ${maxArticles} articles (or fewer if not enough found). Each article must have:
+- "title": string
+- "excerpt": 1-2 sentence summary (max 200 chars)
+- "content": HTML content with <p> tags, key facts from the article (max 500 words)
+- "source": publication name
+- "sourceUrl": the article URL
+- "publishedAt": ISO date string if known, or "2026-01-01"
+
+Return ONLY the JSON array, no other text. Example format:
+[{"title":"...","excerpt":"...","content":"<p>...</p>","source":"Punch","sourceUrl":"https://...","publishedAt":"2026-01-15"}]`;
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 8192,
+          responseMimeType: "application/json",
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Gemini API error: ${response.status} ${err}`);
+  }
+
+  const data = await response.json();
+  const text =
+    data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "[]";
+
+  let jsonStr = text;
+  const match = text.match(/\[[\s\S]*\]/);
+  if (match) jsonStr = match[0];
+
+  const parsed = JSON.parse(jsonStr) as Array<{
+    title?: string;
+    excerpt?: string;
+    content?: string;
+    source?: string;
+    sourceUrl?: string;
+    publishedAt?: string;
+  }>;
+
+  const processed: ProcessedArticle[] = [];
+  for (const p of parsed) {
+    if (!p.title || !p.sourceUrl) continue;
+    processed.push({
+      title: p.title,
+      slug: slugify(p.title),
+      excerpt: p.excerpt || p.title.slice(0, 150),
+      content: p.content || `<p>${p.title}</p><p><a href="${p.sourceUrl}">Read original</a></p>`,
+      source: p.source || "Web",
+      sourceUrl: p.sourceUrl,
+      category: "Tax Law 2026",
+      publishedAt: p.publishedAt ? new Date(p.publishedAt) : new Date(),
+    });
+  }
   return processed;
 }
