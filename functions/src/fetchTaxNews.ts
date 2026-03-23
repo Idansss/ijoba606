@@ -296,6 +296,75 @@ export async function fetchAndProcessTaxNews(
   return processed;
 }
 
+/**
+ * Fetch tax/business news from RSS feeds WITHOUT AI summarization.
+ * No GEMINI_API_KEY or OPENAI_API_KEY needed. Uses raw title + snippet.
+ */
+export async function fetchTaxNewsRssOnly(
+  maxArticles: number = 15
+): Promise<ProcessedArticle[]> {
+  const Parser = (await import("rss-parser")).default;
+  const parser = new Parser({ timeout: 10000 });
+
+  const taxItems: { item: RawFeedItem; source: string }[] = [];
+  const allItems: { item: RawFeedItem; source: string }[] = [];
+  const businessFeeds = ["Nairametrics", "BusinessDay", "Punch Business"];
+
+  for (const feed of RSS_FEEDS) {
+    try {
+      const result = await parser.parseURL(feed.url);
+      const items = (result.items || []) as RawFeedItem[];
+      for (const item of items) {
+        const snippet = item.contentSnippet || item.content || "";
+        const entry = { item, source: feed.name };
+        allItems.push(entry);
+        if (isTaxRelated(item.title || "", snippet)) {
+          taxItems.push(entry);
+        }
+      }
+    } catch (err) {
+      logger.warn(`Failed to fetch RSS ${feed.url}`, err);
+    }
+  }
+
+  const sortByDate = (a: { item: RawFeedItem }, b: { item: RawFeedItem }) => {
+    const dateA = a.item.isoDate || a.item.pubDate || "";
+    const dateB = b.item.isoDate || b.item.pubDate || "";
+    return dateB.localeCompare(dateA);
+  };
+  taxItems.sort(sortByDate);
+  allItems.sort(sortByDate);
+
+  let toProcess = taxItems.slice(0, maxArticles);
+  if (toProcess.length === 0) {
+    logger.info("No tax-filtered articles; using fallback from business feeds");
+    const fallback = allItems.filter((x) => businessFeeds.includes(x.source));
+    toProcess = fallback.slice(0, Math.min(maxArticles, 10));
+  }
+
+  const processed: ProcessedArticle[] = [];
+  for (const { item, source } of toProcess) {
+    const rawContent = item.content || item.contentSnippet || item.title || "";
+    const excerpt = (rawContent?.slice(0, 200) || item.title || "Untitled").trim();
+    const pubDate = item.isoDate || item.pubDate;
+    const publishedAt = pubDate ? new Date(pubDate) : new Date();
+
+    processed.push({
+      title: item.title || "Untitled",
+      slug: slugify(item.title || `article-${Date.now()}`),
+      excerpt: excerpt.length > 200 ? excerpt.slice(0, 197) + "…" : excerpt,
+      content: `<p>${excerpt}</p><p><a href="${item.link || "#"}">Read original on ${source}</a></p>`,
+      source,
+      sourceUrl: item.link || "",
+      category: "Tax & Compliance",
+      publishedAt,
+    });
+  }
+
+  logger.info("RSS-only fetch completed", { count: processed.length });
+  return processed;
+}
+
 const SEARCH_MODELS = [
   "gemini-2.5-flash",
   "gemini-2.0-flash",

@@ -2193,6 +2193,109 @@ export const fetchTaxNewsNow = onCall(
   }
 );
 
+async function runFetchTaxNewsRssOnly(maxArticles: number): Promise<{ fetched: number; added: number }> {
+  const { Timestamp } = await import("firebase-admin/firestore");
+  const { fetchTaxNewsRssOnly } = await import("./fetchTaxNews.js");
+  const articles = await fetchTaxNewsRssOnly(maxArticles);
+  let added = 0;
+
+  for (const article of articles) {
+    const existing = await db
+      .collection("newsArticles")
+      .where("sourceUrl", "==", article.sourceUrl)
+      .limit(1)
+      .get();
+
+    if (!existing.empty) continue;
+
+    await db.collection("newsArticles").add({
+      title: article.title,
+      slug: article.slug,
+      excerpt: article.excerpt,
+      content: article.content,
+      source: article.source,
+      sourceUrl: article.sourceUrl,
+      category: article.category,
+      publishedAt: Timestamp.fromDate(article.publishedAt),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      isActive: true,
+    });
+    added++;
+    logger.info("Added RSS-only article", { title: article.title });
+  }
+
+  return { fetched: articles.length, added };
+}
+
+export const fetchTaxNewsRssOnlyNow = onCall({ region }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+  const userDoc = await db.collection("users").doc(request.auth.uid).get();
+  if (userDoc.data()?.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin only");
+  }
+  const maxArticles = (request.data?.maxArticles as number) || 15;
+  const { fetched, added } = await runFetchTaxNewsRssOnly(maxArticles);
+  return { fetched, added };
+});
+
+/* ---------------------------------
+   SEED SAMPLE ARTICLES (manual mass populate)
+----------------------------------*/
+const SAMPLE_NEWS_ARTICLES = [
+  { title: "FIRS extends tax filing deadline for businesses", excerpt: "The Federal Inland Revenue Service has extended the deadline for filing annual tax returns to give businesses more time to comply.", source: "Premium Times", sourceUrl: "https://www.premiumtimesng.com/news/headlines/firs-deadline", category: "Tax & Compliance" },
+  { title: "Finance Act 2025: Key changes for Nigerian taxpayers", excerpt: "Nigeria's Finance Act 2025 introduces new tax incentives and compliance requirements affecting PAYE, VAT, and corporate income tax.", source: "Nairametrics", sourceUrl: "https://nairametrics.com/finance-act-2025", category: "Tax Law 2026" },
+  { title: "PAYE compliance: What employers need to know in 2026", excerpt: "A comprehensive guide to Pay-As-You-Earn compliance requirements for Nigerian employers under the updated tax regime.", source: "BusinessDay", sourceUrl: "https://businessday.ng/paye-compliance-2026", category: "Tax & Compliance" },
+  { title: "VAT increases: Impact on consumer prices", excerpt: "The recent changes to Value Added Tax in Nigeria are expected to affect prices across several sectors of the economy.", source: "TheCable", sourceUrl: "https://www.thecable.ng/vat-impact", category: "Tax & Compliance" },
+  { title: "Tax reforms 2026: What's changing for individuals", excerpt: "The Nigerian government's tax reform agenda for 2026 includes simplifications for individual taxpayers and new relief measures.", source: "Punch", sourceUrl: "https://punchng.com/tax-reforms-2026", category: "Tax Law 2026" },
+  { title: "FIRS revenue collection hits record high", excerpt: "The Federal Inland Revenue Service reported its highest ever revenue collection, driven by improved compliance and enforcement.", source: "Vanguard", sourceUrl: "https://www.vanguardngr.com/firs-revenue", category: "Tax & Compliance" },
+  { title: "Budget 2026: Fiscal policy and tax implications", excerpt: "Analysis of the federal budget 2026 and its implications for tax policy, expenditure, and revenue projections.", source: "Guardian", sourceUrl: "https://guardian.ng/budget-2026", category: "Tax & Compliance" },
+  { title: "Customs tariff adjustments affect import costs", excerpt: "Recent adjustments to customs duties and tariffs are impacting the cost of imported goods and raw materials.", source: "ThisDay", sourceUrl: "https://www.thisdaylive.com/customs-tariff", category: "Tax & Compliance" },
+  { title: "Tax relief for SMEs: New government incentives", excerpt: "Small and medium enterprises can benefit from new tax incentives aimed at boosting formalization and compliance.", source: "Nairametrics", sourceUrl: "https://nairametrics.com/tax-relief-smes", category: "Tax & Compliance" },
+  { title: "Penalties for late tax filing: What you need to know", excerpt: "Understanding the penalties and interest charges for late filing of tax returns in Nigeria.", source: "Premium Times", sourceUrl: "https://www.premiumtimesng.com/tax-penalties", category: "Tax & Compliance" },
+];
+
+async function runSeedSampleNewsArticles(): Promise<{ added: number }> {
+  const { Timestamp } = await import("firebase-admin/firestore");
+
+  function slugify(t: string) {
+    return t.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim().slice(0, 80);
+  }
+
+  let added = 0;
+  for (const a of SAMPLE_NEWS_ARTICLES) {
+    const existing = await db.collection("newsArticles").where("sourceUrl", "==", a.sourceUrl).limit(1).get();
+    if (!existing.empty) continue;
+
+    await db.collection("newsArticles").add({
+      title: a.title,
+      slug: slugify(a.title),
+      excerpt: a.excerpt,
+      content: `<p>${a.excerpt}</p><p><a href="${a.sourceUrl}">Read more on ${a.source}</a></p>`,
+      source: a.source,
+      sourceUrl: a.sourceUrl,
+      category: a.category,
+      publishedAt: Timestamp.now(),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      isActive: true,
+    });
+    added++;
+  }
+  logger.info("Seed sample articles completed", { added });
+  return { added };
+}
+
+export const seedSampleNewsArticlesNow = onCall({ region }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+  const userDoc = await db.collection("users").doc(request.auth.uid).get();
+  if (userDoc.data()?.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin only");
+  }
+  const { added } = await runSeedSampleNewsArticles();
+  return { added };
+});
+
 export const fetchTaxNews = onSchedule(
   {
     schedule: "every 24 hours",

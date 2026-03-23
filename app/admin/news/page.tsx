@@ -19,7 +19,7 @@ import {
 import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
-import { fetchTaxNewsNow, searchTaxLaw2026Now } from '@/lib/firebase/functions';
+import { fetchTaxNewsNow, searchTaxLaw2026Now, fetchTaxNewsRssOnlyNow, seedSampleNewsArticlesNow } from '@/lib/firebase/functions';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
 import {
   ArrowLeft,
@@ -67,6 +67,8 @@ export default function AdminNewsPage() {
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
   const [fetching, setFetching] = useState(false);
   const [searching2026, setSearching2026] = useState(false);
+  const [fetchingRss, setFetchingRss] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -231,6 +233,42 @@ export default function AdminNewsPage() {
     }
   };
 
+  const handleFetchFromRss = async () => {
+    setFetchingRss(true);
+    try {
+      const { fetched, added } = await fetchTaxNewsRssOnlyNow(15);
+      addToast({
+        type: 'success',
+        message: `Fetched ${fetched} from RSS (no AI), added ${added} new.`,
+      });
+      fetchArticles();
+    } catch (error) {
+      console.error('Error fetching from RSS:', error);
+      const msg = error instanceof Error ? error.message : 'Failed to fetch';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setFetchingRss(false);
+    }
+  };
+
+  const handleSeedSample = async () => {
+    setSeeding(true);
+    try {
+      const { added } = await seedSampleNewsArticlesNow();
+      addToast({
+        type: 'success',
+        message: `Seeded ${added} sample articles.`,
+      });
+      fetchArticles();
+    } catch (error) {
+      console.error('Error seeding:', error);
+      const msg = error instanceof Error ? error.message : 'Failed to seed';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this article?')) return;
     if (!db) return;
@@ -282,15 +320,23 @@ export default function AdminNewsPage() {
             </p>
             <p className="text-sm text-gray-500 mt-1">Total: {articles.length} article(s)</p>
             <details className="mt-2 text-xs text-gray-500">
-              <summary className="cursor-pointer hover:text-gray-700">Setup Fetch from AI</summary>
-              <ol className="mt-2 ml-4 list-decimal space-y-1">
-                <li>Get a free key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-purple-600 hover:underline">Google AI Studio</a></li>
-                <li>Run: <code className="bg-gray-100 px-1 rounded">firebase functions:secrets:set GEMINI_API_KEY</code></li>
-                <li>Deploy: <code className="bg-gray-100 px-1 rounded">firebase deploy --only functions</code></li>
-              </ol>
+              <summary className="cursor-pointer hover:text-gray-700">Setup options</summary>
+              <ul className="mt-2 ml-4 list-disc space-y-1">
+                <li><strong>Fetch from RSS</strong> — No setup. Gets tax/business news from Nigerian feeds.</li>
+                <li><strong>Seed Sample</strong> — No setup. Adds 10 curated sample articles instantly.</li>
+                <li><strong>Fetch from AI / Search Tax Law 2026</strong> — Requires GEMINI_API_KEY: <code className="bg-gray-100 px-1 rounded">firebase functions:secrets:set GEMINI_API_KEY</code>, then deploy.</li>
+              </ul>
             </details>
           </div>
           <div className="flex flex-wrap gap-3">
+            <button
+              onClick={handleFetchFromRss}
+              disabled={fetchingRss}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition disabled:opacity-50"
+            >
+              <Newspaper className="w-5 h-5" />
+              {fetchingRss ? 'Fetching…' : 'Fetch from RSS'}
+            </button>
             <button
               onClick={handleFetchFromAI}
               disabled={fetching}
@@ -298,6 +344,14 @@ export default function AdminNewsPage() {
             >
               <Sparkles className="w-5 h-5" />
               {fetching ? 'Fetching…' : 'Fetch from AI'}
+            </button>
+            <button
+              onClick={handleSeedSample}
+              disabled={seeding}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 transition disabled:opacity-50"
+            >
+              <Plus className="w-5 h-5" />
+              {seeding ? 'Seeding…' : 'Seed Sample'}
             </button>
             <button
               onClick={() => openModal()}
@@ -321,6 +375,22 @@ export default function AdminNewsPage() {
               Add articles manually or use AI to fetch tax news from Nigerian sources.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={handleFetchFromRss}
+                disabled={fetchingRss}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 disabled:opacity-50"
+              >
+                <Newspaper className="w-5 h-5" />
+                {fetchingRss ? 'Fetching…' : 'Fetch from RSS'}
+              </button>
+              <button
+                onClick={handleSeedSample}
+                disabled={seeding}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 disabled:opacity-50"
+              >
+                <Plus className="w-5 h-5" />
+                {seeding ? 'Seeding…' : 'Seed Sample'}
+              </button>
               <button
                 onClick={handleFetchFromAI}
                 disabled={fetching}

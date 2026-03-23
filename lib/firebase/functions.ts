@@ -536,6 +536,26 @@ export interface SearchTaxLaw2026Response {
   added: number;
 }
 
+export async function fetchTaxNewsRssOnlyNow(maxArticles?: number): Promise<FetchTaxNewsResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<{ maxArticles?: number }, FetchTaxNewsResponse>(
+    fns,
+    'fetchTaxNewsRssOnlyNow'
+  );
+  const result = await fn({ maxArticles: maxArticles ?? 15 });
+  return result.data;
+}
+
+export async function seedSampleNewsArticlesNow(): Promise<{ added: number }> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<Record<string, never>, { added: number }>(
+    fns,
+    'seedSampleNewsArticlesNow'
+  );
+  const result = await fn({});
+  return result.data;
+}
+
 export async function fetchTaxNewsNow(): Promise<FetchTaxNewsResponse> {
   const fns = requireFunctions();
   const fn = httpsCallable<Record<string, never>, FetchTaxNewsResponse>(
