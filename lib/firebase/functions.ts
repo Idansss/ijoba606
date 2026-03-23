@@ -602,3 +602,25 @@ export async function sendTestWelcomeEmail(email: string): Promise<SendTestWelco
   const result = await fn({ email });
   return result.data;
 }
+
+export interface SubmitContactFormRequest {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+export interface SubmitContactFormResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function submitContactForm(data: SubmitContactFormRequest): Promise<SubmitContactFormResponse> {
+  const fns = requireFunctions();
+  const fn = httpsCallable<SubmitContactFormRequest, SubmitContactFormResponse>(
+    fns,
+    'submitContactForm'
+  );
+  const result = await fn(data);
+  return result.data;
+}

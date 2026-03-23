@@ -11,6 +11,7 @@ import {
   FileText,
   Gamepad2,
   LogOut,
+  Mail,
   Menu,
   MessageCircle,
   Sparkles,
@@ -40,6 +41,7 @@ const navLinks = [
   { href: '/glossary', label: 'Glossary', icon: BookOpen },
   { href: '/consultants', label: 'Consultants', icon: Briefcase },
   { href: '/news', label: 'News', icon: FileText },
+  { href: '/contact', label: 'Contact', icon: Mail },
 ];
 
 export function Header() {

@@ -13,9 +13,9 @@ import {
   Facebook,
   Instagram,
   MessageCircle,
-  CheckCircle
 } from 'lucide-react';
 import { useToastStore } from '@/lib/store/toast';
+import { submitContactForm } from '@/lib/firebase/functions';
 
 export default function ContactPage() {
   const { addToast } = useToastStore();
@@ -30,16 +30,16 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-
-    // Simulate form submission (you can integrate with a backend service later)
-    setTimeout(() => {
-      addToast({
-        type: 'success',
-        message: 'Thank you for your message! We\'ll get back to you soon.',
-      });
+    try {
+      const result = await submitContactForm(formData);
+      addToast({ type: 'success', message: result.message });
       setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Failed to send. Please try info@ijoba606.com directly.';
+      addToast({ type: 'error', message: msg });
+    } finally {
       setSubmitting(false);
-    }, 1500);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -53,8 +53,8 @@ export default function ContactPage() {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@ijoba606.com',
-      href: 'mailto:hello@ijoba606.com',
+      value: 'info@ijoba606.com',
+      href: 'mailto:info@ijoba606.com',
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
     },

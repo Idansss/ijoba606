@@ -1955,6 +1955,67 @@ export const sendTestWelcomeEmail = onCall(
 );
 
 /* ---------------------------------
+   CONTACT FORM (public, no auth required)
+   Delivers to info@ijoba606.com; sent from noreply@ with Reply-To: user email
+----------------------------------*/
+export const submitContactForm = onCall(
+  { region, secrets: emailSecrets },
+  async (request) => {
+    const data = request.data as { name?: string; email?: string; subject?: string; message?: string } | undefined;
+    const name = String(data?.name || "").trim().slice(0, 100);
+    const email = String(data?.email || "").trim().toLowerCase();
+    const subject = String(data?.subject || "").trim().slice(0, 200);
+    const message = String(data?.message || "").trim().slice(0, 5000);
+
+    if (!name || name.length < 2) {
+      throw new HttpsError("invalid-argument", "Please enter your name");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new HttpsError("invalid-argument", "Please enter a valid email address");
+    }
+    if (!subject || subject.length < 3) {
+      throw new HttpsError("invalid-argument", "Please enter a subject");
+    }
+    if (!message || message.length < 10) {
+      throw new HttpsError("invalid-argument", "Please enter a message (at least 10 characters)");
+    }
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      throw new HttpsError("failed-precondition", "Contact form is temporarily unavailable. Please email info@ijoba606.com directly.");
+    }
+
+    try {
+      const transporter = getEmailTransporter();
+      const from = process.env.EMAIL_FROM || "noreply@ijoba606.com";
+
+      await transporter.sendMail({
+        from: `"IJOBA 606 Contact" <${from}>`,
+        to: "info@ijoba606.com",
+        replyTo: email,
+        subject: `[Contact] ${subject}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px;">
+            <h2 style="color: #7c3aed;">New contact form submission</h2>
+            <p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+            <div style="white-space: pre-wrap;">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            <p style="color: #6b7280; font-size: 12px; margin-top: 24px;">Sent via ijoba606.com contact form. Reply to this email to reach the sender.</p>
+          </div>
+        `,
+      });
+
+      logger.info("Contact form submitted", { email, subject: subject.slice(0, 30) });
+      return { success: true, message: "Thank you! We'll get back to you soon." };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      logger.error("Contact form failed", { err: msg });
+      throw new HttpsError("internal", "Failed to send message. Please try info@ijoba606.com directly.");
+    }
+  }
+);
+
+/* ---------------------------------
    INVOICE CREATED TRIGGER (auto-send email when invoice is sent)
 ----------------------------------*/
 export const onInvoiceCreated = onDocumentCreated(
