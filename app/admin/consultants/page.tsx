@@ -24,6 +24,15 @@ import { ArrowLeft, Briefcase, UserCheck, FileText, X } from 'lucide-react';
 
 type Tab = 'applications' | 'consultants';
 
+function profileIdForApplication(app: ConsultantApplication): string {
+  return (app.uid && String(app.uid)) || app.id!;
+}
+
+function applicationHasProfile(app: ConsultantApplication, list: ConsultantProfile[]): boolean {
+  const pid = profileIdForApplication(app);
+  return list.some((p) => p.id === pid || p.uid === pid);
+}
+
 export default function AdminConsultantsPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuthStore();
@@ -91,6 +100,57 @@ export default function AdminConsultantsPage() {
     }
   }, [user, fetchData]);
 
+  const upsertProfileFromApplication = async (application: ConsultantApplication) => {
+    if (!db) return;
+    const profileId = profileIdForApplication(application);
+    const profileRef = doc(db, 'consultantProfiles', profileId);
+    await setDoc(
+      profileRef,
+      {
+        uid: profileId,
+        name: application.name,
+        email: application.email,
+        phone: application.phone,
+        whatsapp: application.whatsapp,
+        locationState: application.locationState,
+        bio: application.bio,
+        specialties: application.specialties || [],
+        experienceYears: application.experienceYears ?? 0,
+        qualifications: [],
+        certifications: [],
+        workExperience: [],
+        portfolioItems: [],
+        availabilityStatus: 'unavailable',
+        totalClients: 0,
+        totalProjects: 0,
+        averageRating: 0,
+        reviewsCount: 0,
+        isVerified: true,
+        isActive: false,
+        verificationStatus: 'verified',
+        activityStatus: 'inactive',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  };
+
+  const handleCreateMissingProfile = async (app: ConsultantApplication) => {
+    if (!db || app.status !== 'approved') return;
+    setUpdatingId(app.id!);
+    try {
+      await upsertProfileFromApplication(app);
+      await fetchData();
+      addToast({ type: 'success', message: 'Consultant profile created. Open the Consultants tab to set them active.' });
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      addToast({ type: 'error', message: 'Failed to create consultant profile. Check Firestore rules are deployed.' });
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   const handleUpdateApplicationStatus = async (appId: string, status: ConsultantApplication['status']) => {
     if (!db) return;
     setUpdatingId(appId);
@@ -104,38 +164,7 @@ export default function AdminConsultantsPage() {
       });
 
       if (status === 'approved' && application) {
-        const profileId = application.uid || appId;
-        const profileRef = doc(db, 'consultantProfiles', profileId);
-        await setDoc(
-          profileRef,
-          {
-            uid: profileId,
-            name: application.name,
-            email: application.email,
-            phone: application.phone,
-            whatsapp: application.whatsapp,
-            locationState: application.locationState,
-            bio: application.bio,
-            specialties: application.specialties || [],
-            experienceYears: application.experienceYears ?? 0,
-            qualifications: [],
-            certifications: [],
-            workExperience: [],
-            portfolioItems: [],
-            availabilityStatus: 'unavailable',
-            totalClients: 0,
-            totalProjects: 0,
-            averageRating: 0,
-            reviewsCount: 0,
-            isVerified: true,
-            isActive: false,
-            verificationStatus: 'verified',
-            activityStatus: 'inactive',
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
+        await upsertProfileFromApplication(application);
       }
 
       setApplications((prev) =>
@@ -345,28 +374,42 @@ export default function AdminConsultantsPage() {
                           : 'Unknown'}
                       </td>
                       <td className="py-3 px-4">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedApplication(app)}
-                          className="mr-3 text-xs font-semibold text-purple-700 hover:underline"
-                        >
-                          View
-                        </button>
-                        <select
-                          value={app.status}
-                          onChange={(e) =>
-                            handleUpdateApplicationStatus(
-                              app.id!,
-                              e.target.value as ConsultantApplication['status']
-                            )
-                          }
-                          disabled={updatingId === app.id}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="approved">Approved</option>
-                          <option value="rejected">Rejected</option>
-                        </select>
+                        <div className="flex flex-col gap-2 items-start">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedApplication(app)}
+                              className="text-xs font-semibold text-purple-700 hover:underline"
+                            >
+                              View
+                            </button>
+                            <select
+                              value={app.status}
+                              onChange={(e) =>
+                                handleUpdateApplicationStatus(
+                                  app.id!,
+                                  e.target.value as ConsultantApplication['status']
+                                )
+                              }
+                              disabled={updatingId === app.id}
+                              className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </div>
+                          {app.status === 'approved' && !applicationHasProfile(app, profiles) && (
+                            <button
+                              type="button"
+                              onClick={() => handleCreateMissingProfile(app)}
+                              disabled={updatingId === app.id}
+                              className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1 hover:bg-amber-100 disabled:opacity-50"
+                            >
+                              Create profile (missing)
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

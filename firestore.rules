@@ -168,10 +168,15 @@ service cloud.firestore {
     // Consultant Profiles (approved consultants)
     match /consultantProfiles/{profileId} {
       allow read: if true; // Public read for discovery
-      allow create: if isSignedIn() && 
-                       request.resource.data.uid == request.auth.uid &&
-                       exists(/databases/$(database)/documents/consultantApplications/$(request.auth.uid)) &&
-                       get(/databases/$(database)/documents/consultantApplications/$(request.auth.uid)).data.status == 'approved';
+      // Applicant creates own profile after approval, OR admin creates profile when approving from dashboard
+      allow create: if isSignedIn() && (
+        isAdmin() ||
+        (
+          request.resource.data.uid == request.auth.uid &&
+          exists(/databases/$(database)/documents/consultantApplications/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/consultantApplications/$(request.auth.uid)).data.status == 'approved'
+        )
+      );
       allow update: if isSignedIn() && 
                        (resource.data.uid == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
