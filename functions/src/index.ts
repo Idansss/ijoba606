@@ -25,6 +25,32 @@ const emailHost = defineSecret("EMAIL_HOST");
 const emailPort = defineSecret("EMAIL_PORT");
 const emailSecure = defineSecret("EMAIL_SECURE");
 const emailSecrets = [emailUser, emailPassword, emailFrom, emailHost, emailPort, emailSecure];
+
+function isEmailTransportConfigured(): boolean {
+  return Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASSWORD);
+}
+
+/** Explains Spamhaus / 554 when shared SMTP blocks Google Cloud IPs */
+function smtpFailureUserMessage(err: unknown): string {
+  const raw = err instanceof Error ? err.message : String(err);
+  const lower = raw.toLowerCase();
+  if (
+    lower.includes("spamhaus") ||
+    lower.includes("554") ||
+    lower.includes("aup#bl") ||
+    lower.includes("connection rejected") ||
+    lower.includes("blocked") ||
+    lower.includes("invalid greeting")
+  ) {
+    return (
+      "SMTP rejected the connection from Firebase (shared hosting often blocks Google Cloud IPs / Spamhaus). " +
+      "Switch to SendGrid: secrets EMAIL_HOST=smtp.sendgrid.net, EMAIL_PORT=587, EMAIL_SECURE=false, " +
+      "EMAIL_USER=apikey, EMAIL_PASSWORD=<SendGrid API key>, EMAIL_FROM=verified sender. Original: " +
+      raw.slice(0, 200)
+    );
+  }
+  return raw;
+}
 const aiSecrets = [geminiApiKey, openaiApiKey];
 
 // Note: CORS is automatically handled for onCall (callable) functions in v2
@@ -1667,7 +1693,7 @@ export const onChatMessageCreated = onDocumentCreated(
         }
       }
 
-      if (recipientEmail && process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      if (recipientEmail && isEmailTransportConfigured()) {
         const transporter = getEmailTransporter();
         // Customer: /consultants/chat/{consultantUid}; Consultant: /consultants (chat list)
         const chatUrl =
@@ -1704,7 +1730,8 @@ export const onChatMessageCreated = onDocumentCreated(
    EMAIL INTEGRATION (iPage / Network Solutions / Gmail)
 ----------------------------------*/
 
-// Supports iPage (smtp.ipage.com), Gmail (service: "gmail"), or custom SMTP
+// Use SendGrid (or Mailgun, etc.) with EMAIL_HOST=smtp.sendgrid.net, EMAIL_USER=apikey, EMAIL_PASSWORD=<API key>.
+// iPage/EIG often blocks Firebase IPs (Spamhaus 554) — transactional SMTP is recommended.
 const getEmailTransporter = () => {
   const user = process.env.EMAIL_USER || "";
   const pass = process.env.EMAIL_PASSWORD || "";
@@ -1713,11 +1740,12 @@ const getEmailTransporter = () => {
   const secure = process.env.EMAIL_SECURE === "true";
 
   if (host) {
-    // Custom SMTP (iPage, Network Solutions, etc.)
+    const isSendGrid = host.toLowerCase().includes("sendgrid");
+    // SendGrid: 587 + STARTTLS (secure: false). iPage: often 465 SSL.
     return nodemailer.createTransport({
       host,
-      port: port || (secure ? 465 : 587),
-      secure: secure ?? true,
+      port: isSendGrid ? 587 : port || (secure ? 465 : 587),
+      secure: isSendGrid ? false : secure ?? true,
       auth: { user, pass },
     });
   }
@@ -1768,7 +1796,7 @@ async function sendPaymentEmailsAndPush(
   invoiceId: string
 ): Promise<void> {
   const { customerUid, consultantUid, invoiceNumber } = invoiceData;
-  const hasEmail = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD;
+  const hasEmail = isEmailTransportConfigured();
 
   // Push to customer
   await sendPushToUser(
@@ -1853,7 +1881,7 @@ export const onUserCreated = onDocumentCreated(
     if (!snapshot) return;
 
     const uid = snapshot.id;
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) return;
+    if (!isEmailTransportConfigured()) return;
 
     try {
       const authUser = await getAuth().getUser(uid);
@@ -1915,8 +1943,11 @@ export const sendTestWelcomeEmail = onCall(
       throw new HttpsError("invalid-argument", "Valid email required");
     }
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      throw new HttpsError("failed-precondition", "EMAIL_USER and EMAIL_PASSWORD must be set");
+    if (!isEmailTransportConfigured()) {
+      throw new HttpsError(
+        "failed-precondition",
+        "Set EMAIL_USER, EMAIL_PASSWORD, and EMAIL_FROM. For Firebase, use SendGrid SMTP (see deploy docs)."
+      );
     }
 
     try {
@@ -1947,9 +1978,9 @@ export const sendTestWelcomeEmail = onCall(
       });
       logger.info("Test welcome email sent", { to: email });
       return { success: true, message: `Test welcome email sent to ${email}` };
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error("Test welcome email failed", { email, err });
-      throw new HttpsError("internal", `Failed to send: ${err?.message || "Unknown error"}`);
+      throw new HttpsError("internal", smtpFailureUserMessage(err));
     }
   }
 );
@@ -1980,8 +2011,11 @@ export const submitContactForm = onCall(
       throw new HttpsError("invalid-argument", "Please enter a message (at least 10 characters)");
     }
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      throw new HttpsError("failed-precondition", "Contact form is temporarily unavailable. Please email info@ijoba606.com directly.");
+    if (!isEmailTransportConfigured()) {
+      throw new HttpsError(
+        "failed-precondition",
+        "Contact form is temporarily unavailable. Please email info@ijoba606.com directly."
+      );
     }
 
     try {
@@ -2008,9 +2042,8 @@ export const submitContactForm = onCall(
       logger.info("Contact form submitted", { email, subject: subject.slice(0, 30) });
       return { success: true, message: "Thank you! We'll get back to you soon." };
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      logger.error("Contact form failed", { err: msg });
-      throw new HttpsError("internal", "Failed to send message. Please try info@ijoba606.com directly.");
+      logger.error("Contact form failed", { err });
+      throw new HttpsError("internal", smtpFailureUserMessage(err));
     }
   }
 );
@@ -2033,7 +2066,7 @@ export const onInvoiceCreated = onDocumentCreated(
     const invoiceNumber = data.invoiceNumber || `INV-${invoiceId.slice(0, 8)}`;
     const total = data.total || 0;
 
-    if (!customerUid || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) return;
+    if (!customerUid || !isEmailTransportConfigured()) return;
 
     try {
       let customerEmail: string | null = null;
