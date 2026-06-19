@@ -31,11 +31,11 @@ export function SummaryStat({
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay }}
-      className="rounded-3xl border border-slate-100 bg-white/95 p-5 shadow-sm"
+      className="rounded-3xl border border-[#efefe2] bg-white/95 p-5 shadow-sm"
     >
-      <div className="flex items-center gap-3 text-sm text-slate-500">
+      <div className="flex items-center gap-3 text-sm text-[#707a6a]">
         {icon && (
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-lg">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#efefe2] text-lg">
             {icon}
           </span>
         )}

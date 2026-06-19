@@ -84,8 +84,8 @@ export default function AdminLoginPage() {
           className="bg-white rounded-2xl shadow-xl p-8 text-center"
         >
           <Shield className="w-16 h-16 mx-auto mb-4 text-[#006400]" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Access</h1>
-          <p className="text-gray-600 mb-6">Please sign in to access the admin panel</p>
+          <h1 className="text-2xl font-bold text-[#1a1c15] mb-2">Admin Access</h1>
+          <p className="text-[#404a3b] mb-6">Please sign in to access the admin panel</p>
           <button
             onClick={() => router.push('/')}
             className="w-full px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all"
@@ -108,29 +108,29 @@ export default function AdminLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Access</h1>
-          <p className="text-gray-600">Enter your admin access code to continue</p>
+          <h1 className="text-3xl font-bold text-[#1a1c15] mb-2">Admin Access</h1>
+          <p className="text-[#404a3b]">Enter your admin access code to continue</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="accessCode" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label htmlFor="accessCode" className="block text-sm font-semibold text-[#404a3b] mb-2">
               Access Code
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#707a6a] w-5 h-5" />
               <input
                 id="accessCode"
                 type="password"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
                 placeholder="Enter admin access code"
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
                 autoFocus
               />
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-[#707a6a]">
               Contact a system administrator for the access code
             </p>
           </div>
@@ -154,8 +154,8 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-center text-sm text-gray-600">
+        <div className="mt-6 pt-6 border-t border-[#e3e3d7]">
+          <p className="text-center text-sm text-[#404a3b]">
             Don&apos;t have admin access?{' '}
             <button
               onClick={() => router.push('/admin/register')}

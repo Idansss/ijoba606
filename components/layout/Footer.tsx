@@ -23,101 +23,74 @@ const legalLinks = [
   { href: '/contact', label: 'Contact Us' },
 ];
 
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+}) {
+  return (
+    <div className="md:col-span-2 flex flex-col gap-4">
+      <h4 className="font-label-sm text-label-sm uppercase tracking-widest text-deep-green">
+        {title}
+      </h4>
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className="text-body-md text-on-surface-variant transition-colors hover:text-royal-gold"
+        >
+          {link.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="mt-auto border-t border-[var(--border-soft)] text-[var(--foreground)]"
-      style={{
-        // Use theme tokens so light + dark stay in the same green family
-        background:
-          'linear-gradient(135deg, var(--background) 0%, var(--surface) 40%, var(--background) 100%)',
-      }}
-    >
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-10 lg:grid-cols-4">
-          <div className="lg:col-span-2">
+    <footer className="mt-auto w-full border-t border-outline-variant/10 bg-surface-container-lowest py-12">
+      <div className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop">
+        <div className="mb-12 grid grid-cols-1 gap-gutter md:grid-cols-12">
+          <div className="space-y-6 md:col-span-4">
             <BrandLogo
-              markClassName="h-12 w-12"
-              textClassName="text-xl"
-              taglineClassName="text-[0.7rem] opacity-80"
+              markClassName="h-14 w-14"
+              textClassName="text-xl text-deep-green"
+              taglineClassName="text-[0.65rem]"
             />
-            <h3 className="mt-4 text-3xl font-semibold">
+            <p className="font-body-md text-body-md text-on-surface-variant">
               Make PAYE literacy hard to ignore.
-            </h3>
-            <p className="mt-3 text-sm opacity-85">
-              Micro-quizzes, a kind community, and a Nigeria-ready PAYE calculator
-              built so everyone can see their tax clearly.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-4">
               <Link
                 href="/play"
-                className="rounded-full bg-[#006400] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#006400]/25 transition hover:bg-[#0b7a3b]"
+                className="rounded-full bg-deep-green px-6 py-3 font-label-sm text-label-sm text-on-primary transition-colors hover:bg-forest-green"
               >
                 Start a round
               </Link>
               <Link
                 href="/calculator"
-                className="rounded-full border-2 border-[#006400] px-5 py-2 text-sm font-semibold text-[#006400] transition hover:bg-[#006400] hover:text-white"
+                className="rounded-full border border-deep-green px-6 py-3 font-label-sm text-label-sm text-deep-green transition-colors hover:bg-deep-green/5"
               >
                 Estimate PAYE
               </Link>
             </div>
           </div>
 
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest opacity-70">
-              Product
-            </h4>
-            <ul className="mt-4 space-y-2 text-sm opacity-85">
-              {productLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="transition hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest opacity-70">
-              Community
-            </h4>
-            <ul className="mt-4 space-y-2 text-sm opacity-85">
-              {communityLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="transition hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Product" links={productLinks} />
+          <FooterColumn title="Community" links={communityLinks} />
+          <FooterColumn title="Legal" links={legalLinks} />
         </div>
 
-        <div className="mt-8 grid gap-6 border-t border-white/10 pt-6 text-sm opacity-75 md:grid-cols-2">
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            {legalLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="transition hover:text-white"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-          <p className="text-right md:text-left">
-            (c) {year} ijoba 606. Educational purposes only - not legal or tax
-            advice.
+        <div className="flex flex-col items-start justify-between gap-4 border-t border-outline-variant/10 pt-8 md:flex-row md:items-center">
+          <p className="text-label-sm text-on-surface-variant opacity-60">
+            © {year} IJOBA 606. Empowering Nigerian Prosperity.
+          </p>
+          <p className="text-label-sm italic text-on-surface-variant opacity-60">
+            Educational purposes only — not legal or tax advice.
           </p>
         </div>
       </div>

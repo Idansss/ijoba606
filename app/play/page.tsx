@@ -21,6 +21,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import Link from 'next/link';
+import { Icon } from '@/components/ui/Icon';
 
 export default function PlayPage() {
   const router = useRouter();
@@ -117,64 +118,75 @@ export default function PlayPage() {
 
   if (!firebaseUser) {
     return (
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-auto mt-16 max-w-2xl rounded-[32px] border border-white/80 bg-white/80 p-10 text-center shadow-[0_45px_120px_rgba(87,93,170,0.2)]"
-        >
-          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
-            Learn & play
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold text-slate-900">
-            3 questions per round, rewards that stick.
-          </h1>
-          <p className="mt-4 text-slate-600">
-            Sign in anonymously to earn streaks, badges, and climb the leaderboard.
-            Upgrade to Google later if you want to save everything.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <button
-              onClick={handleSignInAndPlay}
-              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-8 py-3 text-base font-semibold text-white shadow-lg shadow-[#0b7a3b]/30"
-            >
-              Try a demo round
-            </button>
-            <Link
-              href="/calculator"
-              className="rounded-full border border-slate-200 px-8 py-3 text-base font-semibold text-slate-700 hover:border-[#7fb56a] hover:text-slate-900"
-            >
-              Explore calculator
-            </Link>
-          </div>
-        </motion.div>
+      <div className="relative overflow-hidden">
+        {/* Ambient float blobs */}
+        <div className="pointer-events-none absolute -left-20 top-10 h-96 w-96 animate-float rounded-full bg-primary-fixed/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 bottom-10 h-80 w-80 animate-float-delayed rounded-full bg-tertiary-fixed/20 blur-3xl" />
+
+        <div className="mx-auto max-w-container-max px-margin-mobile py-16 md:px-margin-desktop md:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative z-10 mx-auto max-w-2xl rounded-bento border border-deep-green/5 bg-surface-container-lowest/80 p-10 text-center shadow-[0px_20px_40px_rgba(0,100,0,0.08)] backdrop-blur-xl md:p-12"
+          >
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary-fixed/20 text-royal-gold">
+              <Icon name="sports_esports" filled className="text-3xl" />
+            </div>
+            <p className="font-label-sm text-label-sm uppercase tracking-widest text-forest-green">
+              Learn &amp; Play
+            </p>
+            <h1 className="mt-4 font-display-lg-mobile text-display-lg-mobile leading-tight text-ink-black">
+              3 questions per round, rewards that stick.
+            </h1>
+            <p className="mx-auto mt-4 max-w-md font-body-lg text-body-lg text-on-surface-variant">
+              Sign in anonymously to earn streaks, badges, and climb the
+              leaderboard. Upgrade to Google later if you want to save everything.
+            </p>
+            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleSignInAndPlay}
+                className="flex items-center justify-center gap-2 rounded-full bg-deep-green px-8 py-4 font-label-sm text-label-sm text-on-primary shadow-md transition-all hover:-translate-y-1 hover:bg-forest-green"
+              >
+                Try a demo round
+                <Icon name="arrow_forward" className="text-[18px]" />
+              </button>
+              <Link
+                href="/calculator"
+                className="rounded-full border border-deep-green px-8 py-4 font-label-sm text-label-sm text-deep-green transition-all hover:bg-deep-green/5"
+              >
+                Explore calculator
+              </Link>
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-5xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-[0_35px_110px_rgba(15,23,42,0.15)]">
+        <div className="rounded-bento border border-deep-green/10 bg-surface-container-lowest p-8 shadow-[0px_20px_40px_rgba(0,100,0,0.08)] md:p-12">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+              <p className="font-label-sm text-label-sm uppercase tracking-widest text-forest-green">
                 Round builder
               </p>
-              <h1 className="mt-2 text-3xl font-semibold text-slate-900">
+              <h1 className="mt-2 font-headline-md text-headline-md text-deep-green">
                 Learn PAYE in snackable sprints.
               </h1>
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 font-body-md text-body-md text-on-surface-variant">
                 Each round is 3 questions. +10 for correct, +2 for giving it a shot.
               </p>
             </div>
             <Link
               href="/leaderboard"
-              className="rounded-full border border-[#aecf9c] px-6 py-2 text-sm font-semibold text-[#004f00] hover:bg-[#e9f1e2]"
+              className="rounded-full border border-deep-green px-6 py-2 font-label-sm text-label-sm text-deep-green transition-colors hover:bg-deep-green/5"
             >
               View leaderboard
             </Link>
@@ -186,8 +198,8 @@ export default function PlayPage() {
                 streakCount={profile.streakCount}
                 bestStreak={profile.bestStreak}
               />
-              <div className="rounded-3xl border border-slate-100 bg-white/80 p-6">
-                <h2 className="text-center text-lg font-semibold text-slate-900">
+              <div className="rounded-input border border-outline-variant/30 bg-surface-container-low p-6">
+                <h2 className="text-center font-headline-md text-lg font-semibold text-deep-green">
                   Your badge shelf
                 </h2>
                 <div className="mt-4">
@@ -198,16 +210,16 @@ export default function PlayPage() {
           )}
 
           {lastScore !== null && (
-            <div className="mt-6 rounded-3xl border border-[#c7ecd6] bg-[#e6f3ec] p-4 text-center text-[#002d15]">
+            <div className="mt-6 rounded-input border border-secondary-container bg-primary-fixed/15 p-4 text-center text-on-secondary-fixed">
               Last round score: <span className="font-semibold">{lastScore}/30</span>
             </div>
           )}
 
           <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-slate-900">
+            <h2 className="font-headline-md text-headline-md text-deep-green">
               Choose a level
             </h2>
-            <p className="text-sm text-slate-500">
+            <p className="font-body-md text-body-md text-on-surface-variant">
               New content drops weekly. Unlock higher levels by maintaining stronger averages.
             </p>
             <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -228,12 +240,13 @@ export default function PlayPage() {
             whileTap={{ scale: 0.99 }}
             onClick={handleStartRound}
             disabled={loading || !isLevelUnlocked(selectedLevel)}
-            className="mt-8 w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl shadow-[#0b7a3b]/30 transition disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-deep-green px-6 py-4 font-label-sm text-base font-semibold text-on-primary shadow-md transition hover:bg-forest-green disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Loading round...' : 'Start round'}
+            {!loading && <Icon name="arrow_forward" className="text-[18px]" />}
           </motion.button>
 
-          <p className="mt-4 text-center text-xs text-slate-400">
+          <p className="mt-4 text-center font-body-md text-xs text-on-surface-variant/70">
             Tip: Daily play keeps your streak alive and unlocks rare badges faster.
           </p>
         </div>

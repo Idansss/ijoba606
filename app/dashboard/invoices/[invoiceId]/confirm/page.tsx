@@ -9,6 +9,7 @@ import { useToastStore } from '@/lib/store/toast';
 import { Invoice, ServiceCompletion, Dispute } from '@/lib/types';
 import { ArrowLeft, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Select } from '@/components/ui/Select';
 
 export default function ConfirmServicePage() {
   const params = useParams();
@@ -240,18 +241,18 @@ export default function ConfirmServicePage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
+          className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-8 shadow-lg border border-[#e3e3d7]">
         <div className="text-center mb-8">
           <CheckCircle2 className="w-16 h-16 text-[#006d33] mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Service Completion Confirmation</h1>
-          <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
+          <h1 className="text-3xl font-bold text-[#1a1c15] mb-2">Service Completion Confirmation</h1>
+          <p className="text-[#404a3b]">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
         <div className="bg-[#e6f3ec] border border-[#97e0b4] rounded-lg p-4 mb-6">
@@ -270,17 +271,17 @@ export default function ConfirmServicePage() {
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Service Details</h3>
-          <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+          <div className="bg-[#f4f4e7] rounded-lg p-4 space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-600">Title:</span>
+              <span className="text-[#404a3b]">Title:</span>
               <span className="font-semibold">{invoice.title}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Amount Paid:</span>
+              <span className="text-[#404a3b]">Amount Paid:</span>
               <span className="font-semibold">₦{invoice.total.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Completed At:</span>
+              <span className="text-[#404a3b]">Completed At:</span>
               <span className="font-semibold">
                 {completion.completedAt && completion.completedAt.toDate().toLocaleString()}
               </span>
@@ -306,26 +307,26 @@ export default function ConfirmServicePage() {
           <h3 className="text-lg font-semibold mb-4 text-red-600">Raise a Dispute</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Reason *</label>
-              <select
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Reason *</label>
+              <Select
                 value={disputeReason}
-                onChange={(e) => setDisputeReason(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              >
-                <option value="">Select Reason</option>
-                <option value="service_not_provided">Service Not Provided</option>
-                <option value="poor_quality">Poor Quality</option>
-                <option value="not_as_described">Not As Described</option>
-                <option value="other">Other</option>
-              </select>
+                onChange={setDisputeReason}
+                placeholder="Select Reason"
+                options={[
+                  { value: 'service_not_provided', label: 'Service Not Provided' },
+                  { value: 'poor_quality', label: 'Poor Quality' },
+                  { value: 'not_as_described', label: 'Not As Described' },
+                  { value: 'other', label: 'Other' },
+                ]}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Details *</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Details *</label>
               <textarea
                 value={disputeDetails}
                 onChange={(e) => setDisputeDetails(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 placeholder="Please provide details about the issue..."
                 required
               />

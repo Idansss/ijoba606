@@ -10,6 +10,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import { useAuthStore } from '@/lib/store/auth';
 import { ReportButton } from './ReportButton';
+import { Icon } from '@/components/ui/Icon';
 
 interface PostProps {
   post: ForumPost;
@@ -42,7 +43,7 @@ export function Post({
 
   if (post.isHidden && !canModerate) {
     return (
-      <div className="bg-gray-100 border-2 border-gray-300 rounded-xl p-4 text-center text-gray-500 italic">
+      <div className="rounded-input border border-outline-variant bg-surface-container p-4 text-center italic text-outline">
         This post has been hidden by moderators
       </div>
     );
@@ -52,36 +53,26 @@ export function Post({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 ${
+      className={`rounded-bento border bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.03)] backdrop-blur-sm ${
         isAccepted
-          ? 'border-green-400 bg-green-50/50'
+          ? 'border-secondary/40 bg-secondary-container/20'
           : post.isHidden
-          ? 'border-red-300 bg-red-50/50'
-          : 'border-gray-200'
+          ? 'border-error/40 bg-error-container/30'
+          : 'border-deep-green/5'
       }`}
     >
       {/* Accepted Badge */}
       {isAccepted && (
-        <div className="mb-4 flex items-center gap-2 text-green-700">
-          <svg
-            className="w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="font-semibold">Accepted Answer</span>
+        <div className="mb-4 flex items-center gap-2 text-secondary">
+          <Icon name="verified" className="text-[22px]" filled />
+          <span className="font-label-sm text-label-sm uppercase tracking-widest">Accepted Answer</span>
         </div>
       )}
 
       {/* Hidden Badge */}
       {post.isHidden && canModerate && (
-        <div className="mb-4 px-3 py-2 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">
-          ⚠️ Hidden by moderator
+        <div className="mb-4 flex items-center gap-2 rounded-input border border-error/30 bg-error-container/40 px-3 py-2 text-sm text-on-error-container">
+          <Icon name="visibility_off" className="text-[18px]" /> Hidden by moderator
         </div>
       )}
 
@@ -98,12 +89,12 @@ export function Post({
           {/* Meta */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full flex items-center justify-center text-white font-bold">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-forest-green to-secondary font-bold text-on-primary">
                 U
               </div>
               <div>
-                <div className="font-semibold text-gray-800">Anonymous User</div>
-                <div className="text-sm text-gray-500">{timeAgo}</div>
+                <div className="font-semibold text-on-surface">Anonymous User</div>
+                <div className="text-sm text-outline">{timeAgo}</div>
               </div>
             </div>
 
@@ -112,26 +103,20 @@ export function Post({
               <div className="relative">
                 <button
                   onClick={() => setShowActions(!showActions)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="rounded-input p-2 text-on-surface-variant transition-colors hover:bg-surface-container"
                 >
-                  <svg
-                    className="w-5 h-5 text-gray-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                  </svg>
+                  <Icon name="more_horiz" className="text-[20px]" />
                 </button>
 
                 {showActions && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border-2 border-gray-200 py-2 z-10">
+                  <div className="absolute right-0 z-10 mt-2 w-48 rounded-input border border-outline-variant/30 bg-surface-container-lowest py-2 shadow-[0px_20px_40px_rgba(0,50,0,0.12)]">
                     {isOwner && onEdit && (
                       <button
                         onClick={() => {
                           onEdit();
                           setShowActions(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-surface-container"
                       >
                         Edit
                       </button>
@@ -142,7 +127,7 @@ export function Post({
                           onDelete();
                           setShowActions(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+                        className="w-full px-4 py-2 text-left text-sm text-error hover:bg-error-container/40"
                       >
                         Delete
                       </button>
@@ -165,19 +150,9 @@ export function Post({
             {showAcceptButton && onAccept && !isAccepted && (
               <button
                 onClick={onAccept}
-                className="text-sm text-green-600 hover:text-green-700 font-semibold flex items-center gap-1"
+                className="flex items-center gap-1 text-sm font-semibold text-secondary transition-colors hover:text-deep-green"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Icon name="check_circle" className="text-[18px]" />
                 Accept Answer
               </button>
             )}

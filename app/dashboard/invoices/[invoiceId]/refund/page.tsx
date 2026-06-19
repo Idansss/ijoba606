@@ -9,6 +9,7 @@ import { useToastStore } from '@/lib/store/toast';
 import { Invoice, RefundRequest, BankAccount } from '@/lib/types';
 import { ArrowLeft, AlertTriangle, DollarSign } from 'lucide-react';
 import Link from 'next/link';
+import { Select } from '@/components/ui/Select';
 
 export default function RequestRefundPage() {
   const params = useParams();
@@ -209,18 +210,18 @@ export default function RequestRefundPage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
+          className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-8 shadow-lg border border-[#e3e3d7]">
         <div className="text-center mb-8">
           <DollarSign className="w-16 h-16 text-[#a98700] mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Request Refund</h1>
-          <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
+          <h1 className="text-3xl font-bold text-[#1a1c15] mb-2">Request Refund</h1>
+          <p className="text-[#404a3b]">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
         <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4 mb-6">
@@ -238,13 +239,13 @@ export default function RequestRefundPage() {
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Invoice Details</h3>
-          <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+          <div className="bg-[#f4f4e7] rounded-lg p-4 space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-600">Amount Paid:</span>
+              <span className="text-[#404a3b]">Amount Paid:</span>
               <span className="font-semibold">₦{invoice.total.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Refund Amount:</span>
+              <span className="text-[#404a3b]">Refund Amount:</span>
               <span className="font-semibold text-green-600">₦{invoice.total.toLocaleString()}</span>
             </div>
           </div>
@@ -252,27 +253,27 @@ export default function RequestRefundPage() {
 
         <div className="space-y-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Refund *</label>
-            <select
+            <label className="block text-sm font-medium text-[#404a3b] mb-1">Reason for Refund *</label>
+            <Select
               value={refundData.reason}
-              onChange={(e) => setRefundData({ ...refundData, reason: e.target.value as any })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-            >
-              <option value="">Select Reason</option>
-              <option value="service_not_provided">Service Not Provided</option>
-              <option value="poor_quality">Poor Quality</option>
-              <option value="dispute">Dispute</option>
-              <option value="other">Other</option>
-            </select>
+              onChange={(v) => setRefundData({ ...refundData, reason: v as any })}
+              placeholder="Select Reason"
+              options={[
+                { value: 'service_not_provided', label: 'Service Not Provided' },
+                { value: 'poor_quality', label: 'Poor Quality' },
+                { value: 'dispute', label: 'Dispute' },
+                { value: 'other', label: 'Other' },
+              ]}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Details *</label>
+            <label className="block text-sm font-medium text-[#404a3b] mb-1">Details *</label>
             <textarea
               value={refundData.reasonDetails}
               onChange={(e) => setRefundData({ ...refundData, reasonDetails: e.target.value })}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+              className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               placeholder="Please provide details about why you need a refund..."
               required
             />
@@ -280,19 +281,16 @@ export default function RequestRefundPage() {
 
           {bankAccounts.length > 0 ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Refund to Bank Account *</label>
-              <select
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Refund to Bank Account *</label>
+              <Select
                 value={refundData.bankAccountId}
-                onChange={(e) => setRefundData({ ...refundData, bankAccountId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-              >
-                {bankAccounts.map((account) => (
-                  <option key={account.id} value={account.id}>
-                    {account.accountName} - {account.bankName} ({account.accountNumber})
-                    {account.isDefault && ' - Default'}
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => setRefundData({ ...refundData, bankAccountId: v })}
+                placeholder="Select bank account"
+                options={bankAccounts.map((account) => ({
+                  value: account.id!,
+                  label: `${account.accountName} - ${account.bankName} (${account.accountNumber})${account.isDefault ? ' - Default' : ''}`,
+                }))}
+              />
               <Link
                 href="/settings/bank-account"
                 className="text-sm text-[#006400] hover:underline mt-1 inline-block"
@@ -318,7 +316,7 @@ export default function RequestRefundPage() {
         <div className="flex gap-4">
           <button
             onClick={() => router.push(`/consultants/invoices/${invoice.id}`)}
-            className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+            className="flex-1 px-6 py-3 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition"
           >
             Cancel
           </button>

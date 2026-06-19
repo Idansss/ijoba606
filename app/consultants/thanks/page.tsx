@@ -36,8 +36,8 @@ function ConsultantThanksPageContent() {
           </div>
         </motion.div>
 
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">{title}</h1>
-        <p className="text-lg text-gray-600 mb-8">{message}</p>
+        <h1 className="text-4xl font-bold text-[#1a1c15] mb-4">{title}</h1>
+        <p className="text-lg text-[#404a3b] mb-8">{message}</p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -66,8 +66,8 @@ export default function ConsultantThanksPage() {
         <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-green-200">
           <div className="animate-pulse">
             <div className="w-20 h-20 rounded-full bg-green-100 mx-auto mb-6"></div>
-            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-96 mx-auto mb-8"></div>
+            <div className="h-8 bg-[#e3e3d7] rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-[#e3e3d7] rounded w-96 mx-auto mb-8"></div>
           </div>
         </div>
       </div>

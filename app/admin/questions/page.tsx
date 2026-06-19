@@ -9,11 +9,12 @@ import { useToastStore } from '@/lib/store/toast';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Question, QuizLevel } from '@/lib/types';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { questionSchema, QuestionFormData } from '@/lib/validation/schemas';
 import { generateQuestions } from '@/lib/firebase/functions';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { Select } from '@/components/ui/Select';
 import { ArrowLeft } from 'lucide-react';
 
 export default function AdminQuestionsPage() {
@@ -35,6 +36,7 @@ export default function AdminQuestionsPage() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<QuestionFormData>({
     resolver: zodResolver(questionSchema),
@@ -230,7 +232,7 @@ export default function AdminQuestionsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
+            className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -243,7 +245,7 @@ export default function AdminQuestionsPage() {
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
               Question Management
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#404a3b]">
               Total: {questions.length} questions
             </p>
           </div>
@@ -267,7 +269,7 @@ export default function AdminQuestionsPage() {
         <div className="space-y-8">
           {questionsByLevel.map(({ level, questions: levelQuestions }) => (
             <div key={level}>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              <h2 className="text-2xl font-bold text-[#1a1c15] mb-4">
                 Level {level} ({levelQuestions.length} questions)
               </h2>
               <div className="grid grid-cols-1 gap-4">
@@ -276,7 +278,7 @@ export default function AdminQuestionsPage() {
                     key={question.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200"
+                    className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-[#e3e3d7]"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
@@ -291,16 +293,16 @@ export default function AdminQuestionsPage() {
                           {question.tags?.map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                              className="px-2 py-1 bg-[#efefe2] text-[#404a3b] rounded text-xs"
                             >
                               {tag}
                             </span>
                           ))}
                         </div>
-                        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                        <h3 className="text-lg font-semibold text-[#1a1c15] mb-2">
                           {question.prompt}
                         </h3>
-                        <div className="text-sm text-gray-600 space-y-1">
+                        <div className="text-sm text-[#404a3b] space-y-1">
                           {question.options.map((option, idx) => (
                             <div key={idx} className="flex items-center gap-2">
                               <span className={
@@ -317,7 +319,7 @@ export default function AdminQuestionsPage() {
                           ))}
                         </div>
                         {question.explanation && (
-                          <p className="text-sm text-gray-500 mt-2 italic">
+                          <p className="text-sm text-[#707a6a] mt-2 italic">
                             💡 {question.explanation}
                           </p>
                         )}
@@ -340,7 +342,7 @@ export default function AdminQuestionsPage() {
                   </motion.div>
                 ))}
                 {levelQuestions.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-[#707a6a]">
                     No questions for Level {level} yet
                   </div>
                 )}
@@ -367,7 +369,7 @@ export default function AdminQuestionsPage() {
                 className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto"
               >
                 <div className="bg-white rounded-2xl p-8 max-w-3xl w-full my-8 max-h-[90vh] overflow-y-auto">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                  <h2 className="text-2xl font-bold text-[#1a1c15] mb-6">
                     {editingQuestion ? 'Edit Question' : 'Add New Question'}
                   </h2>
 
@@ -375,41 +377,57 @@ export default function AdminQuestionsPage() {
                     {/* Level & Type */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                           Level
                         </label>
-                        <select
-                          {...register('level', { valueAsNumber: true })}
-                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
-                        >
-                          <option value={1}>Level 1 - Basics</option>
-                          <option value={2}>Level 2 - Calculations</option>
-                          <option value={3}>Level 3 - Scenarios</option>
-                        </select>
+                        <Controller
+                          control={control}
+                          name="level"
+                          render={({ field }) => (
+                            <Select
+                              value={String(field.value)}
+                              onChange={(v) => field.onChange(Number(v))}
+                              onBlur={field.onBlur}
+                              options={[
+                                { value: '1', label: 'Level 1 - Basics' },
+                                { value: '2', label: 'Level 2 - Calculations' },
+                                { value: '3', label: 'Level 3 - Scenarios' },
+                              ]}
+                            />
+                          )}
+                        />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                           Type
                         </label>
-                        <select
-                          {...register('type')}
-                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
-                        >
-                          <option value="single">Single Answer</option>
-                          <option value="multi">Multiple Answers</option>
-                        </select>
+                        <Controller
+                          control={control}
+                          name="type"
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                              options={[
+                                { value: 'single', label: 'Single Answer' },
+                                { value: 'multi', label: 'Multiple Answers' },
+                              ]}
+                            />
+                          )}
+                        />
                       </div>
                     </div>
 
                     {/* Prompt */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Question Prompt
                       </label>
                       <textarea
                         {...register('prompt')}
                         rows={3}
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
+                        className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                       />
                       {errors.prompt && (
                         <p className="text-red-500 text-sm mt-1">{errors.prompt.message}</p>
@@ -418,7 +436,7 @@ export default function AdminQuestionsPage() {
 
                     {/* Options */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Options
                       </label>
                       <div className="space-y-2">
@@ -427,7 +445,7 @@ export default function AdminQuestionsPage() {
                             key={idx}
                             {...register(`options.${idx}` as 'options.0' | 'options.1' | 'options.2' | 'options.3')}
                             placeholder={`Option ${String.fromCharCode(65 + idx)}`}
-                            className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
+                            className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                           />
                         ))}
                       </div>
@@ -435,7 +453,7 @@ export default function AdminQuestionsPage() {
 
                     {/* Correct Answers */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Correct Answer(s) - Enter indices (0-3), comma separated
                       </label>
                       <input
@@ -444,7 +462,7 @@ export default function AdminQuestionsPage() {
                             v.split(',').map((n: string) => parseInt(n.trim())),
                         })}
                         placeholder="e.g., 0 or 0,2"
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
+                        className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                       />
                       {errors.correct && (
                         <p className="text-red-500 text-sm mt-1">{errors.correct.message}</p>
@@ -453,13 +471,13 @@ export default function AdminQuestionsPage() {
 
                     {/* Explanation */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Explanation (optional)
                       </label>
                       <textarea
                         {...register('explanation')}
                         rows={2}
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
+                        className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                       />
                     </div>
 
@@ -468,7 +486,7 @@ export default function AdminQuestionsPage() {
                       <button
                         type="button"
                         onClick={() => setShowModal(false)}
-                        className="flex-1 py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition-all"
+                        className="flex-1 py-3 bg-[#e3e3d7] text-[#1a1c15] rounded-xl font-semibold hover:bg-[#bfcab7] transition-all"
                       >
                         Cancel
                       </button>
@@ -504,28 +522,28 @@ export default function AdminQuestionsPage() {
                   className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                  <h2 className="text-2xl font-bold text-[#1a1c15] mb-6">
                     Generate Questions with AI
                   </h2>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Level
                       </label>
-                      <select
-                        value={generateLevel}
-                        onChange={(e) => setGenerateLevel(Number(e.target.value) as QuizLevel)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-                      >
-                        <option value={1}>Level 1 - Basics</option>
-                        <option value={2}>Level 2 - Intermediate</option>
-                        <option value={3}>Level 3 - Advanced</option>
-                      </select>
+                      <Select
+                        value={String(generateLevel)}
+                        onChange={(v) => setGenerateLevel(Number(v) as QuizLevel)}
+                        options={[
+                          { value: '1', label: 'Level 1 - Basics' },
+                          { value: '2', label: 'Level 2 - Intermediate' },
+                          { value: '3', label: 'Level 3 - Advanced' },
+                        ]}
+                      />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Number of Questions
                       </label>
                       <input
@@ -534,12 +552,12 @@ export default function AdminQuestionsPage() {
                         max="10"
                         value={generateCount}
                         onChange={(e) => setGenerateCount(Number(e.target.value))}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                        className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         Topic (Optional)
                       </label>
                       <input
@@ -547,25 +565,25 @@ export default function AdminQuestionsPage() {
                         value={generateTopic}
                         onChange={(e) => setGenerateTopic(e.target.value)}
                         placeholder="e.g., pension, tax brackets, deductions"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                        className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                         AI Provider
                       </label>
-                      <select
+                      <Select
                         value={generateProvider}
-                        onChange={(e) => setGenerateProvider(e.target.value as 'openai' | 'gemini' | 'cursor' | 'template')}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-                      >
-                        <option value="openai">OpenAI (GPT-4o-mini) - Requires OPENAI_API_KEY</option>
-                        <option value="gemini">Google Gemini (1.5 Flash) - Requires GEMINI_API_KEY</option>
-                        <option value="cursor">Cursor AI - Requires CURSOR_API_KEY</option>
-                        <option value="template">Template-based (Free, limited variety)</option>
-                      </select>
-                      <p className="text-xs text-gray-500 mt-1">
+                        onChange={(v) => setGenerateProvider(v as 'openai' | 'gemini' | 'cursor' | 'template')}
+                        options={[
+                          { value: 'openai', label: 'OpenAI (GPT-4o-mini) - Requires OPENAI_API_KEY' },
+                          { value: 'gemini', label: 'Google Gemini (1.5 Flash) - Requires GEMINI_API_KEY' },
+                          { value: 'cursor', label: 'Cursor AI - Requires CURSOR_API_KEY' },
+                          { value: 'template', label: 'Template-based (Free, limited variety)' },
+                        ]}
+                      />
+                      <p className="text-xs text-[#707a6a] mt-1">
                         {generateProvider === 'openai' && 'Add OPENAI_API_KEY in Firebase Console → Functions → Configuration'}
                         {generateProvider === 'gemini' && 'Add GEMINI_API_KEY in Firebase Console → Functions → Configuration'}
                         {generateProvider === 'cursor' && 'Add CURSOR_API_KEY in Firebase Console → Functions → Configuration (API endpoint may need configuration)'}
@@ -576,7 +594,7 @@ export default function AdminQuestionsPage() {
                     <div className="flex gap-3 mt-6">
                       <button
                         onClick={() => setShowGenerateModal(false)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="flex-1 px-4 py-2 border border-[#bfcab7] rounded-lg text-[#404a3b] hover:bg-[#f4f4e7] transition-colors"
                       >
                         Cancel
                       </button>

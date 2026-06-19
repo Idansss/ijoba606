@@ -20,6 +20,7 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { formatDistanceToNow } from 'date-fns';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
+import { Select } from '@/components/ui/Select';
 import { ArrowLeft, Briefcase, UserCheck, FileText, X } from 'lucide-react';
 
 type Tab = 'applications' | 'consultants';
@@ -254,7 +255,7 @@ export default function AdminConsultantsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
+            className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -266,23 +267,23 @@ export default function AdminConsultantsPage() {
             <span className="bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
               Consultant
             </span>{' '}
-            <span className="text-gray-900">Management</span>
+            <span className="text-[#1a1c15]">Management</span>
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#404a3b]">
             Review applications, verify consultants, and manage activity status.
           </p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[#707a6a] mt-1">
             Total: {applications.length} application(s), {profiles.length} consultant(s)
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-6 p-1 bg-gray-100 rounded-xl">
+        <div className="flex flex-wrap gap-3 mb-6 p-1 bg-[#efefe2] rounded-xl">
           <button
             onClick={() => setActiveTab('applications')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'applications'
                 ? 'bg-white text-[#006400] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -293,7 +294,7 @@ export default function AdminConsultantsPage() {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'consultants'
                 ? 'bg-white text-[#006400] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             <Briefcase className="w-4 h-4" />
@@ -306,36 +307,36 @@ export default function AdminConsultantsPage() {
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       ) : activeTab === 'applications' ? (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg border border-[#e3e3d7] overflow-hidden">
           {applications.length === 0 ? (
             <div className="p-6 sm:p-12 text-center">
-              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No applications yet.</p>
+              <FileText className="w-12 h-12 text-[#bfcab7] mx-auto mb-3" />
+              <p className="text-[#707a6a]">No applications yet.</p>
             </div>
           ) : (
             <div className="overflow-x-auto p-6">
               <table className="w-full min-w-[640px]">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Applicant</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Specialties</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Documents</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Submitted</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Action</th>
+                  <tr className="border-b border-[#e3e3d7]">
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Applicant</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Specialties</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Documents</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Status</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Submitted</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {applications.map((app) => (
-                    <tr key={app.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={app.id} className="border-b border-[#efefe2] hover:bg-[#f4f4e7]">
                       <td className="py-3 px-4">
-                        <p className="font-semibold text-gray-900">{app.name}</p>
-                        <p className="text-xs text-gray-500">{app.email}</p>
+                        <p className="font-semibold text-[#1a1c15]">{app.name}</p>
+                        <p className="text-xs text-[#707a6a]">{app.email}</p>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {app.specialties?.join(', ') || 'N/A'}
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {app.documents && app.documents.length > 0 ? (
                           <ul className="space-y-1">
                             {app.documents.map((docItem, idx) => (
@@ -368,7 +369,7 @@ export default function AdminConsultantsPage() {
                           {app.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {app.createdAt?.toDate
                           ? formatDistanceToNow(app.createdAt.toDate(), { addSuffix: true })
                           : 'Unknown'}
@@ -383,21 +384,22 @@ export default function AdminConsultantsPage() {
                             >
                               View
                             </button>
-                            <select
+                            <Select
                               value={app.status}
-                              onChange={(e) =>
+                              onChange={(v) =>
                                 handleUpdateApplicationStatus(
                                   app.id!,
-                                  e.target.value as ConsultantApplication['status']
+                                  v as ConsultantApplication['status']
                                 )
                               }
                               disabled={updatingId === app.id}
-                              className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
-                            >
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
+                              className="w-36 px-3 py-1 text-sm"
+                              options={[
+                                { value: 'pending', label: 'Pending' },
+                                { value: 'approved', label: 'Approved' },
+                                { value: 'rejected', label: 'Rejected' },
+                              ]}
+                            />
                           </div>
                           {app.status === 'approved' && !applicationHasProfile(app, profiles) && (
                             <button
@@ -419,63 +421,65 @@ export default function AdminConsultantsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg border border-[#e3e3d7] overflow-hidden">
           {profiles.length === 0 ? (
             <div className="p-6 sm:p-12 text-center">
-              <UserCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No consultant profiles yet.</p>
-              <p className="text-sm text-gray-400 mt-1">Approve an application to create a profile.</p>
+              <UserCheck className="w-12 h-12 text-[#bfcab7] mx-auto mb-3" />
+              <p className="text-[#707a6a]">No consultant profiles yet.</p>
+              <p className="text-sm text-[#707a6a] mt-1">Approve an application to create a profile.</p>
             </div>
           ) : (
             <div className="overflow-x-auto p-6">
               <table className="w-full min-w-[640px]">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Consultant</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Verification</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Activity</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Updated</th>
+                  <tr className="border-b border-[#e3e3d7]">
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Consultant</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Verification</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Activity</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Updated</th>
                   </tr>
                 </thead>
                 <tbody>
                   {profiles.map((profile) => (
-                    <tr key={profile.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={profile.id} className="border-b border-[#efefe2] hover:bg-[#f4f4e7]">
                       <td className="py-3 px-4">
-                        <p className="font-semibold text-gray-900">{profile.name}</p>
-                        <p className="text-xs text-gray-500">{profile.email}</p>
+                        <p className="font-semibold text-[#1a1c15]">{profile.name}</p>
+                        <p className="text-xs text-[#707a6a]">{profile.email}</p>
                       </td>
                       <td className="py-3 px-4">
-                        <select
+                        <Select
                           value={profile.verificationStatus || (profile.isVerified ? 'verified' : 'unverified')}
-                          onChange={(e) =>
+                          onChange={(v) =>
                             handleUpdateProfileStatus(profile.id!, {
-                              verificationStatus: e.target.value as ConsultantProfile['verificationStatus'],
+                              verificationStatus: v as ConsultantProfile['verificationStatus'],
                             })
                           }
                           disabled={updatingId === profile.id}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
-                        >
-                          <option value="verified">Verified</option>
-                          <option value="unverified">Unverified</option>
-                        </select>
+                          className="w-36 px-3 py-1 text-sm"
+                          options={[
+                            { value: 'verified', label: 'Verified' },
+                            { value: 'unverified', label: 'Unverified' },
+                          ]}
+                        />
                       </td>
                       <td className="py-3 px-4">
-                        <select
+                        <Select
                           value={profile.activityStatus || (profile.isActive ? 'active' : 'inactive')}
-                          onChange={(e) =>
+                          onChange={(v) =>
                             handleUpdateProfileStatus(profile.id!, {
-                              activityStatus: e.target.value as ConsultantProfile['activityStatus'],
+                              activityStatus: v as ConsultantProfile['activityStatus'],
                             })
                           }
                           disabled={updatingId === profile.id}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                          <option value="suspended">Suspended</option>
-                        </select>
+                          className="w-36 px-3 py-1 text-sm"
+                          options={[
+                            { value: 'active', label: 'Active' },
+                            { value: 'inactive', label: 'Inactive' },
+                            { value: 'suspended', label: 'Suspended' },
+                          ]}
+                        />
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {profile.updatedAt?.toDate
                           ? formatDistanceToNow(profile.updatedAt.toDate(), { addSuffix: true })
                           : 'Unknown'}
@@ -496,55 +500,55 @@ export default function AdminConsultantsPage() {
           <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Application Details</h2>
-                <p className="text-sm text-gray-500">{selectedApplication.email}</p>
+                <h2 className="text-2xl font-bold text-[#1a1c15]">Application Details</h2>
+                <p className="text-sm text-[#707a6a]">{selectedApplication.email}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedApplication(null)}
-                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition"
+                className="p-2 rounded-lg text-[#707a6a] hover:bg-[#efefe2] hover:text-[#404a3b] transition"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="grid gap-4 text-sm text-gray-700">
+            <div className="grid gap-4 text-sm text-[#404a3b]">
               <div>
-                <p className="font-semibold text-gray-900">Name</p>
+                <p className="font-semibold text-[#1a1c15]">Name</p>
                 <p>{selectedApplication.name}</p>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Phone</p>
+                <p className="font-semibold text-[#1a1c15]">Phone</p>
                 <p>{selectedApplication.phone}</p>
               </div>
               {selectedApplication.whatsapp && (
                 <div>
-                  <p className="font-semibold text-gray-900">WhatsApp</p>
+                  <p className="font-semibold text-[#1a1c15]">WhatsApp</p>
                   <p>{selectedApplication.whatsapp}</p>
                 </div>
               )}
               {selectedApplication.locationState && (
                 <div>
-                  <p className="font-semibold text-gray-900">Location / State</p>
+                  <p className="font-semibold text-[#1a1c15]">Location / State</p>
                   <p>{selectedApplication.locationState}</p>
                 </div>
               )}
               <div>
-                <p className="font-semibold text-gray-900">Experience</p>
+                <p className="font-semibold text-[#1a1c15]">Experience</p>
                 <p>{selectedApplication.experienceYears ?? 0} years</p>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Specialties</p>
+                <p className="font-semibold text-[#1a1c15]">Specialties</p>
                 <p>{selectedApplication.specialties?.join(', ') || 'N/A'}</p>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Bio</p>
-                <p className="whitespace-pre-line text-gray-600">{selectedApplication.bio}</p>
+                <p className="font-semibold text-[#1a1c15]">Bio</p>
+                <p className="whitespace-pre-line text-[#404a3b]">{selectedApplication.bio}</p>
               </div>
               {selectedApplication.credentialsUrl && (
                 <div>
-                  <p className="font-semibold text-gray-900">Credentials URL</p>
+                  <p className="font-semibold text-[#1a1c15]">Credentials URL</p>
                   <a
                     href={selectedApplication.credentialsUrl}
                     target="_blank"
@@ -556,7 +560,7 @@ export default function AdminConsultantsPage() {
                 </div>
               )}
               <div>
-                <p className="font-semibold text-gray-900">Documents</p>
+                <p className="font-semibold text-[#1a1c15]">Documents</p>
                 {selectedApplication.documents && selectedApplication.documents.length > 0 ? (
                   <ul className="mt-2 space-y-1">
                     {selectedApplication.documents.map((docItem, idx) => (
@@ -573,7 +577,7 @@ export default function AdminConsultantsPage() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-gray-500">No documents</p>
+                  <p className="text-[#707a6a]">No documents</p>
                 )}
               </div>
             </div>

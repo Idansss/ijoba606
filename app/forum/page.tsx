@@ -36,7 +36,7 @@ export default function ForumPage() {
   return (
     <Suspense
       fallback={
-        <div className="container mx-auto px-4 py-12">
+        <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
           <div className="text-center py-12">
             <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
           </div>
@@ -138,27 +138,27 @@ function ForumPageContent() {
   }, [fetchThreads]);
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]"
+          className="rounded-bento border border-deep-green/10 bg-surface-container-lowest p-6 sm:p-10 shadow-[0px_20px_40px_rgba(0,100,0,0.08)]"
         >
           <div className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+            <p className="font-label-sm text-sm font-semibold uppercase tracking-widest text-forest-green">
               Community forum
             </p>
-            <h1 className="mt-3 text-4xl font-semibold text-slate-900">
+            <h1 className="mt-3 font-display-lg-mobile text-display-lg-mobile text-deep-green">
               Ask the questions payroll forgot to answer.
             </h1>
-            <p className="mt-4 text-slate-500">
+            <p className="mt-4 font-body-lg text-body-lg text-on-surface-variant">
               Share relief hacks, decode payslips, and help someone else stay compliant.
             </p>
             {firebaseUser && (
               <Link
                 href="/forum/new"
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0b7a3b]/30"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-deep-green px-6 py-3 font-label-sm text-sm font-semibold text-on-primary shadow-md transition hover:bg-forest-green"
               >
                 <MessageSquare className="h-4 w-4" />
                 Start a thread
@@ -173,15 +173,15 @@ function ForumPageContent() {
             />
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-2 rounded-full border border-slate-100 bg-white/80 p-1">
+          <div className="mt-8 flex flex-wrap gap-2 rounded-full border border-outline-variant/30 bg-surface-container-low p-1">
             {(['new', 'trending', 'unanswered'] as TabType[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
                   activeTab === tab
-                    ? 'bg-gradient-to-r from-[#006400] to-[#109a48] text-white shadow'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-gradient-to-r from-deep-green to-royal-gold text-on-primary shadow'
+                    : 'text-on-surface-variant hover:text-deep-green'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -193,11 +193,11 @@ function ForumPageContent() {
         <div className="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
           <div>
             {loading ? (
-              <div className="py-12 text-center text-slate-500">
+              <div className="py-12 text-center text-on-surface-variant">
                 Fetching latest conversations...
               </div>
             ) : threads.length === 0 ? (
-              <div className="rounded-[32px] border border-dashed border-slate-200 bg-white/70 p-6 sm:p-12 text-center text-slate-500">
+              <div className="rounded-bento border border-dashed border-outline-variant bg-surface-container-lowest/70 p-6 sm:p-12 text-center text-on-surface-variant">
                 No threads yet. Be the first to start a conversation!
               </div>
             ) : (
@@ -210,8 +210,8 @@ function ForumPageContent() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border border-slate-100 bg-white/90 p-6">
-              <h3 className="text-lg font-semibold text-slate-900">Popular tags</h3>
+            <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
+              <h3 className="font-headline-md text-lg font-semibold text-deep-green">Popular tags</h3>
               <div className="mt-4 flex flex-wrap gap-2">
                 {POPULAR_TAGS.map((tag) => (
                   <TagChip key={tag} tag={tag} size="sm" />
@@ -219,7 +219,7 @@ function ForumPageContent() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#c7ecd6] bg-[#e6f3ec] p-6 text-sm text-[#002d15]">
+            <div className="rounded-input border border-secondary-container bg-primary-fixed/15 p-6 text-sm text-on-secondary-fixed">
               <h3 className="text-lg font-semibold">House rules</h3>
               <ul className="mt-4 space-y-2 text-sm">
                 <li>• Be respectful and stay on topic (PAYE & payroll).</li>
@@ -229,8 +229,8 @@ function ForumPageContent() {
               </ul>
             </div>
 
-            <div className="rounded-3xl border border-slate-100 bg-white/90 p-6 text-sm text-slate-500">
-              <h3 className="text-lg font-semibold text-slate-900">Healthy forum</h3>
+            <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 text-sm text-on-surface-variant shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
+              <h3 className="font-headline-md text-lg font-semibold text-deep-green">Healthy forum</h3>
               <p className="mt-2">
                 {threads.length} threads visible · {threads.filter((t) => t.replyCount > 0).length}{' '}
                 active discussions

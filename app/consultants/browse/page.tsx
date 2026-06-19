@@ -8,6 +8,7 @@ import { ConsultantProfile } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
 import { Search, Star, MapPin, Briefcase, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
+import { Select } from '@/components/ui/Select';
 
 export default function BrowseConsultantsPage() {
   const { firebaseUser } = useAuthStore();
@@ -125,47 +126,46 @@ export default function BrowseConsultantsPage() {
   const specialties = ['all', 'PAYE', 'Reliefs', 'Filing', 'Employment Tax', 'Tax Planning', 'Compliance', 'Audit Support'];
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
+        <h1 className="font-display-lg-mobile text-display-lg-mobile mb-2 text-deep-green">
           Find a Consultant
         </h1>
-        <p className="text-gray-600">Connect with verified tax experts for personalized advice</p>
+        <p className="font-body-lg text-body-lg text-on-surface-variant">Connect with verified tax experts for personalized advice</p>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-8">
+      <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] mb-8">
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
             <input
               type="text"
               placeholder="Search by name, specialty, or expertise..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 rounded-input border border-outline-variant bg-surface-container-low text-on-surface focus:border-forest-green focus:outline-none focus:ring-2 focus:ring-forest-green/30"
             />
           </div>
-          <select
+          <Select
             value={selectedSpecialty}
-            onChange={(e) => setSelectedSpecialty(e.target.value)}
-            className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-          >
-            {specialties.map(spec => (
-              <option key={spec} value={spec}>
-                {spec === 'all' ? 'All Specialties' : spec}
-              </option>
-            ))}
-          </select>
-          <select
+            onChange={setSelectedSpecialty}
+            className="w-full md:w-56"
+            options={specialties.map((spec) => ({
+              value: spec,
+              label: spec === 'all' ? 'All Specialties' : spec,
+            }))}
+          />
+          <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-          >
-            <option value="rating">Sort by Rating</option>
-            <option value="experience">Sort by Experience</option>
-            <option value="clients">Sort by Clients</option>
-          </select>
+            onChange={(v) => setSortBy(v as any)}
+            className="w-full md:w-56"
+            options={[
+              { value: 'rating', label: 'Sort by Rating' },
+              { value: 'experience', label: 'Sort by Experience' },
+              { value: 'clients', label: 'Sort by Clients' },
+            ]}
+          />
         </div>
       </div>
 
@@ -175,30 +175,30 @@ export default function BrowseConsultantsPage() {
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       ) : filteredConsultants.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-lg border border-gray-200">
-          <p className="text-gray-600 text-lg">No consultants found matching your criteria.</p>
+        <div className="text-center py-12 rounded-bento border border-deep-green/5 bg-surface-container-lowest shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
+          <p className="text-on-surface-variant text-lg">No consultants found matching your criteria.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredConsultants.map((consultant) => (
             <div
               key={consultant.id}
-              className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition"
+              className="rounded-bento border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] transition hover:shadow-lg"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#006400] to-[#006d33] flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-16 h-16 rounded-full bg-forest-green flex items-center justify-center text-on-primary text-2xl font-bold">
                     {consultant.name?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-on-surface flex items-center gap-2">
                       {consultant.name}
                       {(consultant.verificationStatus === 'verified' || consultant.isVerified) && (
-                        <CheckCircle2 className="w-5 h-5 text-[#006d33]" />
+                        <CheckCircle2 className="w-5 h-5 text-forest-green" />
                       )}
                     </h3>
                     {consultant.locationState && (
-                      <p className="text-sm text-gray-600 flex items-center gap-1">
+                      <p className="text-sm text-on-surface-variant flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
                         {consultant.locationState}
                       </p>
@@ -207,7 +207,7 @@ export default function BrowseConsultantsPage() {
                 </div>
               </div>
 
-              <p className="text-gray-700 text-sm mb-4 line-clamp-3">
+              <p className="text-on-surface-variant text-sm mb-4 line-clamp-3">
                 {consultant.bio}
               </p>
 
@@ -215,25 +215,25 @@ export default function BrowseConsultantsPage() {
                 {consultant.specialties?.slice(0, 3).map((spec, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 bg-[#d3e6c8] text-[#004f00] rounded-full text-xs font-semibold"
+                    className="px-3 py-1 bg-primary-fixed/30 text-deep-green rounded-full font-label-sm text-xs font-semibold"
                   >
                     {spec}
                   </span>
                 ))}
                 {consultant.specialties && consultant.specialties.length > 3 && (
-                  <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
+                  <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-semibold">
                     +{consultant.specialties.length - 3}
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+              <div className="flex items-center justify-between mb-4 text-sm text-on-surface-variant">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-[#c59f00] fill-[#c59f00]" />
                   <span className="font-semibold">
                     {consultant.averageRating?.toFixed(1) || 'N/A'}
                   </span>
-                  <span className="text-gray-500">
+                  <span className="text-on-surface-variant/60">
                     ({consultant.reviewsCount || 0})
                   </span>
                 </div>
@@ -248,7 +248,7 @@ export default function BrowseConsultantsPage() {
 
               {consultant.hourlyRate && (
                 <div className="mb-4">
-                  <span className="text-lg font-bold text-[#006400]">
+                  <span className="font-figure-md text-lg font-bold text-deep-green">
                     ₦{consultant.hourlyRate.toLocaleString()}/hr
                   </span>
                 </div>
@@ -257,14 +257,14 @@ export default function BrowseConsultantsPage() {
               <div className="flex gap-2">
                 <Link
                   href={`/consultants/${consultant.id}`}
-                  className="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                  className="flex-1 text-center px-4 py-2 bg-surface-container-low text-on-surface-variant rounded-full font-label-sm font-semibold hover:bg-surface-container-high transition"
                 >
                   View Profile
                 </Link>
                 {firebaseUser && (
                   <Link
                     href={`/consultants/chat/${consultant.id}`}
-                    className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition flex items-center justify-center gap-2"
+                    className="flex-1 text-center px-4 py-2 bg-deep-green text-on-primary rounded-full font-label-sm font-semibold hover:bg-forest-green transition flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Chat

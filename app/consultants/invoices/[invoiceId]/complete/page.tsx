@@ -142,18 +142,18 @@ export default function CompleteServicePage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
+          className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-8 shadow-lg border border-[#e3e3d7]">
         <div className="text-center mb-8">
           <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Mark Service as Complete</h1>
-          <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
+          <h1 className="text-3xl font-bold text-[#1a1c15] mb-2">Mark Service as Complete</h1>
+          <p className="text-[#404a3b]">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
         <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4 mb-6">
@@ -172,17 +172,17 @@ export default function CompleteServicePage() {
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Service Details</h3>
-          <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+          <div className="bg-[#f4f4e7] rounded-lg p-4 space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-600">Title:</span>
+              <span className="text-[#404a3b]">Title:</span>
               <span className="font-semibold">{invoice.title}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Amount:</span>
+              <span className="text-[#404a3b]">Amount:</span>
               <span className="font-semibold">₦{invoice.total.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Status:</span>
+              <span className="text-[#404a3b]">Status:</span>
               <span className="font-semibold capitalize">{invoice.serviceStatus}</span>
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function CompleteServicePage() {
         <div className="flex gap-4">
           <button
             onClick={() => router.push(`/consultants/invoices/${invoice.id}`)}
-            className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+            className="flex-1 px-6 py-3 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition"
           >
             Cancel
           </button>

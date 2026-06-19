@@ -300,7 +300,7 @@ export default function AdminNewsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
+            className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -313,18 +313,18 @@ export default function AdminNewsPage() {
               <span className="bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
                 News
               </span>{' '}
-              <span className="text-gray-900">Management</span>
+              <span className="text-[#1a1c15]">Management</span>
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#404a3b]">
               Create and manage tax news articles for the public news page.
             </p>
-            <p className="text-sm text-gray-500 mt-1">Total: {articles.length} article(s)</p>
-            <details className="mt-2 text-xs text-gray-500">
-              <summary className="cursor-pointer hover:text-gray-700">Setup options</summary>
+            <p className="text-sm text-[#707a6a] mt-1">Total: {articles.length} article(s)</p>
+            <details className="mt-2 text-xs text-[#707a6a]">
+              <summary className="cursor-pointer hover:text-[#404a3b]">Setup options</summary>
               <ul className="mt-2 ml-4 list-disc space-y-1">
                 <li><strong>Fetch from RSS</strong> — No setup. Gets tax/business news from Nigerian feeds.</li>
                 <li><strong>Seed Sample</strong> — No setup. Adds 10 curated sample articles instantly.</li>
-                <li><strong>Fetch from AI / Search Tax Law 2026</strong> — Requires GEMINI_API_KEY: <code className="bg-gray-100 px-1 rounded">firebase functions:secrets:set GEMINI_API_KEY</code>, then deploy.</li>
+                <li><strong>Fetch from AI / Search Tax Law 2026</strong> — Requires GEMINI_API_KEY: <code className="bg-[#efefe2] px-1 rounded">firebase functions:secrets:set GEMINI_API_KEY</code>, then deploy.</li>
               </ul>
             </details>
           </div>
@@ -368,10 +368,10 @@ export default function AdminNewsPage() {
             <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-[#006400]" />
           </div>
         ) : articles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-12 text-center">
-            <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">No articles yet</h2>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+          <div className="bg-white rounded-xl shadow-lg border border-[#e3e3d7] p-6 sm:p-12 text-center">
+            <Newspaper className="w-16 h-16 text-[#bfcab7] mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-[#1a1c15] mb-2">No articles yet</h2>
+            <p className="text-[#404a3b] mb-6 max-w-md mx-auto">
               Add articles manually or use AI to fetch tax news from Nigerian sources.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
@@ -417,29 +417,29 @@ export default function AdminNewsPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-lg border border-[#e3e3d7] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[640px]">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Title</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Published</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
+                  <tr className="border-b border-[#e3e3d7] bg-[#f4f4e7]">
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Title</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Category</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Published</th>
+                    <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Status</th>
+                    <th className="text-right py-3 px-4 font-semibold text-[#404a3b]">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {articles.map((article) => (
-                    <tr key={article.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={article.id} className="border-b border-[#efefe2] hover:bg-[#f4f4e7]">
                       <td className="py-3 px-4">
-                        <p className="font-semibold text-gray-900 line-clamp-1">{article.title}</p>
-                        <p className="text-xs text-gray-500">{article.slug || article.id}</p>
+                        <p className="font-semibold text-[#1a1c15] line-clamp-1">{article.title}</p>
+                        <p className="text-xs text-[#707a6a]">{article.slug || article.id}</p>
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {article.category || '—'}
                       </td>
-                      <td className="py-3 px-4 text-sm text-gray-600">
+                      <td className="py-3 px-4 text-sm text-[#404a3b]">
                         {article.publishedAt?.toDate
                           ? format(article.publishedAt.toDate(), 'MMM d, yyyy')
                           : '—'}
@@ -449,7 +449,7 @@ export default function AdminNewsPage() {
                           className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                             article.isActive !== false
                               ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-600'
+                              : 'bg-[#efefe2] text-[#404a3b]'
                           }`}
                         >
                           {article.isActive !== false ? 'Active' : 'Draft'}
@@ -461,7 +461,7 @@ export default function AdminNewsPage() {
                             href={`/news/${article.slug || article.id}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition"
+                            className="p-2 text-[#707a6a] hover:bg-[#efefe2] rounded-lg transition"
                             title="View"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -494,13 +494,13 @@ export default function AdminNewsPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-2xl rounded-2xl bg-white shadow-xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">
+            <div className="p-6 border-b border-[#e3e3d7] flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#1a1c15]">
                 {editingArticle ? 'Edit Article' : 'New Article'}
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100"
+                className="p-2 rounded-lg text-[#707a6a] hover:bg-[#efefe2]"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -508,87 +508,87 @@ export default function AdminNewsPage() {
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Title *</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Title *</label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="Article title"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Slug (URL)</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Slug (URL)</label>
                 <input
                   type="text"
                   value={form.slug}
                   onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="url-friendly-slug"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Excerpt *</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Excerpt *</label>
                 <textarea
                   value={form.excerpt}
                   onChange={(e) => setForm((p) => ({ ...p, excerpt: e.target.value }))}
                   required
                   rows={2}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="Short summary"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Content (HTML) *</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Content (HTML) *</label>
                 <textarea
                   value={form.content}
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
                   required
                   rows={8}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] font-mono text-sm"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] font-mono text-sm"
                   placeholder="<p>Your HTML content here...</p>"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                  <label className="block text-sm font-semibold text-[#404a3b] mb-1">Category</label>
                   <input
                     type="text"
                     value={form.category}
                     onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg"
                     placeholder="e.g. PAYE, Compliance"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Source</label>
+                  <label className="block text-sm font-semibold text-[#404a3b] mb-1">Source</label>
                   <input
                     type="text"
                     value={form.source}
                     onChange={(e) => setForm((p) => ({ ...p, source: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg"
                     placeholder="e.g. FIRS"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Source URL</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Source URL</label>
                 <input
                   type="url"
                   value={form.sourceUrl}
                   onChange={(e) => setForm((p) => ({ ...p, sourceUrl: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg"
                   placeholder="https://..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Image URL</label>
+                <label className="block text-sm font-semibold text-[#404a3b] mb-1">Image URL</label>
                 <input
                   type="url"
                   value={form.imageUrl}
                   onChange={(e) => setForm((p) => ({ ...p, imageUrl: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg"
                   placeholder="https://..."
                 />
               </div>
@@ -598,9 +598,9 @@ export default function AdminNewsPage() {
                   id="isActive"
                   checked={form.isActive}
                   onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))}
-                  className="rounded border-gray-300"
+                  className="rounded border-[#bfcab7]"
                 />
-                <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                <label htmlFor="isActive" className="text-sm font-medium text-[#404a3b]">
                   Active (visible on news page)
                 </label>
               </div>
@@ -614,7 +614,7 @@ export default function AdminNewsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50"
+                  className="px-4 py-2 border border-[#bfcab7] rounded-lg font-semibold text-[#404a3b] hover:bg-[#f4f4e7]"
                 >
                   Cancel
                 </button>

@@ -181,7 +181,7 @@ export default function InvoicePage() {
     if (invoice.status === 'paid') return 'text-green-600 bg-green-50';
     if (invoice.status === 'overdue') return 'text-red-600 bg-red-50';
     if (invoice.status === 'sent') return 'text-[#006d33] bg-[#e6f3ec]';
-    return 'text-gray-600 bg-gray-50';
+    return 'text-[#404a3b] bg-[#f4f4e7]';
   };
 
   return (
@@ -189,19 +189,19 @@ export default function InvoicePage() {
       <div className="mb-6">
         <Link
           href={isConsultant ? '/consultants/wallet' : '/dashboard'}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
+          className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to {isConsultant ? 'Wallet' : 'Dashboard'}
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-8 shadow-lg border border-[#e3e3d7]">
         {/* Header */}
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">{invoice.title}</h1>
-            <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
+            <h1 className="text-3xl font-bold text-[#1a1c15] mb-2">{invoice.title}</h1>
+            <p className="text-[#404a3b]">Invoice #{invoice.invoiceNumber}</p>
           </div>
           <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${getStatusColor()}`}>
             {getStatusIcon()}
@@ -212,19 +212,19 @@ export default function InvoicePage() {
         {/* Invoice Details */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           <div>
-            <h3 className="text-sm font-semibold text-gray-500 mb-1">From</h3>
-            <p className="text-gray-800">Consultant</p>
+            <h3 className="text-sm font-semibold text-[#707a6a] mb-1">From</h3>
+            <p className="text-[#1a1c15]">Consultant</p>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-500 mb-1">To</h3>
-            <p className="text-gray-800">Customer</p>
+            <h3 className="text-sm font-semibold text-[#707a6a] mb-1">To</h3>
+            <p className="text-[#1a1c15]">Customer</p>
           </div>
         </div>
 
         {/* Description */}
         <div className="mb-6">
-          <h3 className="text-sm font-semibold text-gray-500 mb-2">Description</h3>
-          <p className="text-gray-700">{invoice.description}</p>
+          <h3 className="text-sm font-semibold text-[#707a6a] mb-2">Description</h3>
+          <p className="text-[#404a3b]">{invoice.description}</p>
         </div>
 
         {/* Items */}
@@ -232,19 +232,19 @@ export default function InvoicePage() {
           <table className="w-full min-w-[480px]">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 text-sm font-semibold text-gray-700">Description</th>
-                <th className="text-right py-2 text-sm font-semibold text-gray-700">Quantity</th>
-                <th className="text-right py-2 text-sm font-semibold text-gray-700">Unit Price</th>
-                <th className="text-right py-2 text-sm font-semibold text-gray-700">Total</th>
+                <th className="text-left py-2 text-sm font-semibold text-[#404a3b]">Description</th>
+                <th className="text-right py-2 text-sm font-semibold text-[#404a3b]">Quantity</th>
+                <th className="text-right py-2 text-sm font-semibold text-[#404a3b]">Unit Price</th>
+                <th className="text-right py-2 text-sm font-semibold text-[#404a3b]">Total</th>
               </tr>
             </thead>
             <tbody>
               {invoice.items.map((item, index) => (
                 <tr key={index} className="border-b">
-                  <td className="py-3 text-gray-800">{item.description}</td>
-                  <td className="py-3 text-right text-gray-600">{item.quantity}</td>
-                  <td className="py-3 text-right text-gray-600">₦{item.unitPrice.toLocaleString()}</td>
-                  <td className="py-3 text-right font-semibold text-gray-800">₦{item.total.toLocaleString()}</td>
+                  <td className="py-3 text-[#1a1c15]">{item.description}</td>
+                  <td className="py-3 text-right text-[#404a3b]">{item.quantity}</td>
+                  <td className="py-3 text-right text-[#404a3b]">₦{item.unitPrice.toLocaleString()}</td>
+                  <td className="py-3 text-right font-semibold text-[#1a1c15]">₦{item.total.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -255,12 +255,12 @@ export default function InvoicePage() {
         <div className="flex justify-end mb-6">
           <div className="w-80 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Subtotal:</span>
+              <span className="text-[#404a3b]">Subtotal:</span>
               <span className="font-semibold">₦{invoice.subtotal.toLocaleString()}</span>
             </div>
             {invoice.vat && invoice.vat > 0 && (
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">VAT (7.5%):</span>
+                <span className="text-[#404a3b]">VAT (7.5%):</span>
                 <span className="font-semibold">₦{invoice.vat.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             )}
@@ -274,7 +274,7 @@ export default function InvoicePage() {
               <span>Total:</span>
               <span className="text-[#006400]">₦{invoice.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
-            <div className="text-xs text-gray-500 mt-2">
+            <div className="text-xs text-[#707a6a] mt-2">
               * VAT and Paystack fees are included. Customer bears all fees.
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function InvoicePage() {
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
-                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                      className="px-6 py-3 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition"
                     />
                   )}
                 </>
@@ -373,7 +373,7 @@ export default function InvoicePage() {
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
-                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                      className="px-6 py-3 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition"
                     />
                   )}
                 </>
@@ -419,7 +419,7 @@ export default function InvoicePage() {
         {isCustomer && invoice.serviceStatus === 'pending_confirmation' && (
           <div className="border-t pt-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">Service Confirmation Required</h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[#404a3b] mb-4">
               The consultant has marked this service as complete. Please confirm or raise a dispute.
             </p>
             <div className="flex gap-4">
@@ -436,7 +436,7 @@ export default function InvoicePage() {
         {isCustomer && invoice.paymentStatus === 'completed' && invoice.serviceStatus !== 'cancelled' && (
           <div className="border-t pt-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">Request Refund</h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[#404a3b] mb-4">
               If you're not satisfied with the service, you can request a refund.
             </p>
             <Link
@@ -450,11 +450,11 @@ export default function InvoicePage() {
 
         {/* Actions */}
         <div className="flex gap-2 pt-6 border-t">
-          <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition">
             <Download className="w-4 h-4" />
             Download PDF
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition">
             <Share2 className="w-4 h-4" />
             Share
           </button>

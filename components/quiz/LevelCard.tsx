@@ -58,8 +58,8 @@ export function LevelCard({
       className={cn(
         'relative w-full rounded-3xl border px-6 py-6 text-left transition-all',
         isUnlocked
-          ? 'border-slate-100 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.08)]'
-          : 'border-dashed border-slate-200 bg-white/60 opacity-60'
+          ? 'border-[#efefe2] bg-white/90 shadow-[0_20px_60px_rgba(0,50,0,0.08)]'
+          : 'border-dashed border-[#e3e3d7] bg-white/60 opacity-60'
       )}
     >
       <div
@@ -79,16 +79,16 @@ export function LevelCard({
           {info.emoji}
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-slate-900">
+          <h3 className="text-lg font-semibold text-[#1a1c15]">
             {info.title}
           </h3>
-          <p className="text-sm text-slate-500">{info.description}</p>
+          <p className="text-sm text-[#707a6a]">{info.description}</p>
           {isUnlocked ? (
-            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#707a6a]">
               {isSelected ? 'Selected' : 'Tap to focus on this level'}
             </p>
           ) : (
-            <p className="mt-3 text-xs uppercase tracking-[0.3em] text-slate-400">
+            <p className="mt-3 text-xs uppercase tracking-[0.3em] text-[#707a6a]">
               Unlock by boosting your average
             </p>
           )}
@@ -96,7 +96,7 @@ export function LevelCard({
         {isSelected && isUnlocked && (
           <BadgeCheck className="h-5 w-5 text-emerald-500" />
         )}
-        {!isUnlocked && <Lock className="h-5 w-5 text-slate-400" />}
+        {!isUnlocked && <Lock className="h-5 w-5 text-[#707a6a]" />}
       </div>
     </motion.button>
   );

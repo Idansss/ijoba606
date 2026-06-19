@@ -81,15 +81,15 @@ export function MarkdownEditor({
       <div className="flex items-center gap-2 flex-wrap">
         {/* Mode Toggle */}
         {showPreview && (
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="flex gap-1 rounded-input bg-surface-container p-1">
             <button
               type="button"
               onClick={() => setMode('write')}
               className={cn(
-                'px-3 py-1 rounded text-sm font-medium transition-all',
+                'rounded px-3 py-1 text-sm font-medium transition-all',
                 mode === 'write'
-                  ? 'bg-white text-[#006400] shadow-sm'
-                  : 'text-gray-600 hover:text-gray-800'
+                  ? 'bg-surface-container-lowest text-deep-green shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
               )}
             >
               Write
@@ -98,10 +98,10 @@ export function MarkdownEditor({
               type="button"
               onClick={() => setMode('preview')}
               className={cn(
-                'px-3 py-1 rounded text-sm font-medium transition-all',
+                'rounded px-3 py-1 text-sm font-medium transition-all',
                 mode === 'preview'
-                  ? 'bg-white text-[#006400] shadow-sm'
-                  : 'text-gray-600 hover:text-gray-800'
+                  ? 'bg-surface-container-lowest text-deep-green shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
               )}
             >
               Preview
@@ -112,11 +112,11 @@ export function MarkdownEditor({
         {/* Formatting Buttons */}
         {mode === 'write' && (
           <>
-            <div className="w-px h-6 bg-gray-300"></div>
+            <div className="h-6 w-px bg-outline-variant"></div>
             <button
               type="button"
               onClick={() => insertMarkdown('**', '**')}
-              className="px-2 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+              className="px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
               title="Bold"
             >
               <strong>B</strong>
@@ -124,7 +124,7 @@ export function MarkdownEditor({
             <button
               type="button"
               onClick={() => insertMarkdown('_', '_')}
-              className="px-2 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors italic"
+              className="px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors italic"
               title="Italic"
             >
               I
@@ -132,7 +132,7 @@ export function MarkdownEditor({
             <button
               type="button"
               onClick={() => insertMarkdown('`', '`')}
-              className="px-2 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors font-mono text-sm"
+              className="px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors font-mono text-sm"
               title="Code"
             >
               {'</>'}
@@ -140,7 +140,7 @@ export function MarkdownEditor({
             <button
               type="button"
               onClick={() => insertMarkdown('[', '](url)')}
-              className="px-2 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+              className="px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
               title="Link"
             >
               🔗
@@ -148,7 +148,7 @@ export function MarkdownEditor({
             <button
               type="button"
               onClick={() => insertMarkdown('\n- ', '')}
-              className="px-2 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+              className="px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
               title="List"
             >
               •
@@ -157,7 +157,7 @@ export function MarkdownEditor({
         )}
 
         {/* Character Count */}
-        <div className="ml-auto text-sm text-gray-500">
+        <div className="ml-auto text-sm text-outline">
           {value.length}
           {maxLength && `/${maxLength}`}
         </div>
@@ -179,17 +179,17 @@ export function MarkdownEditor({
                 placeholder={placeholder}
                 style={{ minHeight }}
                 className={cn(
-                  'w-full px-4 py-3 border-2 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-y font-mono text-sm',
-                  error ? 'border-red-500' : 'border-gray-300'
+                  'w-full resize-y rounded-input border-2 bg-surface-container-lowest px-4 py-3 font-mono text-sm focus:border-forest-green focus:outline-none',
+                  error ? 'border-error' : 'border-outline-variant'
                 )}
               />
               {mentionSuggestions.length > 0 && (
-                <div className="absolute bg-white border-2 border-gray-200 rounded-lg shadow-lg mt-1 z-10">
+                <div className="absolute z-10 mt-1 rounded-input border border-outline-variant/30 bg-surface-container-lowest shadow-[0px_20px_40px_rgba(0,50,0,0.12)]">
                   {mentionSuggestions.map((user) => (
                     <button
                       key={user}
                       type="button"
-                      className="block w-full px-4 py-2 text-left hover:bg-[#e9f1e2] transition-colors"
+                      className="block w-full px-4 py-2 text-left transition-colors hover:bg-primary-fixed/20"
                       onClick={() => {
                         onChange(value + user + ' ');
                         setMentionSuggestions([]);
@@ -208,14 +208,14 @@ export function MarkdownEditor({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               style={{ minHeight }}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-gray-50 overflow-auto prose prose-sm max-w-none"
+              className="prose prose-sm w-full max-w-none overflow-auto rounded-input border-2 border-outline-variant bg-surface-container-low px-4 py-3"
             >
               {value.trim() ? (
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
                   {value}
                 </ReactMarkdown>
               ) : (
-                <p className="text-gray-400 italic">Nothing to preview</p>
+                <p className="italic text-outline">Nothing to preview</p>
               )}
             </motion.div>
           )}
@@ -223,10 +223,10 @@ export function MarkdownEditor({
       </div>
 
       {/* Error */}
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       {/* Help Text */}
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-outline">
         Supports <strong>bold</strong>, <em>italic</em>, <code>code</code>,
         lists, and links. Mention users with @username
       </p>

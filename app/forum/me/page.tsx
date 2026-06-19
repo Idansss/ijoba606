@@ -10,6 +10,7 @@ import { db } from '@/lib/firebase/config';
 import { ForumThread, ForumPost } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
 import { formatDistanceToNow } from 'date-fns';
+import { Icon } from '@/components/ui/Icon';
 
 type TabType = 'threads' | 'replies' | 'subscriptions';
 
@@ -83,20 +84,14 @@ export default function MyForumActivityPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
+      <div className="mx-auto max-w-5xl">
         {/* Back Button */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-2 text-[#006400] hover:text-[#004f00] mb-6 font-semibold"
+          className="mb-6 inline-flex items-center gap-2 font-semibold text-deep-green transition hover:text-forest-green"
         >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Icon name="arrow_back" className="text-[20px]" />
           Back to Forum
         </Link>
 
@@ -106,74 +101,57 @@ export default function MyForumActivityPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
+          <h1 className="mb-2 font-display-lg-mobile text-display-lg-mobile text-deep-green">
             My Forum Activity
           </h1>
-          <p className="text-gray-600">
+          <p className="text-on-surface-variant">
             View your threads, replies, and subscriptions
           </p>
         </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-[#006400] mb-2">
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <div className="mb-2 font-figure-xl text-figure-xl text-deep-green">
               {myThreads.length}
             </div>
-            <div className="text-sm text-gray-600">Threads Created</div>
+            <div className="text-sm text-on-surface-variant">Threads Created</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-[#006d33] mb-2">
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <div className="mb-2 font-figure-xl text-figure-xl text-forest-green">
               {myPosts.length}
             </div>
-            <div className="text-sm text-gray-600">Replies Posted</div>
+            <div className="text-sm text-on-surface-variant">Replies Posted</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <div className="mb-2 font-figure-xl text-figure-xl text-royal-gold">
               {subscribedThreads.length}
             </div>
-            <div className="text-sm text-gray-600">Subscriptions</div>
+            <div className="text-sm text-on-surface-variant">Subscriptions</div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl">
-          <button
-            onClick={() => setActiveTab('threads')}
-            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === 'threads'
-                ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            My Threads
-          </button>
-          <button
-            onClick={() => setActiveTab('replies')}
-            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === 'replies'
-                ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            My Replies
-          </button>
-          <button
-            onClick={() => setActiveTab('subscriptions')}
-            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === 'subscriptions'
-                ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            Subscriptions
-          </button>
+        <div className="mb-8 flex gap-2 rounded-full border border-outline-variant/30 bg-surface-container-low p-1">
+          {(['threads', 'replies', 'subscriptions'] as TabType[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 rounded-full py-3 font-semibold transition-all ${
+                activeTab === tab
+                  ? 'bg-gradient-to-r from-deep-green to-royal-gold text-on-primary shadow'
+                  : 'text-on-surface-variant hover:text-deep-green'
+              }`}
+            >
+              {tab === 'threads' ? 'My Threads' : tab === 'replies' ? 'My Replies' : 'Subscriptions'}
+            </button>
+          ))}
         </div>
 
         {/* Content */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
+          <div className="py-12 text-center">
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-deep-green"></div>
           </div>
         ) : (
           <>
@@ -181,17 +159,17 @@ export default function MyForumActivityPage() {
             {activeTab === 'threads' && (
               <div className="space-y-4">
                 {myThreads.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
-                    <div className="text-6xl mb-4">📝</div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-12">
+                    <Icon name="edit_note" className="mb-4 text-[56px] text-royal-gold" />
+                    <h3 className="mb-2 font-headline-md text-headline-md text-deep-green">
                       No threads yet
                     </h3>
-                    <p className="text-gray-600 mb-6">
+                    <p className="mb-6 text-on-surface-variant">
                       Start a discussion to share your knowledge!
                     </p>
                     <Link
                       href="/forum/new"
-                      className="inline-block px-6 py-3 bg-[#006400] text-white rounded-xl font-bold hover:bg-[#004f00] transition-all"
+                      className="inline-block rounded-full bg-deep-green px-6 py-3 font-label-sm text-label-sm font-semibold text-on-primary transition-all hover:bg-forest-green"
                     >
                       Create Thread
                     </Link>
@@ -208,12 +186,12 @@ export default function MyForumActivityPage() {
             {activeTab === 'replies' && (
               <div className="space-y-4">
                 {myPosts.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
-                    <div className="text-6xl mb-4">💬</div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-12">
+                    <Icon name="chat_bubble" className="mb-4 text-[56px] text-royal-gold" />
+                    <h3 className="mb-2 font-headline-md text-headline-md text-deep-green">
                       No replies yet
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-on-surface-variant">
                       Join discussions and share your insights!
                     </p>
                   </div>
@@ -229,12 +207,12 @@ export default function MyForumActivityPage() {
                       <Link
                         key={post.id}
                         href={`/forum/thread/${post.tid}`}
-                        className="block bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 hover:border-[#3f9a37] hover:shadow-lg transition-all"
+                        className="block rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.03)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-[0px_15px_40px_rgba(0,50,0,0.08)]"
                       >
-                        <div className="text-sm text-gray-500 mb-2">
+                        <div className="mb-2 text-sm text-outline">
                           Replied {timeAgo}
                         </div>
-                        <p className="text-gray-700 line-clamp-3">
+                        <p className="line-clamp-3 text-on-surface-variant">
                           {post.bodyMD.substring(0, 200)}...
                         </p>
                       </Link>
@@ -248,12 +226,12 @@ export default function MyForumActivityPage() {
             {activeTab === 'subscriptions' && (
               <div className="space-y-4">
                 {subscribedThreads.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
-                    <div className="text-6xl mb-4">🔔</div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-12">
+                    <Icon name="notifications" className="mb-4 text-[56px] text-royal-gold" />
+                    <h3 className="mb-2 font-headline-md text-headline-md text-deep-green">
                       No subscriptions
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-on-surface-variant">
                       Subscribe to threads to get notified of new replies!
                     </p>
                   </div>

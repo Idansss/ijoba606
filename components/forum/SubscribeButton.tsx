@@ -7,6 +7,7 @@ import { db } from '@/lib/firebase/config';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { Timestamp } from 'firebase/firestore';
+import { Icon } from '@/components/ui/Icon';
 
 interface SubscribeButtonProps {
   threadId: string;
@@ -89,15 +90,13 @@ export function SubscribeButton({ threadId }: SubscribeButtonProps) {
       whileTap={{ scale: 0.95 }}
       onClick={handleToggle}
       disabled={loading}
-      className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-2 disabled:opacity-50 ${
+      className={`flex items-center gap-2 rounded-input px-4 py-2 font-semibold transition-all disabled:opacity-50 ${
         isSubscribed
-          ? 'bg-[#d3e6c8] text-[#004f00] hover:bg-[#aecf9c]'
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          ? 'bg-primary-fixed/40 text-on-secondary-fixed hover:bg-primary-fixed/60'
+          : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
       }`}
     >
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-      </svg>
+      <Icon name={isSubscribed ? 'notifications_active' : 'notifications'} className="text-[20px]" filled={isSubscribed} />
       {loading ? 'Loading...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
     </motion.button>
   );

@@ -25,11 +25,11 @@ export function ResultRow({
         'flex items-center justify-between rounded-2xl border px-4 py-3 text-sm',
         highlight
           ? 'border-[#aecf9c] bg-[#e9f1e2] text-[#003c00]'
-          : 'border-slate-100 bg-white text-slate-700'
+          : 'border-[#efefe2] bg-white text-[#404a3b]'
       )}
     >
       <span className="font-semibold">{label}</span>
-      <span className="text-base font-bold text-slate-900">{value}</span>
+      <span className="text-base font-bold text-[#1a1c15]">{value}</span>
     </motion.div>
   );
 }

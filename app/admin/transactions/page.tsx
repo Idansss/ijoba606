@@ -212,17 +212,17 @@ export default function AdminTransactionsPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Transaction Monitoring
           </h1>
-          <p className="text-gray-600">Monitor payments, refunds, and disputes</p>
+          <p className="text-[#404a3b]">Monitor payments, refunds, and disputes</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl max-w-md">
+        <div className="flex gap-2 mb-8 bg-[#efefe2] p-1 rounded-xl max-w-md">
           <button
             onClick={() => setActiveTab('transactions')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'transactions'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Transactions
@@ -232,7 +232,7 @@ export default function AdminTransactionsPage() {
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'refunds'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Refunds
@@ -242,7 +242,7 @@ export default function AdminTransactionsPage() {
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'disputes'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Disputes
@@ -251,16 +251,16 @@ export default function AdminTransactionsPage() {
 
         {/* Transactions Tab */}
         {activeTab === 'transactions' && (
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
             <h2 className="text-2xl font-bold mb-4">Payment Transactions</h2>
             <div className="space-y-4">
               {transactions.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No transactions found</p>
+                <p className="text-[#707a6a] text-center py-8">No transactions found</p>
               ) : (
                 transactions.map((transaction) => (
                   <div
                     key={transaction.id}
-                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                    className="flex items-center justify-between p-4 border border-[#e3e3d7] rounded-lg"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
@@ -274,14 +274,14 @@ export default function AdminTransactionsPage() {
                           {transaction.status}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">Invoice: {transaction.invoiceId}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm text-[#404a3b]">Invoice: {transaction.invoiceId}</p>
+                      <p className="text-xs text-[#707a6a]">
                         {transaction.createdAt && formatDistanceToNow(transaction.createdAt.toDate(), { addSuffix: true })}
                       </p>
                     </div>
                     <Link
                       href={`/consultants/invoices/${transaction.invoiceId}`}
-                      className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition flex items-center gap-1"
+                      className="px-3 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg text-sm font-semibold hover:bg-[#e3e3d7] transition flex items-center gap-1"
                     >
                       <Eye className="w-4 h-4" />
                       View
@@ -295,16 +295,16 @@ export default function AdminTransactionsPage() {
 
         {/* Refunds Tab */}
         {activeTab === 'refunds' && (
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
             <h2 className="text-2xl font-bold mb-4">Refund Requests</h2>
             <div className="space-y-4">
               {refunds.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No refund requests found</p>
+                <p className="text-[#707a6a] text-center py-8">No refund requests found</p>
               ) : (
                 refunds.map((refund) => (
                   <div
                     key={refund.id}
-                    className="p-4 border border-gray-200 rounded-lg"
+                    className="p-4 border border-[#e3e3d7] rounded-lg"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div>
@@ -320,20 +320,20 @@ export default function AdminTransactionsPage() {
                             {refund.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">Invoice: {refund.invoiceId}</p>
-                        <p className="text-sm text-gray-600">Reason: {refund.reason}</p>
+                        <p className="text-sm text-[#404a3b]">Invoice: {refund.invoiceId}</p>
+                        <p className="text-sm text-[#404a3b]">Reason: {refund.reason}</p>
                         {refund.reasonDetails && (
-                          <p className="text-sm text-gray-500 mt-1">{refund.reasonDetails}</p>
+                          <p className="text-sm text-[#707a6a] mt-1">{refund.reasonDetails}</p>
                         )}
                         {refund.bankAccount && (
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-[#707a6a] mt-1">
                             Refund to: {refund.bankAccount.accountName} - {refund.bankAccount.accountNumber}
                           </p>
                         )}
                       </div>
                       <Link
                         href={`/consultants/invoices/${refund.invoiceId}`}
-                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition flex items-center gap-1"
+                        className="px-3 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg text-sm font-semibold hover:bg-[#e3e3d7] transition flex items-center gap-1"
                       >
                         <Eye className="w-4 h-4" />
                         View
@@ -366,16 +366,16 @@ export default function AdminTransactionsPage() {
 
         {/* Disputes Tab */}
         {activeTab === 'disputes' && (
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
             <h2 className="text-2xl font-bold mb-4">Disputes</h2>
             <div className="space-y-4">
               {disputes.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No disputes found</p>
+                <p className="text-[#707a6a] text-center py-8">No disputes found</p>
               ) : (
                 disputes.map((dispute) => (
                   <div
                     key={dispute.id}
-                    className="p-4 border border-gray-200 rounded-lg"
+                    className="p-4 border border-[#e3e3d7] rounded-lg"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -390,19 +390,19 @@ export default function AdminTransactionsPage() {
                             {dispute.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{dispute.details}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-[#404a3b] mt-1">{dispute.details}</p>
+                        <p className="text-xs text-[#707a6a] mt-1">
                           Invoice: {dispute.invoiceId} • {dispute.createdAt && formatDistanceToNow(dispute.createdAt.toDate(), { addSuffix: true })}
                         </p>
                         {dispute.resolution && (
-                          <p className="text-sm text-gray-700 mt-2 p-2 bg-gray-50 rounded">
+                          <p className="text-sm text-[#404a3b] mt-2 p-2 bg-[#f4f4e7] rounded">
                             <strong>Resolution:</strong> {dispute.resolution}
                           </p>
                         )}
                       </div>
                       <Link
                         href={`/consultants/invoices/${dispute.invoiceId}`}
-                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition flex items-center gap-1"
+                        className="px-3 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg text-sm font-semibold hover:bg-[#e3e3d7] transition flex items-center gap-1"
                       >
                         <Eye className="w-4 h-4" />
                         View
@@ -436,7 +436,7 @@ function DisputeResolutionForm({ disputeId, onResolve, processing }: { disputeId
         onChange={(e) => setResolution(e.target.value)}
         placeholder="Enter resolution details..."
         rows={3}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
       />
       <div className="flex gap-2">
         <button

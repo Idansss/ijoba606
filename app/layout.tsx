@@ -26,9 +26,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   icons: {
-    icon: "/ijoba606-logo.svg",
-    shortcut: "/ijoba606-logo.svg",
-    apple: "/ijoba606-logo.svg",
+    icon: "/ijoba606-logo-v2-icon.png",
+    shortcut: "/ijoba606-logo-v2-icon.png",
+    apple: "/ijoba606-logo-v2-icon.png",
   },
   robots: {
     index: true,
@@ -60,7 +60,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen bg-linear-to-br from-[#f5f5e8] via-[#eef3df] to-[#e7f0e0]">
+      <body className="antialiased min-h-screen overflow-x-clip bg-cream-canvas text-on-surface font-body-md">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -81,9 +95,9 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <FCMProvider />
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen overflow-x-clip">
               <Header />
-              <main className="flex-1">
+              <main className="flex-1 overflow-x-clip">
                 {children}
               </main>
               <Footer />

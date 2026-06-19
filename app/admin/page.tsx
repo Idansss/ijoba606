@@ -26,6 +26,7 @@ import {
   Mail
 } from 'lucide-react';
 import { sendTestWelcomeEmail } from '@/lib/firebase/functions';
+import { Select } from '@/components/ui/Select';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -153,8 +154,8 @@ export default function AdminDashboard() {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage users, questions, rules, and moderation</p>
+        <h1 className="text-4xl font-bold text-[#1a1c15] mb-2">Admin Dashboard</h1>
+        <p className="text-[#404a3b]">Manage users, questions, rules, and moderation</p>
       </div>
 
       {/* Quick Stats */}
@@ -166,8 +167,8 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-sm text-[#404a3b] mb-1">Total Users</p>
+              <p className="text-3xl font-bold text-[#1a1c15]">{stats.total}</p>
             </div>
             <Users className="w-12 h-12 text-[#109a48]" />
           </div>
@@ -181,8 +182,8 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Admins</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.admins}</p>
+              <p className="text-sm text-[#404a3b] mb-1">Admins</p>
+              <p className="text-3xl font-bold text-[#1a1c15]">{stats.admins}</p>
             </div>
             <Crown className="w-12 h-12 text-[#0b7a3b]" />
           </div>
@@ -196,8 +197,8 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Moderators</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.moderators}</p>
+              <p className="text-sm text-[#404a3b] mb-1">Moderators</p>
+              <p className="text-3xl font-bold text-[#1a1c15]">{stats.moderators}</p>
             </div>
             <Shield className="w-12 h-12 text-[#c59f00]" />
           </div>
@@ -211,8 +212,8 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Regular Users</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.regular}</p>
+              <p className="text-sm text-[#404a3b] mb-1">Regular Users</p>
+              <p className="text-3xl font-bold text-[#1a1c15]">{stats.regular}</p>
             </div>
             <Users className="w-12 h-12 text-green-500" />
           </div>
@@ -223,16 +224,16 @@ export default function AdminDashboard() {
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-2 border-[#efd98a]">
         <div className="flex items-center gap-2 mb-4">
           <Mail className="w-6 h-6 text-[#a98700]" />
-          <h2 className="text-xl font-bold text-gray-900">Test Welcome Email</h2>
+          <h2 className="text-xl font-bold text-[#1a1c15]">Test Welcome Email</h2>
         </div>
-        <p className="text-gray-600 mb-4">Send a test welcome email to verify your email configuration.</p>
+        <p className="text-[#404a3b] mb-4">Send a test welcome email to verify your email configuration.</p>
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
             placeholder="email@example.com"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
           />
           <button
             onClick={handleSendTestEmail}
@@ -314,31 +315,32 @@ export default function AdminDashboard() {
       {/* User Management */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
+          <h2 className="text-2xl font-bold text-[#1a1c15]">User Management</h2>
         </div>
 
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#707a6a] w-5 h-5" />
             <input
               type="text"
               placeholder="Search by handle or UID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
           </div>
-          <select
+          <Select
             value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value as typeof roleFilter)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-          >
-            <option value="all">All Roles</option>
-            <option value="admin">Admins</option>
-            <option value="moderator">Moderators</option>
-            <option value="user">Regular Users</option>
-          </select>
+            onChange={(v) => setRoleFilter(v as typeof roleFilter)}
+            className="w-full sm:w-56"
+            options={[
+              { value: 'all', label: 'All Roles' },
+              { value: 'admin', label: 'Admins' },
+              { value: 'moderator', label: 'Moderators' },
+              { value: 'user', label: 'Regular Users' },
+            ]}
+          />
         </div>
 
         {/* Users Table */}
@@ -347,28 +349,28 @@ export default function AdminDashboard() {
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-[#006400]"></div>
           </div>
         ) : filteredUsers.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Users className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+          <div className="text-center py-12 text-[#707a6a]">
+            <Users className="w-12 h-12 mx-auto mb-3 text-[#707a6a]" />
             <p>No users found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">User</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Role</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Created</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                <tr className="border-b border-[#e3e3d7]">
+                  <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">User</th>
+                  <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Role</th>
+                  <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Created</th>
+                  <th className="text-left py-3 px-4 font-semibold text-[#404a3b]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredUsers.map((u) => (
-                  <tr key={u.uid} className="border-b border-gray-100 hover:bg-gray-50">
+                  <tr key={u.uid} className="border-b border-[#efefe2] hover:bg-[#f4f4e7]">
                     <td className="py-3 px-4">
                       <div>
-                        <p className="font-semibold text-gray-900">{u.handle}</p>
-                        <p className="text-xs text-gray-500 font-mono">{u.uid.substring(0, 8)}...</p>
+                        <p className="font-semibold text-[#1a1c15]">{u.handle}</p>
+                        <p className="text-xs text-[#707a6a] font-mono">{u.uid.substring(0, 8)}...</p>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -378,7 +380,7 @@ export default function AdminDashboard() {
                             ? 'bg-[#d3e6c8] text-[#003c00]'
                             : u.role === 'moderator'
                             ? 'bg-[#f7edc4] text-[#655100]'
-                            : 'bg-gray-100 text-gray-800'
+                            : 'bg-[#efefe2] text-[#1a1c15]'
                         }`}
                       >
                         {u.role === 'admin' && <Crown className="w-3 h-3 mr-1" />}
@@ -386,27 +388,28 @@ export default function AdminDashboard() {
                         {u.role}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-[#404a3b]">
                       {u.createdAt
                         ? formatDistanceToNow(u.createdAt.toDate(), { addSuffix: true })
                         : 'Unknown'}
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex gap-2">
-                        <select
+                        <Select
                           value={u.role}
-                          onChange={(e) =>
-                            handleUpdateRole(u.uid, e.target.value as 'user' | 'moderator' | 'admin')
+                          onChange={(v) =>
+                            handleUpdateRole(u.uid, v as 'user' | 'moderator' | 'admin')
                           }
                           disabled={updatingRole === u.uid || u.uid === user?.uid}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <option value="user">User</option>
-                          <option value="moderator">Moderator</option>
-                          <option value="admin">Admin</option>
-                        </select>
+                          className="w-36 px-3 py-1 text-sm"
+                          options={[
+                            { value: 'user', label: 'User' },
+                            { value: 'moderator', label: 'Moderator' },
+                            { value: 'admin', label: 'Admin' },
+                          ]}
+                        />
                         {u.uid === user?.uid && (
-                          <span className="text-xs text-gray-500 self-center">(You)</span>
+                          <span className="text-xs text-[#707a6a] self-center">(You)</span>
                         )}
                       </div>
                     </td>

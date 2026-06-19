@@ -137,15 +137,15 @@ function ResultPageContent() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-5xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(0,50,0,0.15)]">
           <div className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+            <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#707a6a]">
               Personal Income Tax Summary
             </p>
-            <h1 className="mt-3 text-4xl font-semibold text-slate-900">
+            <h1 className="mt-3 text-4xl font-semibold text-[#1a1c15]">
               Here&apos;s your estimated tax footprint.
           </h1>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-[#707a6a]">
               Print or save this snapshot for your tax planning.
           </p>
         </div>
@@ -217,14 +217,14 @@ function ResultPageContent() {
             <button
               onClick={handleSave}
               disabled={saving}
-                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900 disabled:opacity-50"
+                className="rounded-full border border-[#e3e3d7] px-6 py-4 text-sm font-semibold text-[#404a3b] hover:border-[#aecf9c] hover:text-[#1a1c15] disabled:opacity-50"
             >
                 {saving ? 'Saving...' : 'Save to profile'}
             </button>
           )}
           <button
             onClick={() => setShareOpen(true)}
-              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
+              className="rounded-full border border-[#e3e3d7] px-6 py-4 text-sm font-semibold text-[#404a3b] hover:border-[#aecf9c] hover:text-[#1a1c15]"
           >
               Share result
           </button>
@@ -233,7 +233,7 @@ function ResultPageContent() {
           <div className="mt-6 text-center">
           <button
             onClick={() => window.print()}
-              className="text-xs text-slate-500 underline"
+              className="text-xs text-[#707a6a] underline"
           >
               Print or save as PDF
           </button>

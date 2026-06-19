@@ -8,6 +8,7 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { Icon } from '@/components/ui/Icon';
 
 interface VoteBarProps {
   targetId: string;
@@ -102,34 +103,24 @@ export function VoteBar({
         onClick={() => handleVote(1)}
         disabled={loading}
         className={cn(
-          'p-2 rounded-lg transition-all disabled:opacity-50',
+          'rounded-input p-1.5 transition-all disabled:opacity-50',
           userVote === 1
-            ? 'bg-[#c59f00] text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-[#f7edc4] hover:text-[#a98700]'
+            ? 'bg-royal-gold text-on-primary'
+            : 'bg-surface-container text-on-surface-variant hover:bg-tertiary-fixed/40 hover:text-tertiary'
         )}
       >
-        <svg
-          className="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <Icon name="keyboard_arrow_up" className="text-[22px] leading-none" />
       </motion.button>
 
       {/* Vote Count */}
       <div
         className={cn(
-          'font-bold text-lg',
+          'font-figure-md text-lg font-bold',
           votes > 0
-            ? 'text-[#a98700]'
+            ? 'text-tertiary'
             : votes < 0
-            ? 'text-[#006d33]'
-            : 'text-gray-700'
+            ? 'text-secondary'
+            : 'text-on-surface-variant'
         )}
       >
         {votes}
@@ -142,23 +133,13 @@ export function VoteBar({
         onClick={() => handleVote(-1)}
         disabled={loading}
         className={cn(
-          'p-2 rounded-lg transition-all disabled:opacity-50',
+          'rounded-input p-1.5 transition-all disabled:opacity-50',
           userVote === -1
-            ? 'bg-[#109a48] text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-[#c7ecd6] hover:text-[#006d33]'
+            ? 'bg-secondary text-on-primary'
+            : 'bg-surface-container text-on-surface-variant hover:bg-secondary-container/60 hover:text-secondary'
         )}
       >
-        <svg
-          className="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <Icon name="keyboard_arrow_down" className="text-[22px] leading-none" />
       </motion.button>
     </div>
   );

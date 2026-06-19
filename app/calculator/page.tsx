@@ -10,6 +10,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { PayeRules } from '@/lib/types';
 import { useToastStore } from '@/lib/store/toast';
+import { Icon } from '@/components/ui/Icon';
 
 export default function CalculatorPage() {
   const router = useRouter();
@@ -64,41 +65,41 @@ export default function CalculatorPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl mx-auto"
+        className="mx-auto max-w-3xl"
       >
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">🧮</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
+        <div className="mb-8">
+          <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary-container/10 text-deep-green">
+            <Icon name="calculate" className="text-3xl" />
+          </span>
+          <h1 className="mt-4 font-display-lg-mobile text-display-lg-mobile leading-tight text-deep-green">
             Personal Income Tax Calculator
           </h1>
-          <p className="text-gray-600">
-            Calculate your personal income tax in 60 seconds. Monthly or annual, with clean
-            breakdown.
+          <p className="mt-3 font-body-lg text-body-lg text-on-surface-variant">
+            Figure your tax wahala in 60 seconds. Gain clarity on your take-home
+            pay versus deductions — fast, accurate, and built for the modern
+            Nigerian workforce.
           </p>
-          <div className="mt-4 inline-block px-4 py-2 bg-[#fcf7e6] border-2 border-[#efd98a] rounded-xl">
-            <p className="text-sm text-[#655100]">
-              ⚠️ Educational purposes only. Not legal or tax advice.
-            </p>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-tertiary-fixed/30 px-4 py-2 font-label-sm text-label-sm text-on-tertiary-fixed-variant">
+            <Icon name="info" className="text-[16px]" />
+            Educational purposes only — not legal or tax advice.
           </div>
         </div>
 
         {/* Form */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200">
+        <div className="rounded-bento border border-deep-green/10 bg-surface-container-lowest p-8 shadow-[0px_20px_40px_rgba(0,100,0,0.08)] md:p-10">
           <CalcForm onSubmit={handleSubmit} loading={loading} />
         </div>
 
         {/* Info */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>
-            💡 Based on Nigeria Personal Income Tax rules ({rules.year}). Rules are
-            configurable by admin.
-          </p>
-        </div>
+        <p className="mt-8 text-center font-body-md text-sm text-on-surface-variant/70">
+          Based on Nigeria Personal Income Tax rules ({rules.year}). Rules are
+          configurable by admin.
+        </p>
       </motion.div>
     </div>
   );

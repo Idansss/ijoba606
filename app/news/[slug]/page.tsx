@@ -84,7 +84,7 @@ export default function NewsArticlePage() {
   if (!article) {
     return (
       <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Article not found</h1>
+        <h1 className="text-2xl font-bold text-[#1a1c15] mb-2">Article not found</h1>
         <Link
           href="/news"
           className="inline-flex items-center gap-2 text-[#006400] hover:underline font-semibold"
@@ -106,17 +106,17 @@ export default function NewsArticlePage() {
         Back to news
       </Link>
 
-      <article className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      <article className="bg-white rounded-2xl shadow-lg border border-[#e3e3d7] overflow-hidden">
         <div className="p-8 md:p-12">
           {article.category && (
             <span className="text-xs font-semibold text-[#006400] uppercase tracking-wide">
               {article.category}
             </span>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1a1c15] mt-2">
             {article.title}
           </h1>
-          <div className="flex items-center gap-4 mt-4 text-gray-500">
+          <div className="flex items-center gap-4 mt-4 text-[#707a6a]">
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
               {article.publishedAt
@@ -147,7 +147,7 @@ export default function NewsArticlePage() {
           </div>
 
           <div
-            className="mt-8 prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-[#006400]"
+            className="mt-8 prose prose-lg max-w-none prose-headings:text-[#1a1c15] prose-p:text-[#404a3b] prose-a:text-[#006400]"
             dangerouslySetInnerHTML={{
               __html:
                 article.content?.startsWith('<') ?

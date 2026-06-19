@@ -37,7 +37,7 @@ export function OptionCard({
         'w-full rounded-2xl border px-4 py-4 text-left transition-all',
         'bg-white/85',
         isSelected && !isRevealed && 'border-[#3f9a37] shadow-lg shadow-[#aecf9c]',
-        !isSelected && !isRevealed && 'border-slate-100 hover:border-[#aecf9c]',
+        !isSelected && !isRevealed && 'border-[#efefe2] hover:border-[#aecf9c]',
         isRevealed && isCorrect && 'border-emerald-200 bg-emerald-50',
         isWrongSelection && 'border-rose-200 bg-rose-50',
         disabled && !isSelected && !isCorrect && 'opacity-70'
@@ -49,14 +49,14 @@ export function OptionCard({
             'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl text-sm font-semibold',
             'border',
             isSelected && !isRevealed && 'border-[#aecf9c] bg-[#e9f1e2] text-[#004f00]',
-            !isSelected && !isRevealed && 'border-slate-200 text-slate-500 bg-white',
+            !isSelected && !isRevealed && 'border-[#e3e3d7] text-[#707a6a] bg-white',
             isRevealed && isCorrect && 'border-emerald-200 bg-emerald-100 text-emerald-700',
             isWrongSelection && 'border-rose-200 bg-rose-100 text-rose-700'
           )}
         >
           {labels[index] ?? '?'}
         </div>
-        <div className="flex-1 text-slate-800">{option}</div>
+        <div className="flex-1 text-[#1a1c15]">{option}</div>
         {isRevealed && (
           <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
             {isCorrect ? (

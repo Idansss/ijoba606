@@ -1,24 +1,24 @@
 export default function TermsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200">
-        <h1 className="text-4xl font-bold mb-6 text-gray-800">Terms of Service</h1>
-        <p className="text-sm text-gray-500 mb-8">Last updated: January 2025</p>
+      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-[#e3e3d7]">
+        <h1 className="text-4xl font-bold mb-6 text-[#1a1c15]">Terms of Service</h1>
+        <p className="text-sm text-[#707a6a] mb-8">Last updated: January 2025</p>
 
         <div className="prose prose-gray max-w-none">
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">1. Acceptance of Terms</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">1. Acceptance of Terms</h2>
+            <p className="text-[#404a3b] mb-4">
               By accessing and using ijoba 606 (&quot;the Service&quot;), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">2. Description of Service</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">2. Description of Service</h2>
+            <p className="text-[#404a3b] mb-4">
               ijoba 606 is an educational web application that provides:
             </p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Interactive quizzes about PAYE (Pay As You Earn) taxation</li>
               <li>A community forum for tax-related discussions</li>
               <li>A personal income tax calculator</li>
@@ -27,7 +27,7 @@ export default function TermsPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">3. Educational Purpose Disclaimer</h2>
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">3. Educational Purpose Disclaimer</h2>
             <div className="bg-[#fcf7e6] border-2 border-[#e6c552] rounded-xl p-6 mb-4">
               <p className="text-[#463800] font-bold mb-2">⚠️ IMPORTANT DISCLAIMER</p>
               <p className="text-[#655100] mb-2">
@@ -46,16 +46,16 @@ export default function TermsPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">4. User Accounts</h2>
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">4.1 Account Types</h3>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">4. User Accounts</h2>
+            <h3 className="text-xl font-semibold mb-3 text-[#1a1c15]">4.1 Account Types</h3>
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li><strong>Guest (Anonymous):</strong> Limited features, data may be lost if you clear browser data</li>
               <li><strong>Google Account:</strong> Full features, persistent data storage</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">4.2 Account Responsibilities</h3>
-            <p className="text-gray-700 mb-4">You are responsible for:</p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <h3 className="text-xl font-semibold mb-3 text-[#1a1c15]">4.2 Account Responsibilities</h3>
+            <p className="text-[#404a3b] mb-4">You are responsible for:</p>
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Maintaining the security of your account</li>
               <li>All activities that occur under your account</li>
               <li>Notifying us immediately of any unauthorized use</li>
@@ -63,10 +63,10 @@ export default function TermsPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">5. Forum Community Guidelines</h2>
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">5.1 Acceptable Use</h3>
-            <p className="text-gray-700 mb-4">When using the forum, you agree NOT to:</p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">5. Forum Community Guidelines</h2>
+            <h3 className="text-xl font-semibold mb-3 text-[#1a1c15]">5.1 Acceptable Use</h3>
+            <p className="text-[#404a3b] mb-4">When using the forum, you agree NOT to:</p>
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Post offensive, abusive, or discriminatory content</li>
               <li>Harass, threaten, or impersonate others</li>
               <li>Share personal information of others without consent</li>
@@ -76,23 +76,23 @@ export default function TermsPage() {
               <li>Manipulate votes or game the system</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">5.2 Moderation</h3>
-            <p className="text-gray-700 mb-4">
+            <h3 className="text-xl font-semibold mb-3 text-[#1a1c15]">5.2 Moderation</h3>
+            <p className="text-[#404a3b] mb-4">
               We reserve the right to moderate, edit, or remove any content that violates these terms. Moderators can hide posts, lock threads, and take other actions to maintain community standards.
             </p>
 
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">5.3 Content Ownership</h3>
-            <p className="text-gray-700 mb-4">
+            <h3 className="text-xl font-semibold mb-3 text-[#1a1c15]">5.3 Content Ownership</h3>
+            <p className="text-[#404a3b] mb-4">
               You retain ownership of content you post, but grant us a license to display, distribute, and store your content as part of the Service.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">6. Calculator Accuracy</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">6. Calculator Accuracy</h2>
+            <p className="text-[#404a3b] mb-4">
               The tax calculator is based on configurable rules that attempt to reflect Nigerian PAYE tax laws. However:
             </p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Rules may be out of date or incorrect</li>
               <li>Your actual tax may differ due to specific circumstances</li>
               <li>We make no warranties about the accuracy of calculations</li>
@@ -101,18 +101,18 @@ export default function TermsPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">7. Intellectual Property</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">7. Intellectual Property</h2>
+            <p className="text-[#404a3b] mb-4">
               The Service and its original content (excluding user-generated content) are owned by ijoba 606 and are protected by copyright, trademark, and other laws.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">8. Limitation of Liability</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">8. Limitation of Liability</h2>
+            <p className="text-[#404a3b] mb-4">
               To the maximum extent permitted by law, ijoba 606 shall not be liable for:
             </p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Any indirect, incidental, or consequential damages</li>
               <li>Loss of data or profits</li>
               <li>Decisions made based on information from the Service</li>
@@ -122,44 +122,44 @@ export default function TermsPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">9. Service Availability</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">9. Service Availability</h2>
+            <p className="text-[#404a3b] mb-4">
               We strive to provide continuous service but do not guarantee:
             </p>
-            <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2">
+            <ul className="list-disc list-inside mb-4 text-[#404a3b] space-y-2">
               <li>Uninterrupted access</li>
               <li>Error-free operation</li>
               <li>Specific uptime percentages</li>
             </ul>
-            <p className="text-gray-700 mb-4">
+            <p className="text-[#404a3b] mb-4">
               We reserve the right to modify, suspend, or discontinue the Service at any time.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">10. Termination</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">10. Termination</h2>
+            <p className="text-[#404a3b] mb-4">
               We may terminate or suspend your account immediately, without prior notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">11. Governing Law</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">11. Governing Law</h2>
+            <p className="text-[#404a3b] mb-4">
               These Terms shall be governed by and construed in accordance with the laws of Nigeria, without regard to its conflict of law provisions.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">12. Changes to Terms</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">12. Changes to Terms</h2>
+            <p className="text-[#404a3b] mb-4">
               We reserve the right to modify these Terms at any time. We will notify users of any material changes by posting the new Terms on this page and updating the &quot;Last updated&quot; date. Your continued use after changes constitutes acceptance of the new Terms.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">13. Contact</h2>
-            <p className="text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-[#1a1c15]">13. Contact</h2>
+            <p className="text-[#404a3b] mb-4">
               For questions about these Terms, please contact us through the footer links or GitHub repository.
             </p>
           </section>

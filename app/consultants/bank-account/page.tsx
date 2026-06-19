@@ -8,6 +8,7 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { BankAccount } from '@/lib/types';
 import { Plus, Trash2, Save, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { Select } from '@/components/ui/Select';
 
 interface PaystackBank {
   name: string;
@@ -234,39 +235,33 @@ export default function BankAccountPage() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Bank Account Management
         </h1>
-        <p className="text-gray-600">Manage your bank accounts for withdrawals</p>
+        <p className="text-[#404a3b]">Manage your bank accounts for withdrawals</p>
       </div>
 
       {/* Add Bank Account Form */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-8">
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7] mb-8">
         <h2 className="text-2xl font-bold mb-4">Add Bank Account</h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Bank</label>
-            <select
+            <label className="block text-sm font-medium text-[#404a3b] mb-1">Bank</label>
+            <Select
               value={formData.bankCode}
-              onChange={(e) => {
-                const selected = banks.find(b => b.code === e.target.value);
+              onChange={(v) => {
+                const selected = banks.find(b => b.code === v);
                 setFormData({
                   ...formData,
-                  bankCode: e.target.value,
+                  bankCode: v,
                   bankName: selected?.name || '',
                   accountName: '', // Clear resolved name when bank changes
                 });
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-            >
-              <option value="">Select Bank</option>
-              {banks.map((bank) => (
-                <option key={bank.code} value={bank.code}>
-                  {bank.name}
-                </option>
-              ))}
-            </select>
+              placeholder="Select Bank"
+              options={banks.map((bank) => ({ value: bank.code, label: bank.name }))}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+            <label className="block text-sm font-medium text-[#404a3b] mb-1">Account Number</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -278,7 +273,7 @@ export default function BankAccountPage() {
                     accountName: '', // Clear resolved name when account number changes
                   });
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="0000000000"
                 maxLength={10}
               />
@@ -300,12 +295,12 @@ export default function BankAccountPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Account Name</label>
+            <label className="block text-sm font-medium text-[#404a3b] mb-1">Account Name</label>
             <input
               type="text"
               value={formData.accountName}
               readOnly
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+              className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg bg-[#f4f4e7]"
               placeholder="Account name will appear here after resolution"
             />
             {formData.accountName && (
@@ -328,20 +323,20 @@ export default function BankAccountPage() {
       </div>
 
       {/* Saved Bank Accounts */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
         <h2 className="text-2xl font-bold mb-4">Saved Bank Accounts</h2>
         {bankAccounts.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No bank accounts saved yet</p>
+          <p className="text-[#707a6a] text-center py-8">No bank accounts saved yet</p>
         ) : (
           <div className="space-y-4">
             {bankAccounts.map((account) => (
               <div
                 key={account.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                className="flex items-center justify-between p-4 border border-[#e3e3d7] rounded-lg"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="font-semibold text-gray-800">{account.accountName}</p>
+                    <p className="font-semibold text-[#1a1c15]">{account.accountName}</p>
                     {account.isDefault && (
                       <span className="px-2 py-1 bg-[#d3e6c8] text-[#004f00] rounded text-xs font-semibold">
                         Default
@@ -351,14 +346,14 @@ export default function BankAccountPage() {
                       <CheckCircle2 className="w-4 h-4 text-green-600" />
                     )}
                   </div>
-                  <p className="text-sm text-gray-600">{account.bankName}</p>
-                  <p className="text-sm text-gray-500">Account: {account.accountNumber}</p>
+                  <p className="text-sm text-[#404a3b]">{account.bankName}</p>
+                  <p className="text-sm text-[#707a6a]">Account: {account.accountNumber}</p>
                 </div>
                 <div className="flex gap-2">
                   {!account.isDefault && (
                     <button
                       onClick={() => account.id && handleSetDefault(account.id)}
-                      className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition"
+                      className="px-3 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg text-sm font-semibold hover:bg-[#e3e3d7] transition"
                     >
                       Set Default
                     </button>

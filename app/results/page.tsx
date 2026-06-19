@@ -14,6 +14,7 @@ import { calculateScore } from '@/lib/utils/scoring';
 import { submitRound } from '@/lib/firebase/functions';
 import { useToastStore } from '@/lib/store/toast';
 import { BADGES } from '@/lib/utils/badges';
+import { Icon } from '@/components/ui/Icon';
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -95,21 +96,21 @@ export default function ResultsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-4xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
-          <h1 className="text-center text-4xl font-semibold text-slate-900">
-            Round complete
-          </h1>
-          <p className="mt-2 text-center text-sm text-slate-500">
+        <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_20px_40px_rgba(0,50,0,0.08)] backdrop-blur-sm sm:p-10">
+          <p className="text-center font-label-sm text-sm font-semibold uppercase tracking-widest text-forest-green">
             Level {currentLevel} · 3-question sprint
           </p>
+          <h1 className="mt-2 text-center font-display-lg-mobile text-display-lg-mobile text-deep-green">
+            Round complete
+          </h1>
           {submitting && (
-            <p className="mt-4 text-center text-sm text-slate-500">
+            <p className="mt-4 text-center text-sm text-on-surface-variant">
               Saving your progress...
             </p>
           )}
@@ -119,23 +120,86 @@ export default function ResultsPage() {
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-center">
-              <p className="text-3xl font-semibold text-emerald-700">
+            <div className="rounded-input border border-secondary-container/60 bg-secondary-container/30 p-4 text-center">
+              <p className="font-figure-xl text-figure-xl text-secondary">
                 {correctCount}
               </p>
-              <p className="text-sm text-emerald-800">Correct answers</p>
+              <p className="text-sm text-on-secondary-fixed">Correct answers</p>
             </div>
-            <div className="rounded-2xl border border-[#c7ecd6] bg-[#e6f3ec] p-4 text-center">
-              <p className="text-3xl font-semibold text-[#005728]">
+            <div className="rounded-input border border-forest-green/20 bg-forest-green/10 p-4 text-center">
+              <p className="font-figure-xl text-figure-xl text-forest-green">
                 {answers.length}
               </p>
-              <p className="text-sm text-[#00421f]">Attempted</p>
+              <p className="text-sm text-on-surface-variant">Attempted</p>
             </div>
-            <div className="rounded-2xl border border-[#d3e6c8] bg-[#e9f1e2] p-4 text-center">
-              <p className="text-3xl font-semibold text-[#004f00]">
+            <div className="rounded-input border border-primary-fixed/40 bg-primary-fixed/20 p-4 text-center">
+              <p className="font-figure-xl text-figure-xl text-deep-green">
                 {totalScore}
               </p>
-              <p className="text-sm text-[#003c00]">Total points</p>
+              <p className="text-sm text-on-secondary-fixed">Total points</p>
+            </div>
+          </div>
+
+          {/* Per-question recap */}
+          <div className="mt-10">
+            <h2 className="mb-4 font-headline-md text-headline-md text-deep-green">Question recap</h2>
+            <div className="space-y-4">
+              {questions.map((question, idx) => {
+                const answer = answers.find((a) => a.questionId === question.id);
+                const isCorrect = answer?.isCorrect ?? false;
+                return (
+                  <div
+                    key={question.id}
+                    className={`rounded-input border p-4 ${
+                      isCorrect
+                        ? 'border-secondary-container/60 bg-secondary-container/20'
+                        : 'border-error/30 bg-error-container/30'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Icon
+                        name={isCorrect ? 'check_circle' : 'cancel'}
+                        className={`mt-0.5 shrink-0 text-[22px] ${isCorrect ? 'text-secondary' : 'text-error'}`}
+                        filled
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-on-surface">
+                          <span className="text-on-surface-variant">Q{idx + 1}. </span>
+                          {question.prompt}
+                        </p>
+                        <div className="mt-2 space-y-1">
+                          {question.options.map((option, optIdx) => {
+                            const isAnswerCorrect = question.correct.includes(optIdx);
+                            const wasSelected = answer?.selectedOptions.includes(optIdx);
+                            return (
+                              <p
+                                key={optIdx}
+                                className={`flex items-center gap-2 text-sm ${
+                                  isAnswerCorrect
+                                    ? 'font-semibold text-secondary'
+                                    : wasSelected
+                                    ? 'text-error line-through'
+                                    : 'text-on-surface-variant'
+                                }`}
+                              >
+                                {isAnswerCorrect && <Icon name="check" className="text-[16px]" />}
+                                {!isAnswerCorrect && wasSelected && <Icon name="close" className="text-[16px]" />}
+                                {option}
+                              </p>
+                            );
+                          })}
+                        </div>
+                        {question.explanation && (
+                          <p className="mt-2 rounded-input bg-surface-container-low p-3 text-sm text-on-surface-variant">
+                            <span className="font-semibold text-deep-green">Why: </span>
+                            {question.explanation}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -143,9 +207,9 @@ export default function ResultsPage() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-8 rounded-3xl border border-[#d3e6c8] bg-gradient-to-r from-[#e9f1e2] via-[#e6f3ec] to-white p-6"
+              className="mt-8 rounded-bento border border-primary-fixed/40 bg-gradient-to-r from-primary-fixed/20 via-secondary-container/20 to-surface-container-lowest p-6"
             >
-              <p className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-[#0b7a3b]">
+              <p className="text-center font-label-sm text-sm font-semibold uppercase tracking-widest text-forest-green">
                 New badges unlocked
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -155,7 +219,7 @@ export default function ResultsPage() {
                   return (
                     <div
                       key={badgeId}
-                      className="flex items-center gap-3 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 shadow"
+                      className="flex items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container-lowest px-4 py-2 text-sm font-semibold text-on-surface shadow-sm"
                     >
                       <span className="text-2xl">{badge.emoji}</span>
                       {badge.name}
@@ -167,8 +231,9 @@ export default function ResultsPage() {
           )}
 
           {submitted && streakCount > 0 && (
-            <div className="mt-8 rounded-2xl border border-[#f7edc4] bg-[#fcf7e6] p-4 text-center text-[#463800]">
-              🔥 Streak updated: {streakCount} day
+            <div className="mt-8 flex items-center justify-center gap-2 rounded-input border border-tertiary-container/40 bg-tertiary-container/10 p-4 text-center text-on-tertiary-container">
+              <Icon name="local_fire_department" className="text-[22px] text-tertiary" filled />
+              Streak updated: {streakCount} day
               {streakCount !== 1 ? 's' : ''} strong.
             </div>
           )}
@@ -176,24 +241,28 @@ export default function ResultsPage() {
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             <button
               onClick={handlePlayAgain}
-              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl"
+              className="rounded-full bg-gradient-to-r from-deep-green to-royal-gold px-6 py-4 text-lg font-semibold text-on-primary shadow-md transition hover:opacity-90"
             >
               Play another round
             </button>
             <button
               onClick={() => setShareOpen(true)}
-              className="rounded-full border border-slate-200 px-6 py-4 text-lg font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
+              className="rounded-full border border-outline-variant px-6 py-4 text-lg font-semibold text-on-surface-variant transition hover:border-forest-green hover:text-deep-green"
             >
               Share my score
             </button>
           </div>
-          <p className="mt-4 text-center text-xs text-slate-400">
-            Need a breather? Jump to the{' '}
-            <Link href="/forum" className="text-[#006400] underline">
-              community forum
-            </Link>{' '}
-            for explanations.
-          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link href="/leaderboard" className="inline-flex items-center gap-1 font-semibold text-deep-green hover:text-forest-green">
+              <Icon name="leaderboard" className="text-[18px]" />
+              View leaderboard
+            </Link>
+            <span className="text-outline">·</span>
+            <Link href="/forum" className="inline-flex items-center gap-1 font-semibold text-deep-green hover:text-forest-green">
+              <Icon name="forum" className="text-[18px]" />
+              Discuss in the forum
+            </Link>
+          </div>
         </div>
       </motion.div>
 

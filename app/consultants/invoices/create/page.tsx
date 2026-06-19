@@ -309,42 +309,42 @@ function CreateInvoicePageContent() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Create Invoice
         </h1>
-        <p className="text-gray-600">Create and send an invoice to your client</p>
+        <p className="text-[#404a3b]">Create and send an invoice to your client</p>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 space-y-6">
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7] space-y-6">
         {/* Customer Selection */}
         <div className="relative" ref={searchRef}>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Select Customer *</label>
+          <label className="block text-sm font-medium text-[#404a3b] mb-1">Select Customer *</label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#707a6a]" />
             <input
               type="text"
               value={customerSearch}
               onChange={(e) => setCustomerSearch(e.target.value)}
               onFocus={() => customerSuggestions.length > 0 && setShowSuggestions(true)}
               placeholder="Search by name or user ID..."
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+              className="w-full pl-10 pr-10 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
             {selectedCustomer && (
               <button
                 onClick={clearCustomer}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#707a6a] hover:text-[#404a3b]"
               >
                 <X className="w-5 h-5" />
               </button>
             )}
           </div>
           {showSuggestions && customerSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+            <div className="absolute z-10 w-full mt-1 bg-white border border-[#bfcab7] rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {customerSuggestions.map((user) => (
                 <button
                   key={user.uid}
                   onClick={() => selectCustomer(user)}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                  className="w-full text-left px-4 py-2 hover:bg-[#efefe2] transition"
                 >
                   <div className="font-semibold">{formatHandleForDisplay(user.handle)}</div>
-                  <div className="text-xs text-gray-500">{user.uid}</div>
+                  <div className="text-xs text-[#707a6a]">{user.uid}</div>
                 </button>
               ))}
             </div>
@@ -360,24 +360,24 @@ function CreateInvoicePageContent() {
 
         {/* Basic Info */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Invoice Title *</label>
+          <label className="block text-sm font-medium text-[#404a3b] mb-1">Invoice Title *</label>
           <input
             type="text"
             value={invoice.title || ''}
             onChange={(e) => setInvoice(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+            className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="e.g., Tax Consultation Services"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+          <label className="block text-sm font-medium text-[#404a3b] mb-1">Description *</label>
           <textarea
             value={invoice.description || ''}
             onChange={(e) => setInvoice(prev => ({ ...prev, description: e.target.value }))}
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+            className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="Describe the services provided..."
             required
           />
@@ -386,7 +386,7 @@ function CreateInvoicePageContent() {
         {/* Items */}
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">Items *</label>
+            <label className="block text-sm font-medium text-[#404a3b]">Items *</label>
             <button
               onClick={addItem}
               className="flex items-center gap-1 px-3 py-1 bg-[#006400] text-white rounded-lg text-sm hover:bg-[#004f00]"
@@ -403,7 +403,7 @@ function CreateInvoicePageContent() {
                     placeholder="Description"
                     value={item.description}
                     onChange={(e) => updateItem(index, 'description', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                   />
                 </div>
                 <div className="col-span-1 sm:col-span-2">
@@ -412,7 +412,7 @@ function CreateInvoicePageContent() {
                     placeholder="Qty"
                     value={item.quantity}
                     onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 1)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                     min="1"
                   />
                 </div>
@@ -422,7 +422,7 @@ function CreateInvoicePageContent() {
                     placeholder="Unit Price (₦)"
                     value={item.unitPrice}
                     onChange={(e) => updateItem(index, 'unitPrice', parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                     min="0"
                     step="0.01"
                   />
@@ -448,15 +448,15 @@ function CreateInvoicePageContent() {
           <div className="flex justify-end">
             <div className="w-full sm:w-80 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
+                <span className="text-[#404a3b]">Subtotal:</span>
                 <span className="font-semibold">₦{invoice.subtotal?.toLocaleString() || '0'}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">VAT (7.5%):</span>
+                <span className="text-[#404a3b]">VAT (7.5%):</span>
                 <span className="font-semibold">₦{invoice.vat?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal + VAT:</span>
+                <span className="text-[#404a3b]">Subtotal + VAT:</span>
                 <span className="font-semibold">₦{((invoice.subtotal || 0) + (invoice.vat || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between text-sm text-[#a98700]">
@@ -467,7 +467,7 @@ function CreateInvoicePageContent() {
                 <span>Total (Customer Pays):</span>
                 <span className="text-[#006400]">₦{invoice.total?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
               </div>
-              <div className="text-xs text-gray-500 mt-2">
+              <div className="text-xs text-[#707a6a] mt-2">
                 * VAT and Paystack fees are automatically calculated. Customer bears all fees.
               </div>
             </div>
@@ -479,7 +479,7 @@ function CreateInvoicePageContent() {
           <button
             onClick={() => handleSave(false)}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition disabled:opacity-50"
           >
             <Save className="w-5 h-5" />
             Save Draft

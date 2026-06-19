@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Search, BookOpen, Hash, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Select } from '@/components/ui/Select';
 
 interface GlossaryTerm {
   id: string;
@@ -172,10 +173,10 @@ export default function GlossaryPage() {
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full mb-4">
           <BookOpen className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#1a1c15] mb-4">
           Nigeria Tax Law 2026 Glossary
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-[#404a3b] max-w-2xl mx-auto">
           Comprehensive guide to tax terms, codes, and definitions from the Personal Income Tax Act (PITA) 2026
         </p>
       </motion.div>
@@ -190,32 +191,29 @@ export default function GlossaryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#707a6a] w-5 h-5" />
             <input
               type="text"
               placeholder="Search by term, code, or keyword..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
           </div>
 
           {/* Category Filter */}
           <div>
-            <select
+            <Select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+              onChange={setSelectedCategory}
+              className="px-4 py-3"
+              options={categories.map((cat) => ({ value: cat, label: cat }))}
+            />
           </div>
         </div>
 
         {/* Results Count */}
-        <div className="mt-4 text-sm text-gray-600">
+        <div className="mt-4 text-sm text-[#404a3b]">
           Found <span className="font-semibold text-[#006400]">{filteredTerms.length}</span> term{filteredTerms.length !== 1 ? 's' : ''}
         </div>
       </motion.div>
@@ -228,9 +226,9 @@ export default function GlossaryPage() {
             animate={{ opacity: 1 }}
             className="text-center py-12 bg-white rounded-2xl shadow-lg"
           >
-            <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600 text-lg">No terms found matching your search</p>
-            <p className="text-gray-500 text-sm mt-2">Try different keywords or select a different category</p>
+            <FileText className="w-16 h-16 mx-auto mb-4 text-[#707a6a]" />
+            <p className="text-[#404a3b] text-lg">No terms found matching your search</p>
+            <p className="text-[#707a6a] text-sm mt-2">Try different keywords or select a different category</p>
           </motion.div>
         ) : (
           filteredTerms.map((term, index) => (
@@ -243,11 +241,11 @@ export default function GlossaryPage() {
             >
               <button
                 onClick={() => toggleExpand(term.id)}
-                className="w-full p-6 text-left hover:bg-gray-50 transition-colors flex items-start justify-between gap-4"
+                className="w-full p-6 text-left hover:bg-[#f4f4e7] transition-colors flex items-start justify-between gap-4"
               >
                 <div className="flex-1">
                   <div className="flex items-start gap-3 mb-2">
-                    <h3 className="text-xl font-bold text-gray-900">{term.term}</h3>
+                    <h3 className="text-xl font-bold text-[#1a1c15]">{term.term}</h3>
                     {term.code && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#d3e6c8] text-[#004f00] rounded-full text-sm font-semibold">
                         <Hash className="w-4 h-4" />
@@ -255,32 +253,32 @@ export default function GlossaryPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                  <div className="flex items-center gap-4 text-sm text-[#404a3b] mb-2">
                     <span className="px-3 py-1 bg-[#c7ecd6] text-[#005728] rounded-full font-semibold">
                       {term.category}
                     </span>
                     {term.effectiveDate && (
-                      <span className="text-gray-500">
+                      <span className="text-[#707a6a]">
                         Effective: {new Date(term.effectiveDate).toLocaleDateString()}
                       </span>
                     )}
                   </div>
                   {expandedTerms.has(term.id) ? (
                     <div className="mt-3">
-                      <p className="text-gray-700 leading-relaxed">{term.definition}</p>
+                      <p className="text-[#404a3b] leading-relaxed">{term.definition}</p>
                       {term.source && (
-                        <p className="text-sm text-gray-500 mt-2 italic">Source: {term.source}</p>
+                        <p className="text-sm text-[#707a6a] mt-2 italic">Source: {term.source}</p>
                       )}
                       {term.relatedTerms && term.relatedTerms.length > 0 && (
                         <div className="mt-3">
-                          <p className="text-sm font-semibold text-gray-700 mb-1">Related Terms:</p>
+                          <p className="text-sm font-semibold text-[#404a3b] mb-1">Related Terms:</p>
                           <div className="flex flex-wrap gap-2">
                             {term.relatedTerms.map(relatedId => {
                               const relatedTerm = glossaryData.find(t => t.id === relatedId);
                               return relatedTerm ? (
                                 <span
                                   key={relatedId}
-                                  className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
+                                  className="px-2 py-1 bg-[#efefe2] text-[#404a3b] rounded text-sm"
                                 >
                                   {relatedTerm.term}
                                 </span>
@@ -291,14 +289,14 @@ export default function GlossaryPage() {
                       )}
                     </div>
                   ) : (
-                    <p className="text-gray-600 line-clamp-2">{term.definition}</p>
+                    <p className="text-[#404a3b] line-clamp-2">{term.definition}</p>
                   )}
                 </div>
                 <div className="flex-shrink-0">
                   {expandedTerms.has(term.id) ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
+                    <ChevronUp className="w-5 h-5 text-[#707a6a]" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <ChevronDown className="w-5 h-5 text-[#707a6a]" />
                   )}
                 </div>
               </button>
@@ -314,10 +312,10 @@ export default function GlossaryPage() {
         transition={{ delay: 0.3 }}
         className="mt-12 bg-gradient-to-br from-[#e9f1e2] to-[#e6f3ec] rounded-2xl p-6 text-center"
       >
-        <p className="text-gray-700 mb-2">
+        <p className="text-[#404a3b] mb-2">
           <strong>Note:</strong> This glossary is for educational purposes only and should not be considered as legal or tax advice.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-[#404a3b]">
           For official tax guidance, consult the Federal Inland Revenue Service (FIRS) or a qualified tax professional.
         </p>
       </motion.div>

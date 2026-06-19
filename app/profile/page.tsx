@@ -21,6 +21,7 @@ import { db } from '@/lib/firebase/config';
 import { CalcRun } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils/calculator';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
+import { Icon } from '@/components/ui/Icon';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -80,127 +81,162 @@ export default function ProfilePage() {
     return null;
   }
 
+  const levelProgress = Math.min(100, (profile.levelUnlocked / 3) * 100);
+
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mx-auto max-w-5xl"
+        className="mx-auto max-w-5xl space-y-6"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
-          <div className="text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#006400] to-[#109a48] text-3xl font-semibold text-white shadow-lg">
-              {user.handle[0]?.toUpperCase() || '?'}
-            </div>
-            <h1 className="mt-4 text-3xl font-semibold text-slate-900">
-              {formatHandleForDisplay(user.handle)}
-            </h1>
-            {user.anon && (
-              <p className="text-sm uppercase tracking-[0.4em] text-slate-400">
-                Guest account
-              </p>
-            )}
+        {/* Identity header */}
+        <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-10">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-bento bg-gradient-to-br from-deep-green to-forest-green text-3xl font-semibold text-on-primary shadow-md">
+            {user.handle[0]?.toUpperCase() || '?'}
           </div>
-
+          <h1 className="mt-4 font-display-lg-mobile text-display-lg-mobile text-deep-green">
+            {formatHandleForDisplay(user.handle)}
+          </h1>
           {user.anon && (
-            <div className="mt-6 rounded-3xl border border-slate-100 bg-white/95 p-6 text-center shadow-inner">
-              <p className="text-lg font-semibold text-slate-900">
-                Upgrade to keep your streak forever
-              </p>
-              <p className="mt-2 text-sm text-slate-500">
-                Link your Google account to sync stats and calculator history.
-              </p>
-              <button
-                onClick={handleUpgrade}
-                disabled={upgrading}
-                className="mt-4 rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-3 text-sm font-semibold text-white shadow-lg disabled:opacity-50"
-              >
-                {upgrading ? 'Upgrading...' : 'Upgrade to Google'}
-              </button>
-            </div>
+            <p className="font-label-sm text-sm uppercase tracking-widest text-on-surface-variant">
+              Guest account
+            </p>
           )}
+        </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            {[
-              { label: 'Total points', value: profile.totalPoints },
-              { label: 'Level unlocked', value: profile.levelUnlocked },
-              { label: 'Badges earned', value: profile.badges.length },
-              { label: 'Best streak', value: profile.bestStreak },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-3xl border border-slate-100 bg-white/90 p-4 text-center shadow-sm"
-              >
-                <p className="text-3xl font-semibold text-slate-900">
-                  {stat.value}
-                </p>
-                <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+        {user.anon && (
+          <div className="rounded-bento border border-tertiary-container/40 bg-tertiary-container/10 p-6 text-center">
+            <p className="flex items-center justify-center gap-2 text-lg font-semibold text-on-surface">
+              <Icon name="lock_open" className="text-[22px] text-tertiary" filled />
+              Upgrade to keep your streak forever
+            </p>
+            <p className="mt-2 text-sm text-on-surface-variant">
+              Link your Google account to sync stats and calculator history.
+            </p>
+            <button
+              onClick={handleUpgrade}
+              disabled={upgrading}
+              className="mt-4 rounded-full bg-gradient-to-r from-deep-green to-royal-gold px-6 py-3 text-sm font-semibold text-on-primary shadow-md transition hover:opacity-90 disabled:opacity-50"
+            >
+              {upgrading ? 'Upgrading...' : 'Upgrade to Google'}
+            </button>
           </div>
+        )}
 
-          <div className="mt-8">
+        {/* Stat tiles */}
+        <div className="grid gap-4 md:grid-cols-4">
+          {[
+            { label: 'Total points', value: profile.totalPoints, icon: 'stars', color: 'text-royal-gold' },
+            { label: 'Level unlocked', value: profile.levelUnlocked, icon: 'military_tech', color: 'text-deep-green' },
+            { label: 'Badges earned', value: profile.badges.length, icon: 'workspace_premium', color: 'text-secondary' },
+            { label: 'Best streak', value: profile.bestStreak, icon: 'local_fire_department', color: 'text-tertiary' },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-5 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.04)] backdrop-blur-sm"
+            >
+              <Icon name={stat.icon} className={`text-[28px] ${stat.color}`} filled />
+              <p className="mt-2 font-figure-xl text-figure-xl text-on-surface">
+                {stat.value}
+              </p>
+              <p className="mt-1 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Streak + level progress */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <h2 className="mb-4 flex items-center gap-2 font-headline-md text-headline-md text-deep-green">
+              <Icon name="local_fire_department" className="text-tertiary" filled />
+              Your streak
+            </h2>
             <StreakPill
               streakCount={profile.streakCount}
               bestStreak={profile.bestStreak}
             />
           </div>
 
-          <div className="mt-8 rounded-3xl border border-slate-100 bg-white/90 p-8">
-            <h2 className="text-center text-2xl font-semibold text-slate-900">
-              Badge shelf
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <h2 className="mb-4 flex items-center gap-2 font-headline-md text-headline-md text-deep-green">
+              <Icon name="trending_up" className="text-forest-green" />
+              Level progress
             </h2>
-            <div className="mt-4">
-              <BadgeStrip badges={profile.badges} />
+            <div className="flex items-center justify-between text-sm text-on-surface-variant">
+              <span>Level {profile.levelUnlocked} of 3</span>
+              <span className="font-figure-md text-deep-green">{Math.round(levelProgress)}%</span>
+            </div>
+            <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-surface-container-high">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-deep-green to-royal-gold transition-all"
+                style={{ width: `${levelProgress}%` }}
+              />
+            </div>
+            <p className="mt-3 text-sm text-on-surface-variant">
+              {profile.levelUnlocked < 3
+                ? 'Keep playing to unlock the next difficulty tier.'
+                : 'All levels unlocked — you are a PAYE pro!'}
+            </p>
+          </div>
+        </div>
+
+        {/* Badge shelf */}
+        <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-8">
+          <h2 className="flex items-center justify-center gap-2 text-center font-headline-md text-headline-md text-deep-green">
+            <Icon name="workspace_premium" className="text-royal-gold" filled />
+            Badge shelf
+          </h2>
+          <div className="mt-4">
+            <BadgeStrip badges={profile.badges} />
+          </div>
+        </div>
+
+        {calcRuns.length > 0 && (
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <h2 className="font-headline-md text-headline-md text-deep-green">
+              Saved tax calculations
+            </h2>
+            <div className="mt-4 space-y-3">
+              {calcRuns.map((run) => (
+                <Link
+                  key={run.id}
+                  href={`/calculator/result?id=${run.id}`}
+                  className="flex items-center justify-between rounded-input border border-deep-green/5 bg-surface-container-low px-4 py-3 text-sm text-on-surface-variant transition hover:border-forest-green/40 hover:text-on-surface"
+                >
+                  <div>
+                    <p className="font-semibold text-on-surface">
+                      {run.inputs.period === 'monthly' ? 'Monthly' : 'Annual'} run
+                    </p>
+                    <p className="text-xs text-outline">
+                      Tax: {formatCurrency(run.outputs.monthlyTax)}/month
+                    </p>
+                  </div>
+                  <div className="text-xs text-outline">
+                    {run.createdAt &&
+                      new Date(run.createdAt.seconds * 1000).toLocaleDateString()}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
+        )}
 
-          {calcRuns.length > 0 && (
-            <div className="mt-8 rounded-3xl border border-slate-100 bg-white/90 p-6">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                Saved tax calculations
-              </h2>
-              <div className="mt-4 space-y-3">
-                {calcRuns.map((run) => (
-                  <Link
-                    key={run.id}
-                    href={`/calculator/result?id=${run.id}`}
-                    className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm text-slate-600 transition hover:border-[#aecf9c] hover:text-slate-900"
-                  >
-                    <div>
-                      <p className="font-semibold text-slate-900">
-                        {run.inputs.period === 'monthly' ? 'Monthly' : 'Annual'} run
-                      </p>
-                      <p className="text-xs text-slate-400">
-                        Tax: {formatCurrency(run.outputs.monthlyTax)}/month
-                      </p>
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {run.createdAt &&
-                        new Date(run.createdAt.seconds * 1000).toLocaleDateString()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <Link
-              href="/play"
-              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
-            >
-              Play quiz
-            </Link>
-            <Link
-              href="/calculator"
-              className="rounded-full border border-slate-200 px-6 py-4 text-center text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
-            >
-              Calculate Tax
-            </Link>
-          </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Link
+            href="/play"
+            className="rounded-full bg-gradient-to-r from-deep-green to-royal-gold px-6 py-4 text-center text-sm font-semibold text-on-primary shadow-md transition hover:opacity-90"
+          >
+            Play quiz
+          </Link>
+          <Link
+            href="/calculator"
+            className="rounded-full border border-outline-variant px-6 py-4 text-center text-sm font-semibold text-on-surface-variant transition hover:border-forest-green hover:text-deep-green"
+          >
+            Calculate Tax
+          </Link>
         </div>
       </motion.div>
     </div>

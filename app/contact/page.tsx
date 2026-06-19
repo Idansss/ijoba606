@@ -93,7 +93,7 @@ export default function ContactPage() {
       icon: Github,
       label: 'GitHub',
       href: 'https://github.com/ijoba606',
-      color: 'hover:text-gray-400',
+      color: 'hover:text-[#707a6a]',
     },
     {
       icon: Facebook,
@@ -117,10 +117,10 @@ export default function ContactPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#1a1c15] mb-4">
           Get in Touch
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-[#404a3b] max-w-2xl mx-auto">
           Have questions, feedback, or need support? We&apos;d love to hear from you!
         </p>
       </motion.div>
@@ -134,7 +134,7 @@ export default function ContactPage() {
             transition={{ delay: 0.1 }}
             className="bg-white rounded-2xl shadow-lg p-6"
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-6">Contact Information</h2>
             <div className="space-y-4">
               {contactInfo.map((info, index) => {
                 const Icon = info.icon;
@@ -142,14 +142,14 @@ export default function ContactPage() {
                   <a
                     key={index}
                     href={info.href}
-                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors group"
+                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#f4f4e7] transition-colors group"
                   >
                     <div className={`${info.bgColor} p-3 rounded-lg group-hover:scale-110 transition-transform`}>
                       <Icon className={`w-6 h-6 ${info.color}`} />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">{info.label}</p>
-                      <p className="text-gray-900 font-medium">{info.value}</p>
+                      <p className="text-sm font-semibold text-[#404a3b] mb-1">{info.label}</p>
+                      <p className="text-[#1a1c15] font-medium">{info.value}</p>
                     </div>
                   </a>
                 );
@@ -164,7 +164,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="bg-white rounded-2xl shadow-lg p-6"
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Follow Us</h2>
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-6">Follow Us</h2>
             <div className="grid grid-cols-2 gap-3">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
@@ -174,7 +174,7 @@ export default function ContactPage() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-[#0b7a3b] transition-all ${social.color} group`}
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 border-[#e3e3d7] hover:border-[#0b7a3b] transition-all ${social.color} group`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="text-sm font-semibold">{social.label}</span>
@@ -207,11 +207,11 @@ export default function ContactPage() {
           className="lg:col-span-2"
         >
           <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-6">Send us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-semibold text-[#404a3b] mb-2">
                     Your Name *
                   </label>
                   <input
@@ -221,12 +221,12 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                     placeholder="John Doe"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-semibold text-[#404a3b] mb-2">
                     Email Address *
                   </label>
                   <input
@@ -236,14 +236,14 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                     placeholder="john@example.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="subject" className="block text-sm font-semibold text-[#404a3b] mb-2">
                   Subject *
                 </label>
                 <input
@@ -253,13 +253,13 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                   placeholder="How can we help?"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-semibold text-[#404a3b] mb-2">
                   Message *
                 </label>
                 <textarea
@@ -269,7 +269,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-[#bfcab7] rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all resize-none"
                   placeholder="Tell us what's on your mind..."
                 />
               </div>
@@ -292,7 +292,7 @@ export default function ContactPage() {
                 )}
               </button>
 
-              <p className="text-sm text-gray-500 text-center">
+              <p className="text-sm text-[#707a6a] text-center">
                 By submitting this form, you agree to our{' '}
                 <a href="/legal/privacy" className="text-[#006400] hover:underline">
                   Privacy Policy

@@ -228,11 +228,11 @@ export default function ChatPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       {/* Header */}
-      <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 mb-4 flex items-center justify-between">
+      <div className="bg-white rounded-xl p-4 shadow-lg border border-[#e3e3d7] mb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
             href="/consultants/browse"
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-[#efefe2] rounded-lg transition"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
@@ -240,17 +240,17 @@ export default function ChatPage() {
             {consultant.name?.[0]?.toUpperCase() || '?'}
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800">{consultant.name}</h2>
-            <p className="text-sm text-gray-600">{consultant.specialties?.join(', ')}</p>
+            <h2 className="text-xl font-bold text-[#1a1c15]">{consultant.name}</h2>
+            <p className="text-sm text-[#404a3b]">{consultant.specialties?.join(', ')}</p>
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-4" style={{ height: '500px', overflowY: 'auto' }}>
+      <div className="bg-white rounded-xl shadow-lg border border-[#e3e3d7] mb-4" style={{ height: '500px', overflowY: 'auto' }}>
         <div className="p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="text-center text-gray-500 py-12">
+            <div className="text-center text-[#707a6a] py-12">
               <p>No messages yet. Start the conversation!</p>
             </div>
           ) : (
@@ -265,7 +265,7 @@ export default function ChatPage() {
                     className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                       isOwn
                         ? 'bg-gradient-to-r from-[#006400] to-[#006d33] text-white'
-                        : 'bg-gray-100 text-gray-800'
+                        : 'bg-[#efefe2] text-[#1a1c15]'
                     }`}
                   >
                     {!isOwn && (
@@ -295,7 +295,7 @@ export default function ChatPage() {
       </div>
 
       {/* Message Input */}
-      <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-4 shadow-lg border border-[#e3e3d7]">
         <div className="flex gap-2">
           <input
             type="text"
@@ -308,7 +308,7 @@ export default function ChatPage() {
               }
             }}
             placeholder="Type your message..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             disabled={sending}
           />
           <button

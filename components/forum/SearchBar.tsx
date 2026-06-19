@@ -31,22 +31,22 @@ export function SearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-3 rounded-full border border-slate-100 bg-white/90 px-4 py-2 shadow-sm"
+      className="flex items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container-lowest px-4 py-2 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]"
     >
-      <Search className="h-5 w-5 text-slate-400" />
+      <Search className="h-5 w-5 text-on-surface-variant" />
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
+        className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none"
       />
       {query && (
         <motion.button
           type="submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-white"
+          className="rounded-full bg-gradient-to-r from-deep-green to-royal-gold px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-on-primary"
         >
           Search
         </motion.button>

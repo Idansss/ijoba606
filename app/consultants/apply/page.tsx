@@ -157,9 +157,9 @@ export default function ConsultantApplyPage() {
         className="mb-8"
       >
         <div className="flex items-center gap-3 mb-4">
-          <h1 className="text-4xl font-bold text-gray-800">Consultant Application</h1>
+          <h1 className="text-4xl font-bold text-[#1a1c15]">Consultant Application</h1>
         </div>
-        <p className="text-gray-600">
+        <p className="text-[#404a3b]">
           Join our network of verified tax consultants. Upload supporting documents so our team can review and approve your application.
         </p>
       </motion.div>
@@ -169,16 +169,16 @@ export default function ConsultantApplyPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-100"
+        className="space-y-6 bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-[#efefe2]"
       >
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Full Name *
           </label>
           <input
             type="text"
             {...register('name')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.name && (
             <p className="mt-1 text-xs text-rose-500">{errors.name.message}</p>
@@ -186,13 +186,13 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Email *
           </label>
           <input
             type="email"
             {...register('email')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.email && (
             <p className="mt-1 text-xs text-rose-500">{errors.email.message}</p>
@@ -200,13 +200,13 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Phone *
           </label>
           <input
             type="tel"
             {...register('phone')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="e.g., +234 801 234 5678"
           />
           {errors.phone && (
@@ -215,13 +215,13 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             WhatsApp (optional)
           </label>
           <input
             type="tel"
             {...register('whatsapp')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.whatsapp && (
             <p className="mt-1 text-xs text-rose-500">{errors.whatsapp.message}</p>
@@ -229,31 +229,31 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Location / State (optional)
           </label>
           <input
             type="text"
             {...register('locationState')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Years of Experience (optional)
           </label>
           <input
             type="number"
             {...register('experienceYears', { valueAsNumber: true })}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
             min="0"
             max="50"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Specialties * (Select 1-5)
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -274,7 +274,7 @@ export default function ConsultantApplyPage() {
                   className={`rounded-xl border-2 px-4 py-2 text-sm font-semibold transition ${
                     isSelected
                       ? 'border-[#006400] bg-[#e9f1e2] text-[#004f00]'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#7fb56a]'
+                      : 'border-[#e3e3d7] bg-white text-[#404a3b] hover:border-[#7fb56a]'
                   }`}
                 >
                   {specialty}
@@ -289,13 +289,13 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Bio / Professional Background * (50-1000 characters)
           </label>
           <textarea
             {...register('bio')}
             rows={6}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="Tell us about your experience, qualifications, and expertise..."
           />
           {errors.bio && (
@@ -304,13 +304,13 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Credentials URL (optional)
           </label>
           <input
             type="url"
             {...register('credentialsUrl')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
+            className="w-full rounded-2xl border border-[#e3e3d7] bg-white px-4 py-3 text-[#1a1c15] transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="https://..."
           />
           {errors.credentialsUrl && (
@@ -319,7 +319,7 @@ export default function ConsultantApplyPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
             Supporting Documents (CV, certificates, IDs, etc.)
           </label>
           <label
@@ -329,10 +329,10 @@ export default function ConsultantApplyPage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#006400] shadow-sm">
               <CloudUpload className="h-6 w-6" />
             </span>
-            <span className="text-sm font-semibold text-gray-700">
+            <span className="text-sm font-semibold text-[#404a3b]">
               Click to upload documents
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-[#707a6a]">
               PDF, DOC/DOCX, JPG, JPEG, PNG (max 10MB each)
             </span>
           </label>
@@ -348,7 +348,7 @@ export default function ConsultantApplyPage() {
             accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/jpg,image/png"
           />
           {documents.length > 0 && (
-            <ul className="mt-3 space-y-1 text-sm text-gray-700">
+            <ul className="mt-3 space-y-1 text-sm text-[#404a3b]">
               {documents.map((file, index) => (
                 <li key={`${file.name}-${index}`} className="flex items-center justify-between">
                   <span>{file.name}</span>

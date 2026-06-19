@@ -88,7 +88,7 @@ export default function UserDashboardPage() {
     if (invoice.status === 'cancelled' || invoice.serviceStatus === 'cancelled') {
       return <XCircle className="w-5 h-5 text-red-600" />;
     }
-    return <FileText className="w-5 h-5 text-gray-600" />;
+    return <FileText className="w-5 h-5 text-on-surface-variant" />;
   };
 
   const getStatusColor = (invoice: Invoice) => {
@@ -104,7 +104,7 @@ export default function UserDashboardPage() {
     if (invoice.status === 'cancelled' || invoice.serviceStatus === 'cancelled') {
       return 'text-red-600 bg-red-50';
     }
-    return 'text-gray-600 bg-gray-50';
+    return 'text-on-surface-variant bg-surface-container-low';
   };
 
   const getStatusText = (invoice: Invoice) => {
@@ -125,7 +125,7 @@ export default function UserDashboardPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
@@ -134,47 +134,47 @@ export default function UserDashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
+        <h1 className="font-display-lg-mobile text-display-lg-mobile mb-2 text-deep-green">
           My Dashboard
         </h1>
-        <p className="text-gray-600">Manage your invoices and services</p>
+        <p className="font-body-lg text-body-lg text-on-surface-variant">Manage your invoices and services</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Services</p>
-              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
+              <p className="text-sm text-on-surface-variant mb-1">Total Services</p>
+              <p className="font-figure-xl text-2xl font-bold text-on-surface">{stats.total}</p>
             </div>
             <FileText className="w-8 h-8 text-[#006400]" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Pending Payment</p>
+              <p className="text-sm text-on-surface-variant mb-1">Pending Payment</p>
               <p className="text-2xl font-bold text-[#a98700]">{stats.pendingPayment}</p>
             </div>
             <Clock className="w-8 h-8 text-[#a98700]" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">In Progress</p>
+              <p className="text-sm text-on-surface-variant mb-1">In Progress</p>
               <p className="text-2xl font-bold text-[#006d33]">{stats.inProgress}</p>
             </div>
             <Clock className="w-8 h-8 text-[#006d33]" />
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Completed</p>
+              <p className="text-sm text-on-surface-variant mb-1">Completed</p>
               <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
             </div>
             <CheckCircle2 className="w-8 h-8 text-green-600" />
@@ -183,44 +183,44 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 mb-6">
+      <div className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-4 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] mb-6">
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg font-semibold transition ${
+            className={`px-4 py-2 rounded-full font-label-sm font-semibold transition ${
               filter === 'all'
                 ? 'bg-[#006400] text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
             All
           </button>
           <button
             onClick={() => setFilter('pending_payment')}
-            className={`px-4 py-2 rounded-lg font-semibold transition ${
+            className={`px-4 py-2 rounded-full font-label-sm font-semibold transition ${
               filter === 'pending_payment'
                 ? 'bg-[#a98700] text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
             Pending Payment
           </button>
           <button
             onClick={() => setFilter('in_progress')}
-            className={`px-4 py-2 rounded-lg font-semibold transition ${
+            className={`px-4 py-2 rounded-full font-label-sm font-semibold transition ${
               filter === 'in_progress'
                 ? 'bg-[#006d33] text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
             In Progress
           </button>
           <button
             onClick={() => setFilter('completed')}
-            className={`px-4 py-2 rounded-lg font-semibold transition ${
+            className={`px-4 py-2 rounded-full font-label-sm font-semibold transition ${
               filter === 'completed'
                 ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
             Completed
@@ -231,27 +231,27 @@ export default function UserDashboardPage() {
       {/* Invoices List */}
       <div className="space-y-4">
         {filteredInvoices.length === 0 ? (
-          <div className="bg-white rounded-xl p-6 sm:p-12 shadow-lg border border-gray-200 text-center">
-            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg">No invoices found</p>
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest p-6 sm:p-12 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] text-center">
+            <FileText className="w-16 h-16 text-outline mx-auto mb-4" />
+            <p className="text-on-surface-variant text-lg">No invoices found</p>
           </div>
         ) : (
           filteredInvoices.map((invoice) => (
             <div
               key={invoice.id}
-              className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition"
+              className="rounded-input border border-deep-green/5 bg-surface-container-lowest p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] hover:shadow-xl transition"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     {getStatusIcon(invoice)}
-                    <h3 className="text-xl font-bold text-gray-800">{invoice.title}</h3>
+                    <h3 className="text-xl font-bold text-on-surface">{invoice.title}</h3>
                     <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${getStatusColor(invoice)}`}>
                       {getStatusText(invoice)}
                     </span>
                   </div>
-                  <p className="text-gray-600 mb-2">{invoice.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <p className="text-on-surface-variant mb-2">{invoice.description}</p>
+                  <div className="flex items-center gap-4 text-sm text-on-surface-variant/70">
                     <span>Invoice #{invoice.invoiceNumber}</span>
                     <span>•</span>
                     <span>
@@ -266,13 +266,13 @@ export default function UserDashboardPage() {
                   </div>
                 </div>
                 <div className="text-right ml-4">
-                  <p className="text-2xl font-bold text-[#006400] mb-2">
+                  <p className="font-figure-xl text-2xl font-bold text-deep-green mb-2">
                     ₦{invoice.total.toLocaleString()}
                   </p>
                   {invoice.paymentStatus === 'pending' && (
                     <Link
                       href={`/consultants/invoices/${invoice.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-deep-green text-on-primary rounded-full font-label-sm font-semibold hover:bg-forest-green transition"
                     >
                       <DollarSign className="w-4 h-4" />
                       Pay Now
@@ -282,7 +282,7 @@ export default function UserDashboardPage() {
                   {invoice.paymentStatus === 'completed' && (
                     <Link
                       href={`/consultants/invoices/${invoice.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low text-on-surface-variant rounded-full font-label-sm font-semibold hover:bg-surface-container-high transition"
                     >
                       View Details
                       <ArrowRight className="w-4 h-4" />

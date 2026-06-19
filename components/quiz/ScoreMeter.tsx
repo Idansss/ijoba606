@@ -62,14 +62,14 @@ export function ScoreMeter({ score, maxScore }: ScoreMeterProps) {
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-5xl font-bold text-slate-900">{score}</p>
-          <p className="text-sm text-slate-500">/ {maxScore}</p>
+          <p className="text-5xl font-bold text-[#1a1c15]">{score}</p>
+          <p className="text-sm text-[#707a6a]">/ {maxScore}</p>
         </div>
       </motion.div>
-      <p className="mt-4 text-base font-semibold text-slate-700 md:text-lg">
+      <p className="mt-4 text-base font-semibold text-[#404a3b] md:text-lg">
         {message}
       </p>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-[#707a6a]">
         {percentage}% accuracy this round
       </p>
     </div>

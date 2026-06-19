@@ -268,7 +268,7 @@ export default function AdminModerationPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
+            className="inline-flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -279,19 +279,19 @@ export default function AdminModerationPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Moderation Dashboard
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#404a3b]">
             Review and action reported content, manage moderated items
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl max-w-md">
+        <div className="flex gap-2 mb-8 bg-[#efefe2] p-1 rounded-xl max-w-md">
           <button
             onClick={() => setActiveTab('reports')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'reports'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Reports
@@ -301,7 +301,7 @@ export default function AdminModerationPage() {
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'moderated'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Moderated Content ({moderatedThreads.length + moderatedPosts.length})
@@ -311,30 +311,30 @@ export default function AdminModerationPage() {
         {/* Stats - Only show for reports tab */}
         {activeTab === 'reports' && (
           <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-[#e3e3d7] text-center">
               <div className="text-3xl font-bold text-[#a98700] mb-2">
                 {reports.filter(r => r.status === 'open').length}
               </div>
-              <div className="text-sm text-gray-600">Open Reports</div>
+              <div className="text-sm text-[#404a3b]">Open Reports</div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-[#e3e3d7] text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">
                 {reports.filter(r => r.status === 'actioned').length}
               </div>
-              <div className="text-sm text-gray-600">Actioned Reports</div>
+              <div className="text-sm text-[#404a3b]">Actioned Reports</div>
             </div>
           </div>
         )}
 
         {/* Filter Tabs - Only show for reports tab */}
         {activeTab === 'reports' && (
-        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl max-w-md">
+        <div className="flex gap-2 mb-8 bg-[#efefe2] p-1 rounded-xl max-w-md">
           <button
             onClick={() => setFilter('open')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               filter === 'open'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Open ({reports.filter(r => r.status === 'open').length})
@@ -344,7 +344,7 @@ export default function AdminModerationPage() {
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               filter === 'actioned'
                 ? 'bg-white text-[#006400] shadow-md'
-                : 'text-gray-600 hover:text-gray-800'
+                : 'text-[#404a3b] hover:text-[#1a1c15]'
             }`}
           >
             Actioned ({reports.filter(r => r.status === 'actioned').length})
@@ -356,12 +356,12 @@ export default function AdminModerationPage() {
         {activeTab === 'reports' && (
         <>
         {reports.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-[#e3e3d7] text-center">
             <div className="text-6xl mb-4">✅</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+            <h3 className="text-2xl font-bold text-[#1a1c15] mb-2">
               {filter === 'open' ? 'No pending reports' : 'No actioned reports'}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-[#404a3b]">
               {filter === 'open'
                 ? 'All clear! No reports to review.'
                 : 'Switch to "Open" to see pending reports.'}
@@ -381,7 +381,7 @@ export default function AdminModerationPage() {
                   key={report.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200"
+                  className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-[#e3e3d7]"
                 >
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex-1">
@@ -401,15 +401,15 @@ export default function AdminModerationPage() {
                           {report.status.toUpperCase()}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">
+                      <h3 className="text-lg font-bold text-[#1a1c15] mb-2">
                         Reason: {report.reason}
                       </h3>
                       {report.text && (
-                        <p className="text-gray-600 text-sm mb-2">
+                        <p className="text-[#404a3b] text-sm mb-2">
                           Details: {report.text}
                         </p>
                       )}
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-4 text-sm text-[#707a6a]">
                         <span>Reported {timeAgo}</span>
                         <span>•</span>
                         <Link
@@ -428,11 +428,11 @@ export default function AdminModerationPage() {
 
                   {/* Actions */}
                   {report.status === 'open' && (
-                    <div className="pt-4 border-t-2 border-gray-200">
+                    <div className="pt-4 border-t-2 border-[#e3e3d7]">
                       {/* Reason input for hide/delete */}
                       {(showReasonInput[report.id || ''] || false) && (
                         <div className="mb-4 p-4 bg-[#fcf7e6] rounded-lg border border-[#efd98a]">
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                             Reason for moderation (required):
                           </label>
                           <textarea
@@ -444,7 +444,7 @@ export default function AdminModerationPage() {
                               })
                             }
                             placeholder="Explain why this content is being moderated..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                            className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                             rows={3}
                           />
                         </div>
@@ -492,7 +492,7 @@ export default function AdminModerationPage() {
                         )}
                         <button
                           onClick={() => handleDismissReport(report.id!)}
-                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-all"
+                          className="px-4 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg text-sm font-semibold hover:bg-[#e3e3d7] transition-all"
                         >
                           Dismiss Report
                         </button>
@@ -511,12 +511,12 @@ export default function AdminModerationPage() {
         {activeTab === 'moderated' && (
           <>
             {moderatedThreads.length === 0 && moderatedPosts.length === 0 ? (
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-[#e3e3d7] text-center">
                 <div className="text-6xl mb-4">✅</div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                <h3 className="text-2xl font-bold text-[#1a1c15] mb-2">
                   No moderated content
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-[#404a3b]">
                   All content is visible. Hidden items will appear here.
                 </p>
               </div>
@@ -525,7 +525,7 @@ export default function AdminModerationPage() {
                 {/* Hidden Threads */}
                 {moderatedThreads.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    <h2 className="text-2xl font-bold text-[#1a1c15] mb-4">
                       Hidden Threads ({moderatedThreads.length})
                     </h2>
                     <div className="space-y-4">
@@ -558,10 +558,10 @@ export default function AdminModerationPage() {
                                     HIDDEN
                                   </span>
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-800 mb-2">
+                                <h3 className="text-lg font-bold text-[#1a1c15] mb-2">
                                   {thread.title}
                                 </h3>
-                                <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                                <p className="text-[#404a3b] text-sm mb-2 line-clamp-2">
                                   {thread.bodyMD}
                                 </p>
                                 {thread.moderationReason && (
@@ -574,7 +574,7 @@ export default function AdminModerationPage() {
                                     </p>
                                   </div>
                                 )}
-                                <div className="flex items-center gap-4 text-sm text-gray-500">
+                                <div className="flex items-center gap-4 text-sm text-[#707a6a]">
                                   <span>Created {timeAgo}</span>
                                   {moderatedTimeAgo && (
                                     <>
@@ -594,7 +594,7 @@ export default function AdminModerationPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="pt-4 border-t-2 border-gray-200">
+                            <div className="pt-4 border-t-2 border-[#e3e3d7]">
                               <div className="flex flex-wrap gap-2">
                                 <button
                                   onClick={async () => {
@@ -652,7 +652,7 @@ export default function AdminModerationPage() {
                 {/* Hidden Posts */}
                 {moderatedPosts.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    <h2 className="text-2xl font-bold text-[#1a1c15] mb-4">
                       Hidden Posts ({moderatedPosts.length})
                     </h2>
                     <div className="space-y-4">
@@ -685,7 +685,7 @@ export default function AdminModerationPage() {
                                     HIDDEN
                                   </span>
                                 </div>
-                                <p className="text-gray-600 text-sm mb-2 line-clamp-3">
+                                <p className="text-[#404a3b] text-sm mb-2 line-clamp-3">
                                   {post.bodyMD}
                                 </p>
                                 {post.moderationReason && (
@@ -698,7 +698,7 @@ export default function AdminModerationPage() {
                                     </p>
                                   </div>
                                 )}
-                                <div className="flex items-center gap-4 text-sm text-gray-500">
+                                <div className="flex items-center gap-4 text-sm text-[#707a6a]">
                                   <span>Created {timeAgo}</span>
                                   {moderatedTimeAgo && (
                                     <>
@@ -718,7 +718,7 @@ export default function AdminModerationPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="pt-4 border-t-2 border-gray-200">
+                            <div className="pt-4 border-t-2 border-[#e3e3d7]">
                               <div className="flex flex-wrap gap-2">
                                 <button
                                   onClick={async () => {

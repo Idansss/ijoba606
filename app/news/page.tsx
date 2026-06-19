@@ -70,7 +70,7 @@ export default function NewsPage() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Tax News & Updates
         </h1>
-        <p className="text-gray-600">
+        <p className="text-[#404a3b]">
           Stay informed with the latest PAYE, tax, and compliance news relevant to Nigeria.
         </p>
       </div>
@@ -80,10 +80,10 @@ export default function NewsPage() {
           <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
         </div>
       ) : articles.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-12 text-center">
-          <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">No articles yet</h2>
-          <p className="text-gray-600 max-w-md mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg border border-[#e3e3d7] p-6 sm:p-12 text-center">
+          <Newspaper className="w-16 h-16 text-[#bfcab7] mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-[#1a1c15] mb-2">No articles yet</h2>
+          <p className="text-[#404a3b] max-w-md mx-auto">
             Tax news and updates will appear here. Content can be added manually by admins or
             automatically via AI-powered feeds.
           </p>
@@ -94,11 +94,11 @@ export default function NewsPage() {
             <Link
               key={article.id}
               href={`/news/${article.slug || article.id}`}
-              className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition group"
+              className="block bg-white rounded-2xl shadow-lg border border-[#e3e3d7] overflow-hidden hover:shadow-xl transition group"
             >
               <div className="p-6 flex gap-6">
                 {article.imageUrl && (
-                  <div className="shrink-0 w-32 h-32 rounded-xl overflow-hidden bg-gray-100">
+                  <div className="shrink-0 w-32 h-32 rounded-xl overflow-hidden bg-[#efefe2]">
                     <img
                       src={article.imageUrl}
                       alt=""
@@ -112,17 +112,17 @@ export default function NewsPage() {
                       {article.category}
                     </span>
                   )}
-                  <h2 className="text-xl font-bold text-gray-900 mt-1 group-hover:text-[#006400] transition">
+                  <h2 className="text-xl font-bold text-[#1a1c15] mt-1 group-hover:text-[#006400] transition">
                     {article.title}
                   </h2>
-                  <p className="text-gray-600 mt-2 line-clamp-2">{article.excerpt}</p>
-                  <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                  <p className="text-[#404a3b] mt-2 line-clamp-2">{article.excerpt}</p>
+                  <div className="flex items-center gap-4 mt-4 text-sm text-[#707a6a]">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       {formatArticleDate(article.publishedAt)}
                     </span>
                     {article.source && (
-                      <span className="text-gray-400">{article.source}</span>
+                      <span className="text-[#707a6a]">{article.source}</span>
                     )}
                     <span className="flex items-center gap-1 text-[#006400] font-semibold group-hover:gap-2 transition-all">
                       Read more

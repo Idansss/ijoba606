@@ -8,6 +8,7 @@ import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { BankAccount, ConsultantWallet, WalletTransaction, WithdrawalRequest } from '@/lib/types';
 import { ArrowUp, ArrowDown, Plus, TrendingUp, Wallet, Clock } from 'lucide-react';
+import { Select } from '@/components/ui/Select';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
@@ -231,7 +232,7 @@ export default function ConsultantWalletPage() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Wallet
         </h1>
-        <p className="text-gray-600">Manage your earnings and withdrawals</p>
+        <p className="text-[#404a3b]">Manage your earnings and withdrawals</p>
       </div>
 
       {/* Wallet Summary */}
@@ -243,35 +244,35 @@ export default function ConsultantWalletPage() {
           </div>
           <p className="text-3xl font-bold">₦{balanceInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600">Total Earnings</p>
+            <p className="text-sm text-[#404a3b]">Total Earnings</p>
             <TrendingUp className="w-6 h-6 text-green-600" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">₦{totalEarningsInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="text-2xl font-bold text-[#1a1c15]">₦{totalEarningsInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600">Total Withdrawn</p>
+            <p className="text-sm text-[#404a3b]">Total Withdrawn</p>
             <ArrowDown className="w-6 h-6 text-[#006d33]" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">₦{totalWithdrawnInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="text-2xl font-bold text-[#1a1c15]">₦{totalWithdrawnInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600">Pending Release</p>
+            <p className="text-sm text-[#404a3b]">Pending Release</p>
             <Clock className="w-6 h-6 text-[#a98700]" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">₦{(pendingRelease / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-          <p className="text-xs text-gray-500 mt-1">48-hour hold</p>
+          <p className="text-2xl font-bold text-[#1a1c15]">₦{(pendingRelease / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="text-xs text-[#707a6a] mt-1">48-hour hold</p>
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600">In Service</p>
+            <p className="text-sm text-[#404a3b]">In Service</p>
             <Clock className="w-6 h-6 text-[#006d33]" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">₦{(inService / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-          <p className="text-xs text-gray-500 mt-1">Awaiting completion</p>
+          <p className="text-2xl font-bold text-[#1a1c15]">₦{(inService / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="text-xs text-[#707a6a] mt-1">Awaiting completion</p>
         </div>
       </div>
 
@@ -288,16 +289,16 @@ export default function ConsultantWalletPage() {
       </div>
 
       {/* Transactions */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-6">
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7] mb-6">
         <h2 className="text-2xl font-bold mb-4">Transaction History</h2>
         <div className="space-y-4">
           {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No transactions yet</p>
+            <p className="text-[#707a6a] text-center py-8">No transactions yet</p>
           ) : (
             transactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                className="flex items-center justify-between p-4 border border-[#e3e3d7] rounded-lg"
               >
                 <div className="flex items-center gap-4">
                   {transaction.type === 'credit' ? (
@@ -306,8 +307,8 @@ export default function ConsultantWalletPage() {
                     <ArrowDown className="w-6 h-6 text-red-600" />
                   )}
                   <div>
-                    <p className="font-semibold text-gray-800">{transaction.description}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-semibold text-[#1a1c15]">{transaction.description}</p>
+                    <p className="text-sm text-[#707a6a]">
                       {transaction.createdAt && formatDistanceToNow(transaction.createdAt.toDate(), { addSuffix: true })}
                     </p>
                     {transaction.fundStatus && (
@@ -315,14 +316,14 @@ export default function ConsultantWalletPage() {
                         <span className={`px-2 py-1 rounded ${
                           transaction.fundStatus === 'credited' ? 'bg-green-100 text-green-700' :
                           transaction.fundStatus === 'pending_release' ? 'bg-[#f7edc4] text-[#876b00]' :
-                          'bg-gray-100 text-gray-700'
+                          'bg-[#efefe2] text-[#404a3b]'
                         }`}>
                           {transaction.fundStatus === 'credited' ? 'Available' :
                            transaction.fundStatus === 'pending_release' ? 'Pending Release (48h hold)' :
                            'Pending (In Service)'}
                         </span>
                         {transaction.holdReleaseAt && transaction.fundStatus === 'pending_release' && (
-                          <span className="text-gray-500 ml-2">
+                          <span className="text-[#707a6a] ml-2">
                             Releases {formatDistanceToNow(transaction.holdReleaseAt.toDate(), { addSuffix: true })}
                           </span>
                         )}
@@ -342,7 +343,7 @@ export default function ConsultantWalletPage() {
                       maximumFractionDigits: 2,
                     })}
                   </p>
-                  <p className="text-xs text-gray-500 capitalize">{transaction.status}</p>
+                  <p className="text-xs text-[#707a6a] capitalize">{transaction.status}</p>
                 </div>
               </div>
             ))
@@ -351,28 +352,28 @@ export default function ConsultantWalletPage() {
       </div>
 
       {/* Withdrawal Requests */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
         <h2 className="text-2xl font-bold mb-4">Withdrawal Requests</h2>
         <div className="space-y-4">
           {withdrawals.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No withdrawal requests yet</p>
+            <p className="text-[#707a6a] text-center py-8">No withdrawal requests yet</p>
           ) : (
             withdrawals.map((withdrawal) => (
               <div
                 key={withdrawal.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                className="flex items-center justify-between p-4 border border-[#e3e3d7] rounded-lg"
               >
                 <div>
-                  <p className="font-semibold text-gray-800">
+                  <p className="font-semibold text-[#1a1c15]">
                     ₦{(withdrawal.amount / 100).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-[#707a6a]">
                     {withdrawal.bankAccount.accountName} - {withdrawal.bankAccount.accountNumber}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-[#707a6a]">
                     {withdrawal.createdAt && formatDistanceToNow(withdrawal.createdAt.toDate(), { addSuffix: true })}
                   </p>
                 </div>
@@ -384,7 +385,7 @@ export default function ConsultantWalletPage() {
                       ? 'bg-[#f7edc4] text-[#876b00]'
                       : withdrawal.status === 'failed'
                       ? 'bg-red-100 text-red-700'
-                      : 'bg-gray-100 text-gray-700'
+                      : 'bg-[#efefe2] text-[#404a3b]'
                   }`}
                 >
                   {withdrawal.status}
@@ -402,36 +403,33 @@ export default function ConsultantWalletPage() {
             <h3 className="text-2xl font-bold mb-4">Request Withdrawal</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Amount (₦)</label>
+                <label className="block text-sm font-medium text-[#404a3b] mb-1">Amount (₦)</label>
                 <input
                   type="number"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                   placeholder="0.00"
                   min="0"
                   step="0.01"
                   max={balanceInNaira}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-[#707a6a] mt-1">
                   Available: ₦{balanceInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
               {savedBankAccounts.length > 0 ? (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Bank Account *</label>
-                  <select
+                  <label className="block text-sm font-medium text-[#404a3b] mb-1">Bank Account *</label>
+                  <Select
                     value={selectedBankAccountId}
-                    onChange={(e) => setSelectedBankAccountId(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-                  >
-                    {savedBankAccounts.map((account) => (
-                      <option key={account.id} value={account.id}>
-                        {account.accountName} - {account.bankName} ({account.accountNumber})
-                        {account.isDefault && ' - Default'}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setSelectedBankAccountId}
+                    placeholder="Select bank account"
+                    options={savedBankAccounts.map((account) => ({
+                      value: account.id!,
+                      label: `${account.accountName} - ${account.bankName} (${account.accountNumber})${account.isDefault ? ' - Default' : ''}`,
+                    }))}
+                  />
                   <Link
                     href="/consultants/bank-account"
                     className="text-sm text-[#006400] hover:underline mt-1 inline-block"
@@ -456,7 +454,7 @@ export default function ConsultantWalletPage() {
             <div className="flex gap-2 mt-6">
               <button
                 onClick={() => setShowWithdrawModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                className="flex-1 px-4 py-2 bg-[#efefe2] text-[#404a3b] rounded-lg font-semibold hover:bg-[#e3e3d7] transition"
               >
                 Cancel
               </button>

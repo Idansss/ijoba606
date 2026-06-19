@@ -70,17 +70,17 @@ export function ShareSheet({ isOpen, onClose, shareData }: ShareSheetProps) {
             exit={{ opacity: 0, y: 50 }}
             className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 z-50 max-w-lg mx-auto"
           >
-            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+            <div className="w-12 h-1 bg-[#bfcab7] rounded-full mx-auto mb-6"></div>
 
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+            <h3 className="text-2xl font-bold text-[#1a1c15] mb-2">
               Share Your Result
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[#404a3b] mb-6">
               Spread the word and challenge your friends!
             </p>
 
-            <div className="bg-gray-100 rounded-xl p-4 mb-6">
-              <p className="text-sm text-gray-700">{shareData.text}</p>
+            <div className="bg-[#efefe2] rounded-xl p-4 mb-6">
+              <p className="text-sm text-[#404a3b]">{shareData.text}</p>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -94,13 +94,13 @@ export function ShareSheet({ isOpen, onClose, shareData }: ShareSheetProps) {
               )}
               <button
                 onClick={handleCopy}
-                className="w-full py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition-all"
+                className="w-full py-3 bg-[#e3e3d7] text-[#1a1c15] rounded-xl font-semibold hover:bg-[#bfcab7] transition-all"
               >
                 {copied ? '✓ Copied!' : 'Copy Link'}
               </button>
               <button
                 onClick={onClose}
-                className="w-full py-3 text-gray-600 hover:text-gray-800 transition-colors"
+                className="w-full py-3 text-[#404a3b] hover:text-[#1a1c15] transition-colors"
               >
                 Cancel
               </button>

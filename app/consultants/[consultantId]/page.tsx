@@ -7,13 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { ConsultantProfile } from '@/lib/types';
 import { useAuthStore } from '@/lib/store/auth';
-import {
-  Star,
-  MapPin,
-  Briefcase,
-  MessageCircle,
-  CheckCircle2,
-} from 'lucide-react';
+import { Icon } from '@/components/ui/Icon';
 import { format } from 'date-fns';
 
 export default function ConsultantProfileViewPage() {
@@ -55,9 +49,9 @@ export default function ConsultantProfileViewPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
+      <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
+        <div className="flex justify-center py-12">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-deep-green" />
         </div>
       </div>
     );
@@ -65,17 +59,20 @@ export default function ConsultantProfileViewPage() {
 
   if (!consultant) {
     return (
-      <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Consultant not found</h1>
-        <p className="text-gray-600 mb-6">
-          This consultant may no longer be available or the link may be incorrect.
-        </p>
-        <Link
-          href="/consultants/browse"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#006400] text-white rounded-lg font-semibold hover:bg-[#004f00]"
-        >
-          Browse consultants
-        </Link>
+      <div className="mx-auto max-w-2xl px-margin-mobile py-12 text-center md:px-margin-desktop">
+        <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-12">
+          <Icon name="person_off" className="mb-4 text-[56px] text-royal-gold" />
+          <h1 className="mb-2 font-headline-md text-headline-md text-deep-green">Consultant not found</h1>
+          <p className="mb-6 text-on-surface-variant">
+            This consultant may no longer be available or the link may be incorrect.
+          </p>
+          <Link
+            href="/consultants/browse"
+            className="inline-flex items-center gap-2 rounded-full bg-deep-green px-6 py-3 font-label-sm text-label-sm font-semibold text-on-primary transition hover:bg-forest-green"
+          >
+            Browse consultants
+          </Link>
+        </div>
       </div>
     );
   }
@@ -83,178 +80,193 @@ export default function ConsultantProfileViewPage() {
   const isVerified = consultant.verificationStatus === 'verified' || consultant.isVerified;
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <Link
-        href="/consultants/browse"
-        className="inline-flex text-sm text-[#006400] hover:text-[#004f00] font-semibold mb-6"
-      >
-        ← Back to consultants
-      </Link>
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
+      <div className="mx-auto max-w-4xl">
+        <Link
+          href="/consultants/browse"
+          className="mb-6 inline-flex items-center gap-2 font-semibold text-deep-green transition hover:text-forest-green"
+        >
+          <Icon name="arrow_back" className="text-[20px]" />
+          Back to consultants
+        </Link>
 
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#006400] to-[#109a48] px-8 py-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-white text-4xl font-bold">
-              {consultant.name?.[0]?.toUpperCase() || '?'}
-            </div>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-                {consultant.name}
-                {isVerified && <CheckCircle2 className="w-8 h-8" />}
-              </h1>
-              {consultant.locationState && (
-                <p className="text-white/90 flex items-center gap-1 mt-1">
-                  <MapPin className="w-4 h-4" />
-                  {consultant.locationState}
-                </p>
-              )}
-              <div className="flex flex-wrap gap-4 mt-4 text-white/90 text-sm">
-                <span className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-[#e6c552] fill-[#e6c552]" />
-                  {consultant.averageRating?.toFixed(1) ?? 'N/A'} ({consultant.reviewsCount ?? 0} reviews)
-                </span>
-                <span className="flex items-center gap-1">
-                  <Briefcase className="w-4 h-4" />
-                  {consultant.experienceYears ?? 0} years experience
-                </span>
-                <span>{consultant.totalClients ?? 0} clients</span>
+        {/* Hero */}
+        <div className="overflow-hidden rounded-bento border border-deep-green/5 shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
+          <div className="bg-gradient-to-r from-deep-green to-forest-green px-6 py-10 sm:px-8">
+            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-on-primary/20 bg-on-primary/15 font-display-lg text-4xl font-bold text-on-primary">
+                {consultant.name?.[0]?.toUpperCase() || '?'}
               </div>
+              <div className="flex-1">
+                <h1 className="flex items-center gap-2 font-display-lg-mobile text-display-lg-mobile text-on-primary">
+                  {consultant.name}
+                  {isVerified && <Icon name="verified" className="text-[28px] text-tertiary-fixed" filled />}
+                </h1>
+                {consultant.locationState && (
+                  <p className="mt-1 flex items-center gap-1 text-on-primary/90">
+                    <Icon name="location_on" className="text-[18px]" />
+                    {consultant.locationState}
+                  </p>
+                )}
+                <div className="mt-4 flex flex-wrap gap-4 text-sm text-on-primary/90">
+                  <span className="flex items-center gap-1">
+                    <Icon name="star" className="text-[18px] text-tertiary-fixed" filled />
+                    {consultant.averageRating?.toFixed(1) ?? 'N/A'} ({consultant.reviewsCount ?? 0} reviews)
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Icon name="work" className="text-[18px]" />
+                    {consultant.experienceYears ?? 0} years experience
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Icon name="groups" className="text-[18px]" />
+                    {consultant.totalClients ?? 0} clients
+                  </span>
+                </div>
+              </div>
+              {firebaseUser && (
+                <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto">
+                  <Link
+                    href={`/consultants/chat/${consultant.id}`}
+                    className="flex items-center justify-center gap-2 rounded-full bg-on-primary px-6 py-3 font-label-sm text-label-sm font-semibold text-deep-green transition hover:bg-surface-container"
+                  >
+                    <Icon name="chat" className="text-[20px]" />
+                    Chat
+                  </Link>
+                  <Link
+                    href={`/consultants/request?consultantId=${consultant.id}`}
+                    className="flex items-center justify-center gap-2 rounded-full border-2 border-on-primary/60 px-6 py-3 font-label-sm text-label-sm font-semibold text-on-primary transition hover:bg-on-primary/10"
+                  >
+                    <Icon name="handshake" className="text-[20px]" />
+                    Hire
+                  </Link>
+                </div>
+              )}
             </div>
+          </div>
+
+          <div className="space-y-8 bg-surface-container-lowest p-6 sm:p-8">
+            {/* Bio */}
+            <section>
+              <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">About</h2>
+              <p className="whitespace-pre-line text-on-surface-variant">{consultant.bio}</p>
+            </section>
+
+            {/* Specialties */}
+            {consultant.specialties && consultant.specialties.length > 0 && (
+              <section>
+                <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">Specialties</h2>
+                <div className="flex flex-wrap gap-2">
+                  {consultant.specialties.map((spec, idx) => (
+                    <span
+                      key={idx}
+                      className="rounded-full bg-primary-fixed/30 px-4 py-2 text-sm font-semibold text-on-secondary-fixed"
+                    >
+                      {spec}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Rates */}
+            {(consultant.hourlyRate || consultant.fixedRateRange) && (
+              <section className="rounded-input border border-deep-green/5 bg-surface-container-low p-5">
+                <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">Rates</h2>
+                <div className="flex flex-wrap items-baseline gap-4">
+                  {consultant.hourlyRate && (
+                    <span className="font-figure-xl text-figure-xl text-deep-green">
+                      ₦{consultant.hourlyRate.toLocaleString()}/hr
+                    </span>
+                  )}
+                  {consultant.fixedRateRange && (
+                    <span className="text-on-surface-variant">
+                      Fixed: ₦{consultant.fixedRateRange.min.toLocaleString()} – ₦
+                      {consultant.fixedRateRange.max.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Qualifications */}
+            {consultant.qualifications && consultant.qualifications.length > 0 && (
+              <section>
+                <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">Qualifications</h2>
+                <ul className="space-y-2">
+                  {consultant.qualifications.map((q, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <Icon name="school" className="mt-0.5 shrink-0 text-[20px] text-forest-green" />
+                      <div>
+                        <span className="font-semibold text-on-surface">{q.title}</span>
+                        {q.institution && (
+                          <span className="text-on-surface-variant"> — {q.institution}</span>
+                        )}
+                        {q.year && (
+                          <span className="text-sm text-outline"> ({q.year})</span>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Certifications */}
+            {consultant.certifications && consultant.certifications.length > 0 && (
+              <section>
+                <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">Certifications</h2>
+                <ul className="space-y-2">
+                  {consultant.certifications.map((c, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <Icon name="workspace_premium" className="mt-0.5 shrink-0 text-[20px] text-secondary" />
+                      <div>
+                        <span className="font-semibold text-on-surface">{c.name}</span>
+                        {c.issuingBody && (
+                          <span className="text-on-surface-variant"> — {c.issuingBody}</span>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Work Experience */}
+            {consultant.workExperience && consultant.workExperience.length > 0 && (
+              <section>
+                <h2 className="mb-2 font-headline-md text-headline-md text-deep-green">Experience</h2>
+                <ul className="space-y-4">
+                  {consultant.workExperience.map((w, idx) => (
+                    <li key={idx} className="border-l-2 border-primary-fixed pl-4">
+                      <p className="font-semibold text-on-surface">{w.title}</p>
+                      <p className="text-on-surface-variant">{w.company}</p>
+                      {w.startDate?.toDate && (
+                        <p className="text-sm text-outline">
+                          {format(w.startDate.toDate(), 'MMM yyyy')}
+                          {w.endDate?.toDate
+                            ? ` – ${format(w.endDate.toDate(), 'MMM yyyy')}`
+                            : ' – Present'}
+                        </p>
+                      )}
+                      {w.description && (
+                        <p className="mt-1 text-sm text-on-surface-variant">{w.description}</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Contact via chat only */}
             {firebaseUser && (
-              <Link
-                href={`/consultants/chat/${consultant.id}`}
-                className="flex items-center gap-2 px-6 py-3 bg-white text-[#006400] rounded-xl font-semibold hover:bg-gray-100 transition"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Chat
-              </Link>
+              <section className="border-t border-outline-variant/40 pt-6">
+                <p className="text-sm text-on-surface-variant">
+                  To connect with this consultant, use the <strong>Chat</strong> button above. All
+                  communication happens through our platform to protect both parties.
+                </p>
+              </section>
             )}
           </div>
-        </div>
-
-        <div className="p-8 space-y-8">
-          {/* Bio */}
-          <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-2">About</h2>
-            <p className="text-gray-700 whitespace-pre-line">{consultant.bio}</p>
-          </section>
-
-          {/* Specialties */}
-          {consultant.specialties && consultant.specialties.length > 0 && (
-            <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Specialties</h2>
-              <div className="flex flex-wrap gap-2">
-                {consultant.specialties.map((spec, idx) => (
-                  <span
-                    key={idx}
-                    className="px-4 py-2 bg-[#d3e6c8] text-[#004f00] rounded-full text-sm font-semibold"
-                  >
-                    {spec}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Rates */}
-          {(consultant.hourlyRate || consultant.fixedRateRange) && (
-            <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Rates</h2>
-              <div className="flex flex-wrap gap-4">
-                {consultant.hourlyRate && (
-                  <span className="text-xl font-bold text-[#006400]">
-                    ₦{consultant.hourlyRate.toLocaleString()}/hr
-                  </span>
-                )}
-                {consultant.fixedRateRange && (
-                  <span className="text-gray-700">
-                    Fixed: ₦{consultant.fixedRateRange.min.toLocaleString()} – ₦
-                    {consultant.fixedRateRange.max.toLocaleString()}
-                  </span>
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* Qualifications */}
-          {consultant.qualifications && consultant.qualifications.length > 0 && (
-            <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Qualifications</h2>
-              <ul className="space-y-2">
-                {consultant.qualifications.map((q, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="font-semibold text-gray-900">{q.title}</span>
-                      {q.institution && (
-                        <span className="text-gray-600"> — {q.institution}</span>
-                      )}
-                      {q.year && (
-                        <span className="text-gray-500 text-sm"> ({q.year})</span>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Certifications */}
-          {consultant.certifications && consultant.certifications.length > 0 && (
-            <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Certifications</h2>
-              <ul className="space-y-2">
-                {consultant.certifications.map((c, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[#006d33] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="font-semibold text-gray-900">{c.name}</span>
-                      {c.issuingBody && (
-                        <span className="text-gray-600"> — {c.issuingBody}</span>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Work Experience */}
-          {consultant.workExperience && consultant.workExperience.length > 0 && (
-            <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-2">Experience</h2>
-              <ul className="space-y-4">
-                {consultant.workExperience.map((w, idx) => (
-                  <li key={idx} className="border-l-2 border-[#aecf9c] pl-4">
-                    <p className="font-semibold text-gray-900">{w.title}</p>
-                    <p className="text-gray-600">{w.company}</p>
-                    {w.startDate?.toDate && (
-                      <p className="text-sm text-gray-500">
-                        {format(w.startDate.toDate(), 'MMM yyyy')}
-                        {w.endDate?.toDate
-                          ? ` – ${format(w.endDate.toDate(), 'MMM yyyy')}`
-                          : ' – Present'}
-                      </p>
-                    )}
-                    {w.description && (
-                      <p className="text-gray-700 mt-1 text-sm">{w.description}</p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Contact via chat only */}
-          {firebaseUser && (
-            <section className="pt-6 border-t border-gray-200">
-              <p className="text-gray-600 text-sm">
-                To connect with this consultant, use the <strong>Chat</strong> button above. All
-                communication happens through our platform to protect both parties.
-              </p>
-            </section>
-          )}
         </div>
       </div>
     </div>

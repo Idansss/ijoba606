@@ -8,6 +8,7 @@ import { collection, doc, getDoc, getDocs, query, where, limit, setDoc, serverTi
 import { db } from '@/lib/firebase/config';
 import { ConsultantProfile, ConsultantQualification, ConsultantCertification, ConsultantWorkExperience, ConsultantPortfolioItem, ConsultantApplication } from '@/lib/types';
 import { Plus, Trash2, Save } from 'lucide-react';
+import { Select } from '@/components/ui/Select';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
 
 export default function ConsultantProfilePage() {
@@ -233,60 +234,60 @@ export default function ConsultantProfilePage() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Consultant Profile
         </h1>
-        <p className="text-gray-600">Build your professional profile to attract clients</p>
+        <p className="text-[#404a3b]">Build your professional profile to attract clients</p>
       </div>
 
       <div className="space-y-8">
         {/* Basic Information */}
-        <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <section className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Full Name *</label>
               <input
                 type="text"
                 value={profile.name || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Email *</label>
               <input
                 type="email"
                 value={profile.email || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Phone *</label>
               <input
                 type="tel"
                 value={profile.phone || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp (Optional)</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">WhatsApp (Optional)</label>
               <input
                 type="tel"
                 value={profile.whatsapp || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, whatsapp: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Location (State)</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Location (State)</label>
               <input
                 type="text"
                 value={profile.locationState || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, locationState: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="e.g., Lagos, Abuja"
               />
             </div>
@@ -294,20 +295,20 @@ export default function ConsultantProfilePage() {
         </section>
 
         {/* Professional Bio */}
-        <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <section className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <h2 className="text-2xl font-bold mb-4">Professional Bio *</h2>
           <textarea
             value={profile.bio || ''}
             onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
             rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+            className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="Tell clients about your expertise, approach, and what makes you unique..."
             required
           />
         </section>
 
         {/* Specialties */}
-        <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <section className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <h2 className="text-2xl font-bold mb-4">Specialties *</h2>
           <div className="flex flex-wrap gap-2 mb-4">
             {['PAYE', 'Reliefs', 'Filing', 'Employment Tax', 'Tax Planning', 'Compliance', 'Audit Support'].map(spec => (
@@ -324,7 +325,7 @@ export default function ConsultantProfilePage() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
                   profile.specialties?.includes(spec)
                     ? 'bg-[#006400] text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-[#efefe2] text-[#404a3b] hover:bg-[#e3e3d7]'
                 }`}
               >
                 {spec}
@@ -334,13 +335,13 @@ export default function ConsultantProfilePage() {
         </section>
 
         {/* Experience & Qualifications */}
-        <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <section className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Experience & Qualifications</h2>
             <div className="flex gap-2">
               <button
                 onClick={() => setProfile(prev => ({ ...prev, experienceYears: (prev.experienceYears || 0) + 1 }))}
-                className="px-3 py-1 bg-gray-100 rounded-lg text-sm"
+                className="px-3 py-1 bg-[#efefe2] rounded-lg text-sm"
               >
                 + Years
               </button>
@@ -368,21 +369,21 @@ export default function ConsultantProfilePage() {
                   placeholder="Title (e.g., B.Sc Accounting)"
                   value={qual.title}
                   onChange={(e) => updateQualification(index, 'title', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                 />
                 <input
                   type="text"
                   placeholder="Institution"
                   value={qual.institution}
                   onChange={(e) => updateQualification(index, 'institution', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                 />
                 <input
                   type="number"
                   placeholder="Year"
                   value={qual.year || ''}
                   onChange={(e) => updateQualification(index, 'year', e.target.value ? parseInt(e.target.value) : undefined)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                 />
                 <button
                   onClick={() => removeQualification(index)}
@@ -412,14 +413,14 @@ export default function ConsultantProfilePage() {
                   placeholder="Name (e.g., ICAN)"
                   value={cert.name}
                   onChange={(e) => updateCertification(index, 'name', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                 />
                 <input
                   type="text"
                   placeholder="Issuing Body"
                   value={cert.issuingBody}
                   onChange={(e) => updateCertification(index, 'issuingBody', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                 />
                 <button
                   onClick={() => removeCertification(index)}
@@ -443,21 +444,21 @@ export default function ConsultantProfilePage() {
               </button>
             </div>
             {profile.workExperience?.map((exp, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-4 mb-2">
+              <div key={index} className="border border-[#e3e3d7] rounded-lg p-4 mb-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                   <input
                     type="text"
                     placeholder="Job Title"
                     value={exp.title}
                     onChange={(e) => updateWorkExperience(index, 'title', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                   />
                   <input
                     type="text"
                     placeholder="Company"
                     value={exp.company}
                     onChange={(e) => updateWorkExperience(index, 'company', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="px-3 py-2 border border-[#bfcab7] rounded-lg text-sm"
                   />
                 </div>
                 <textarea
@@ -465,7 +466,7 @@ export default function ConsultantProfilePage() {
                   value={exp.description || ''}
                   onChange={(e) => updateWorkExperience(index, 'description', e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2"
+                  className="w-full px-3 py-2 border border-[#bfcab7] rounded-lg text-sm mb-2"
                 />
                 <div className="flex justify-end">
                   <button
@@ -481,30 +482,30 @@ export default function ConsultantProfilePage() {
         </section>
 
         {/* Rates */}
-        <section className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <section className="bg-white rounded-xl p-6 shadow-lg border border-[#e3e3d7]">
           <h2 className="text-2xl font-bold mb-4">Rates</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate (₦)</label>
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Hourly Rate (₦)</label>
               <input
                 type="number"
                 value={profile.hourlyRate || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, hourlyRate: e.target.value ? parseInt(e.target.value) : undefined }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
+                className="w-full px-4 py-2 border border-[#bfcab7] rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="e.g., 5000"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Availability</label>
-              <select
+              <label className="block text-sm font-medium text-[#404a3b] mb-1">Availability</label>
+              <Select
                 value={profile.availabilityStatus || 'available'}
-                onChange={(e) => setProfile(prev => ({ ...prev, availabilityStatus: e.target.value as any }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
-              >
-                <option value="available">Available</option>
-                <option value="busy">Busy</option>
-                <option value="unavailable">Unavailable</option>
-              </select>
+                onChange={(v) => setProfile(prev => ({ ...prev, availabilityStatus: v as any }))}
+                options={[
+                  { value: 'available', label: 'Available' },
+                  { value: 'busy', label: 'Busy' },
+                  { value: 'unavailable', label: 'Unavailable' },
+                ]}
+              />
             </div>
           </div>
         </section>

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { moderateContent } from '@/lib/firebase/functions';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
+import { Icon } from '@/components/ui/Icon';
 
 interface ModeratorBarProps {
   targetKind: 'thread' | 'post';
@@ -56,48 +57,48 @@ export function ModeratorBar({
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#e9f1e2] border-2 border-[#aecf9c] rounded-xl p-4 mb-6"
+      className="mb-6 rounded-input border border-primary-fixed/40 bg-primary-fixed/15 p-4"
     >
-      <div className="flex items-center gap-2 mb-3">
-        <svg className="w-5 h-5 text-[#006400]" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <span className="font-bold text-[#002a00]">Moderator Actions</span>
+      <div className="mb-3 flex items-center gap-2">
+        <Icon name="shield_person" className="text-[20px] text-deep-green" filled />
+        <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-secondary-fixed">Moderator Actions</span>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {/* Hide/Unhide */}
         <button
+          type="button"
           onClick={() => handleAction(isHidden ? 'unhide' : 'hide')}
           disabled={loading}
-          className="px-3 py-2 bg-white border border-[#7fb56a] text-[#004f00] rounded-lg text-sm font-medium hover:bg-[#d3e6c8] transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-input border border-secondary-container bg-surface-container-lowest px-3 py-2 text-sm font-medium text-on-secondary-fixed transition-all hover:bg-secondary-container/40 disabled:opacity-50"
         >
-          {isHidden ? '👁️ Unhide' : '🚫 Hide'}
+          <Icon name={isHidden ? 'visibility' : 'visibility_off'} className="text-[18px]" />
+          {isHidden ? 'Unhide' : 'Hide'}
         </button>
 
         {/* Lock/Unlock (threads only) */}
         {targetKind === 'thread' && (
           <button
+            type="button"
             onClick={() => handleAction(isLocked ? 'unlock' : 'lock')}
             disabled={loading}
-            className="px-3 py-2 bg-white border border-[#7fb56a] text-[#004f00] rounded-lg text-sm font-medium hover:bg-[#d3e6c8] transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-input border border-secondary-container bg-surface-container-lowest px-3 py-2 text-sm font-medium text-on-secondary-fixed transition-all hover:bg-secondary-container/40 disabled:opacity-50"
           >
-            {isLocked ? '🔓 Unlock' : '🔒 Lock'}
+            <Icon name={isLocked ? 'lock_open' : 'lock'} className="text-[18px]" />
+            {isLocked ? 'Unlock' : 'Lock'}
           </button>
         )}
 
         {/* Pin/Unpin (threads only) */}
         {targetKind === 'thread' && (
           <button
+            type="button"
             onClick={() => handleAction(isPinned ? 'unpin' : 'pin')}
             disabled={loading}
-            className="px-3 py-2 bg-white border border-[#7fb56a] text-[#004f00] rounded-lg text-sm font-medium hover:bg-[#d3e6c8] transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-input border border-secondary-container bg-surface-container-lowest px-3 py-2 text-sm font-medium text-on-secondary-fixed transition-all hover:bg-secondary-container/40 disabled:opacity-50"
           >
-            {isPinned ? '📍 Unpin' : '📌 Pin'}
+            <Icon name="push_pin" className="text-[18px]" filled={isPinned} />
+            {isPinned ? 'Unpin' : 'Pin'}
           </button>
         )}
       </div>

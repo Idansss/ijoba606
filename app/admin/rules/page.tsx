@@ -8,12 +8,13 @@ import { useToastStore } from '@/lib/store/toast';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { PayeRules, CalcInputs, CalcOutputs } from '@/lib/types';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { payeRulesSchema, PayeRulesFormData } from '@/lib/validation/schemas';
 import { computeTax, DEFAULT_PAYE_RULES, formatCurrency } from '@/lib/utils/calculator';
 import { AdminBreadcrumb } from '@/components/admin/AdminBreadcrumb';
 import { ArrowLeft } from 'lucide-react';
+import { Select } from '@/components/ui/Select';
 
 export default function AdminRulesPage() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function AdminRulesPage() {
     handleSubmit,
     reset,
     watch,
+    control,
     formState: { errors },
   } = useForm<PayeRulesFormData>({
     resolver: zodResolver(payeRulesSchema),
@@ -158,7 +160,7 @@ export default function AdminRulesPage() {
           <div className="flex items-center gap-4 mb-4">
             <Link
               href="/admin"
-              className="flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
+              className="flex items-center gap-2 text-[#404a3b] hover:text-[#006400] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -167,7 +169,7 @@ export default function AdminRulesPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             PAYE Rules Configuration
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#404a3b]">
             Configure tax brackets, reliefs, and personal allowance rules
           </p>
         </div>
@@ -177,47 +179,47 @@ export default function AdminRulesPage() {
           <div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Basic Info */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Basic Information</h3>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7]">
+                <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Basic Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                       Tax Year
                     </label>
                     <input
                       type="number"
                       {...register('year', { valueAsNumber: true })}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
                     {errors.year && (
                       <p className="text-red-500 text-sm mt-1">{errors.year.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                       Currency
                     </label>
                     <input
                       type="text"
                       {...register('currency')}
                       disabled
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl bg-gray-100"
+                      className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl bg-[#efefe2]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Reliefs */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Reliefs & Deductions</h3>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7]">
+                <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Reliefs & Deductions</h3>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       {...register('reliefs.pensionIsDeductible')}
-                      className="w-5 h-5 text-[#006400] border-gray-300 rounded focus:ring-[#0b7a3b]"
+                      className="w-5 h-5 text-[#006400] border-[#bfcab7] rounded focus:ring-[#0b7a3b]"
                     />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-[#404a3b]">
                       Pension is deductible
                     </span>
                   </label>
@@ -225,48 +227,48 @@ export default function AdminRulesPage() {
                     <input
                       type="checkbox"
                       {...register('reliefs.nhfIsDeductible')}
-                      className="w-5 h-5 text-[#006400] border-gray-300 rounded focus:ring-[#0b7a3b]"
+                      className="w-5 h-5 text-[#006400] border-[#bfcab7] rounded focus:ring-[#0b7a3b]"
                     />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-[#404a3b]">
                       NHF is deductible
                     </span>
                   </label>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                       Life Assurance Cap (optional)
                     </label>
                     <input
                       type="number"
                       {...register('reliefs.lifeAssuranceCap', { valueAsNumber: true })}
                       placeholder="Leave blank for no cap"
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Tax Brackets */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Tax Brackets</h3>
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7]">
+                <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Tax Brackets</h3>
+                <p className="text-sm text-[#404a3b] mb-4">
                   Define progressive tax rates. For the last bracket, use 9999999999 for &quot;Infinity&quot;
                 </p>
                 <div className="space-y-3">
                   {[0, 1, 2, 3, 4, 5].map((idx) => (
                     <div key={idx} className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs text-gray-600 mb-1">
+                        <label className="block text-xs text-[#404a3b] mb-1">
                           Up to (₦)
                         </label>
                         <input
                           type="number"
                           {...register(`brackets.${idx}.upTo`, { valueAsNumber: true })}
                           placeholder="e.g., 300000"
-                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
+                          className="w-full px-3 py-2 border-2 border-[#bfcab7] rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-gray-600 mb-1">
+                        <label className="block text-xs text-[#404a3b] mb-1">
                           Rate (decimal)
                         </label>
                         <input
@@ -274,7 +276,7 @@ export default function AdminRulesPage() {
                           step="0.01"
                           {...register(`brackets.${idx}.rate`, { valueAsNumber: true })}
                           placeholder="e.g., 0.07"
-                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
+                          className="w-full px-3 py-2 border-2 border-[#bfcab7] rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                         />
                       </div>
                     </div>
@@ -283,32 +285,40 @@ export default function AdminRulesPage() {
               </div>
 
               {/* Personal Allowance */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Personal Allowance</h3>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7]">
+                <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Personal Allowance</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                       Type
                     </label>
-                    <select
-                      {...register('personalAllowance.type')}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
-                    >
-                      <option value="fixed">Fixed Amount</option>
-                      <option value="percentOfGross">Percent of Gross</option>
-                      <option value="hybrid">Hybrid (Higher of % or fixed)</option>
-                    </select>
+                    <Controller
+                      control={control}
+                      name="personalAllowance.type"
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          options={[
+                            { value: 'fixed', label: 'Fixed Amount' },
+                            { value: 'percentOfGross', label: 'Percent of Gross' },
+                            { value: 'hybrid', label: 'Hybrid (Higher of % or fixed)' },
+                          ]}
+                        />
+                      )}
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#404a3b] mb-2">
                       Value
                     </label>
                     <input
                       type="number"
                       {...register('personalAllowance.value', { valueAsNumber: true })}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-[#707a6a] mt-1">
                       For fixed: NGN amount. For percent: decimal (e.g., 0.2 = 20%)
                     </p>
                   </div>
@@ -316,12 +326,12 @@ export default function AdminRulesPage() {
               </div>
 
               {/* Notes */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Disclaimer Notes</h3>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7]">
+                <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Disclaimer Notes</h3>
                 <textarea
                   {...register('notes')}
                   rows={3}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-[#bfcab7] rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                 />
               </div>
 
@@ -337,15 +347,15 @@ export default function AdminRulesPage() {
 
           {/* Test Calculator */}
           <div className="space-y-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200 sticky top-4">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Test Calculator</h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#e3e3d7] sticky top-4">
+              <h3 className="text-xl font-bold text-[#1a1c15] mb-4">Test Calculator</h3>
+              <p className="text-sm text-[#404a3b] mb-4">
                 Test your rules with sample inputs
               </p>
 
               <div className="space-y-3 mb-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#404a3b] mb-1">
                     Monthly Basic Salary (₦)
                   </label>
                   <input
@@ -354,11 +364,11 @@ export default function AdminRulesPage() {
                     onChange={(e) =>
                       setTestInputs({ ...testInputs, basic: Number(e.target.value) })
                     }
-                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 border-2 border-[#bfcab7] rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#404a3b] mb-1">
                     Pension % (e.g., 8)
                   </label>
                   <input
@@ -367,7 +377,7 @@ export default function AdminRulesPage() {
                     onChange={(e) =>
                       setTestInputs({ ...testInputs, pensionPct: Number(e.target.value) })
                     }
-                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 border-2 border-[#bfcab7] rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -381,22 +391,22 @@ export default function AdminRulesPage() {
               </button>
 
               {testResults && (
-                <div className="space-y-3 pt-4 border-t-2 border-gray-200">
+                <div className="space-y-3 pt-4 border-t-2 border-[#e3e3d7]">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Annual Tax:</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="text-[#404a3b]">Annual Tax:</span>
+                    <span className="font-bold text-[#1a1c15]">
                       {formatCurrency(testResults.annualTax)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Monthly Tax:</span>
+                    <span className="text-[#404a3b]">Monthly Tax:</span>
                     <span className="font-bold text-[#006400]">
                       {formatCurrency(testResults.monthlyTax)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Effective Rate:</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="text-[#404a3b]">Effective Rate:</span>
+                    <span className="font-bold text-[#1a1c15]">
                       {(testResults.effectiveRate * 100).toFixed(2)}%
                     </span>
                   </div>

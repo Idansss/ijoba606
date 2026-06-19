@@ -14,6 +14,7 @@ import { SubscribeButton } from '@/components/forum/SubscribeButton';
 import { ModeratorBar } from '@/components/forum/ModeratorBar';
 import { MarkdownEditor } from '@/components/forum/MarkdownEditor';
 import { ConsultantCTA } from '@/components/consultants/ConsultantCTA';
+import { Icon } from '@/components/ui/Icon';
 import { useAuthStore } from '@/lib/store/auth';
 import { useToastStore } from '@/lib/store/toast';
 import { createPost } from '@/lib/firebase/functions';
@@ -136,9 +137,9 @@ export default function ThreadDetailPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
+      <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
+        <div className="py-12 text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-deep-green"></div>
         </div>
       </div>
     );
@@ -157,20 +158,14 @@ export default function ThreadDetailPage() {
   const isOwner = user?.uid === thread.uid;
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
+      <div className="mx-auto max-w-5xl">
         {/* Back Button */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-2 text-[#006400] hover:text-[#004f00] mb-6 font-semibold"
+          className="mb-6 inline-flex items-center gap-2 font-semibold text-deep-green transition hover:text-forest-green"
         >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Icon name="arrow_back" className="text-[20px]" />
           Back to Forum
         </Link>
 
@@ -188,23 +183,23 @@ export default function ThreadDetailPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8"
+          className="mb-8 rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm sm:p-8"
         >
           {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             {thread.isPinned && (
-              <span className="px-3 py-1 bg-[#d3e6c8] text-[#004f00] text-sm font-semibold rounded-full">
-                📌 Pinned
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary-fixed/30 px-3 py-1 text-sm font-semibold text-on-secondary-fixed">
+                <Icon name="push_pin" className="text-[16px]" filled /> Pinned
               </span>
             )}
             {thread.isLocked && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded-full">
-                🔒 Locked
+              <span className="inline-flex items-center gap-1 rounded-full bg-error-container px-3 py-1 text-sm font-semibold text-on-error-container">
+                <Icon name="lock" className="text-[16px]" filled /> Locked
               </span>
             )}
             {thread.acceptedPostId && (
-              <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
-                ✓ Solved
+              <span className="inline-flex items-center gap-1 rounded-full bg-secondary-container/60 px-3 py-1 text-sm font-semibold text-secondary">
+                <Icon name="check_circle" className="text-[16px]" filled /> Solved
               </span>
             )}
           </div>
@@ -219,28 +214,28 @@ export default function ThreadDetailPage() {
             />
 
             {/* Content */}
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              <h1 className="mb-4 font-display-lg-mobile text-display-lg-mobile text-deep-green">
                 {thread.title}
               </h1>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="mb-4 flex flex-wrap gap-2">
                 {thread.tags.map((tag) => (
                   <TagChip key={tag} tag={tag} />
                 ))}
               </div>
 
               {/* Meta */}
-              <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
+              <div className="mb-6 flex items-center gap-4 text-sm text-on-surface-variant">
                 <span>Posted {timeAgo}</span>
                 <span>•</span>
                 <span>{thread.replyCount} replies</span>
               </div>
 
               {/* Body */}
-              <div className="prose prose-sm max-w-none mb-6">
+              <div className="prose prose-sm mb-6 max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
                   {thread.bodyMD}
                 </ReactMarkdown>
@@ -256,7 +251,7 @@ export default function ThreadDetailPage() {
 
         {/* Replies */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="mb-6 font-headline-md text-headline-md text-deep-green">
             {posts.length} {posts.length === 1 ? 'Reply' : 'Replies'}
           </h2>
           <div className="space-y-4">
@@ -280,8 +275,8 @@ export default function ThreadDetailPage() {
 
         {/* Reply Form */}
         {firebaseUser && !thread.isLocked ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-lowest/90 p-6 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] backdrop-blur-sm">
+            <h3 className="mb-4 font-headline-md text-headline-md text-deep-green">
               Post a Reply
             </h3>
             <MarkdownEditor
@@ -295,24 +290,25 @@ export default function ThreadDetailPage() {
               <button
                 onClick={handleReply}
                 disabled={submittingReply || replyBody.length < 10}
-                className="px-8 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-full bg-gradient-to-r from-deep-green to-royal-gold px-8 py-3 font-label-sm text-label-sm font-bold text-on-primary shadow-md transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {submittingReply ? 'Posting...' : 'Post Reply'}
               </button>
             </div>
           </div>
         ) : thread.isLocked ? (
-          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-800 font-semibold">
-              🔒 This thread is locked. No new replies can be posted.
+          <div className="rounded-bento border border-error/30 bg-error-container/40 p-6 text-center">
+            <p className="flex items-center justify-center gap-2 font-semibold text-on-error-container">
+              <Icon name="lock" className="text-[20px]" filled />
+              This thread is locked. No new replies can be posted.
             </p>
           </div>
         ) : (
-          <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-6 text-center">
-            <p className="text-gray-600 mb-4">Sign in to reply to this thread</p>
+          <div className="rounded-bento border border-deep-green/5 bg-surface-container-low p-6 text-center shadow-[0px_10px_30px_rgba(0,50,0,0.05)]">
+            <p className="mb-4 text-on-surface-variant">Sign in to reply to this thread</p>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 bg-[#006400] text-white rounded-xl font-semibold hover:bg-[#004f00] transition-all"
+              className="rounded-full bg-deep-green px-6 py-3 font-label-sm text-label-sm font-semibold text-on-primary transition-all hover:bg-forest-green"
             >
               Sign In
             </button>

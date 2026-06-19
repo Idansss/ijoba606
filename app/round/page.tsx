@@ -92,7 +92,7 @@ export default function RoundPage() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -110,17 +110,17 @@ export default function RoundPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.25 }}
-            className="mt-8 rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-[0_35px_110px_rgba(15,23,42,0.12)]"
+            className="mt-8 rounded-bento border border-deep-green/10 bg-surface-container-lowest p-8 shadow-[0px_20px_40px_rgba(0,100,0,0.08)] md:p-12"
           >
             {isMultiSelect && (
-              <span className="inline-flex items-center rounded-full border border-[#aecf9c] px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#006400]">
+              <span className="inline-flex items-center rounded-full border border-primary-fixed/50 bg-primary-fixed/20 px-3 py-1 font-label-sm text-xs font-semibold uppercase tracking-wider text-forest-green">
                 Multi select
               </span>
             )}
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+            <h2 className="mt-4 text-2xl font-bold leading-tight text-ink-black md:text-3xl">
               {currentQuestion.prompt}
             </h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 font-body-md text-sm text-on-surface-variant">
               {currentQuestion.topic}
             </p>
 
@@ -143,9 +143,9 @@ export default function RoundPage() {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-2xl border border-[#c7ecd6] bg-[#e6f3ec] p-4"
+                className="mt-6 rounded-input border border-secondary-container bg-primary-fixed/15 p-4"
               >
-                <p className="text-sm text-[#002d15]">
+                <p className="text-sm text-on-secondary-fixed">
                   {currentQuestion.explanation}
                 </p>
               </motion.div>
@@ -156,19 +156,19 @@ export default function RoundPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={selectedOptions.length === 0}
-                  className="w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-full bg-deep-green px-6 py-4 font-label-sm text-base font-semibold text-on-primary shadow-md transition hover:bg-forest-green disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Submit answer
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  className="w-full rounded-full bg-gradient-to-r from-emerald-500 to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl"
+                  className="w-full rounded-full bg-forest-green px-6 py-4 font-label-sm text-base font-semibold text-on-primary shadow-md transition hover:bg-deep-green"
                 >
                   {isLastQuestion ? 'View results' : 'Next question'}
                 </button>
               )}
-              <p className="mt-3 text-center text-xs text-slate-400">
+              <p className="mt-3 text-center text-xs text-on-surface-variant/70">
                 {isMultiSelect
                   ? 'Multiple answers may be correct.'
                   : 'Only one answer is correct.'}

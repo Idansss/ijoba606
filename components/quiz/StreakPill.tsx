@@ -13,7 +13,7 @@ export function StreakPill({ streakCount, bestStreak }: StreakPillProps) {
   const getGradient = () => {
     if (streakCount >= 7) return 'from-[#c59f00] via-rose-500 to-pink-500';
     if (streakCount >= 3) return 'from-[#d7b01f] via-[#d7b01f] to-pink-400';
-    return 'from-slate-400 via-slate-500 to-slate-600';
+    return 'from-[#707a6a] via-[#707a6a] to-[#404a3b]';
   };
 
   return (
@@ -39,11 +39,11 @@ export function StreakPill({ streakCount, bestStreak }: StreakPillProps) {
       </motion.div>
 
       {bestStreak > streakCount && (
-        <div className="rounded-2xl border border-slate-100 bg-white/80 px-5 py-4 shadow-sm">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
+        <div className="rounded-2xl border border-[#efefe2] bg-white/80 px-5 py-4 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.4em] text-[#707a6a]">
             Best streak
           </p>
-          <p className="text-xl font-semibold text-slate-800">{bestStreak}</p>
+          <p className="text-xl font-semibold text-[#1a1c15]">{bestStreak}</p>
         </div>
       )}
     </div>
