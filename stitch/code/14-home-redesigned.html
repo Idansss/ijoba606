@@ -1,0 +1,248 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IJOBA 606 - Tax literacy made simple</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#002200",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "surface-bright": "#fafaed",
+                        "surface-container": "#efefe2",
+                        "deep-green": "#006400",
+                        "tertiary-container": "#cea711",
+                        "surface-container-high": "#e9e9dc",
+                        "forest-green": "#0B7A3B",
+                        "surface-variant": "#e3e3d7",
+                        "on-tertiary-fixed": "#231b00",
+                        "primary": "#004900",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#006400",
+                        "inverse-surface": "#2f3129",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#404a3b",
+                        "on-secondary-container": "#007436",
+                        "on-secondary": "#ffffff",
+                        "ink-black": "#0A0A0A",
+                        "on-background": "#1a1c15",
+                        "on-primary-container": "#86df72",
+                        "surface-container-highest": "#e3e3d7",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1a1c15",
+                        "secondary-fixed": "#96f8aa",
+                        "royal-gold": "#C59F00",
+                        "background": "#fafaed",
+                        "on-primary-fixed-variant": "#005300",
+                        "primary-fixed-dim": "#82db6f",
+                        "cream-canvas": "#F5F5E8",
+                        "tertiary": "#735c00",
+                        "surface-tint": "#126e0c",
+                        "secondary-fixed-dim": "#7adb90",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#005225",
+                        "surface-dim": "#dbdbce",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#9df888",
+                        "tertiary-fixed": "#ffe085",
+                        "secondary": "#006d33",
+                        "outline-variant": "#bfcab7",
+                        "tertiary-fixed-dim": "#ebc233",
+                        "on-secondary-fixed": "#00210b",
+                        "outline": "#707a6a",
+                        "on-tertiary-container": "#4e3e00",
+                        "secondary-container": "#96f8aa",
+                        "inverse-on-surface": "#f1f1e5",
+                        "error": "#ba1a1a",
+                        "surface": "#fafaed",
+                        "inverse-primary": "#82db6f",
+                        "surface-container-low": "#f4f4e7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "display-lg-mobile": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "figure-md": ["JetBrains Mono"],
+                        "headline-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "figure-xl": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "figure-md": ["16px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "figure-xl": ["32px", { "lineHeight": "1", "letterSpacing": "-0.04em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.cream-canvas');
+            color: theme('colors.on-surface');
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, theme('colors.deep-green') 0%, theme('colors.forest-green') 50%, theme('colors.royal-gold') 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md text-on-surface">
+<!-- TopNavBar -->
+<nav class="bg-surface/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm border-b-0"><div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20 gap-4"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-on-primary"><span class="material-symbols-outlined">auto_awesome</span></div><div class="flex flex-col"><span class="font-display-lg text-deep-green tracking-tighter leading-none" style="font-size: 1.5rem;">IJOBA 606</span><span class="text-[10px] uppercase tracking-widest text-on-surface-variant/70 font-bold">Learn · Play · Calculate</span></div></div><div class="hidden lg:flex items-center bg-surface-container-low rounded-full px-2 py-1.5 border border-outline-variant/20 shadow-sm"><a class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-deep-green to-royal-gold text-on-primary font-label-sm text-label-sm transition-all" href="#"><span class="material-symbols-outlined text-sm">school</span><span class="">Learn &amp; Play</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">forum</span><span class="">Forum</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">calculate</span><span class="">Calculator</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">leaderboard</span><span class="">Leaderboard</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">menu_book</span><span class="">Glossary</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">groups</span><span class="">Consultants</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">newspaper</span><span class="">News</span></a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary font-label-sm text-label-sm transition-colors" href="#"><span class="material-symbols-outlined text-sm">mail</span><span class="">Contact</span></a></div><div class="flex items-center gap-3"><button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined">dark_mode</span></button><div class="relative"><button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined">notifications</span></button><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface"></span></div><div class="flex items-center gap-2 bg-surface-container-high pl-1 pr-3 py-1 rounded-full cursor-pointer hover:bg-surface-container-highest transition-colors"><div class="w-8 h-8 bg-royal-gold rounded-full flex items-center justify-center text-ink-black font-bold text-xs">JD</div><div class="flex flex-col"><span class="text-[10px] font-bold leading-none">1,250 pts</span></div></div></div></div></nav>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center pt-24 pb-12 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- Hero Section -->
+<section class="text-center w-full mb-20 max-w-5xl mx-auto flex flex-col items-center">
+<h1 class="font-display-lg-mobile md:text-[80px] text-5xl font-bold tracking-tighter mb-4 leading-none gradient-text pb-2">
+                IJOBA 606
+</h1>
+<h2 class="font-headline-md text-headline-md text-deep-green mb-6 tracking-tight">
+    Learn PAYE • Play Quizzes • Join Forum • Calculate Tax
+</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto flex items-center justify-center gap-2">
+<span class="">Empowering your financial journey in Nigeria</span>
+<span class="material-symbols-outlined text-2xl">public</span>
+</p>
+</section>
+<!-- Progress Panel (Signed-in State) -->
+<section class="w-full max-w-4xl mx-auto mb-16">
+<div class="glass-panel rounded-[24px] p-6 border border-royal-gold/20 flex flex-col sm:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-royal-gold rounded-full flex items-center justify-center text-ink-black font-bold text-lg">JD</div>
+<div>
+<h3 class="font-headline-md text-base text-deep-green leading-tight">Your Progress</h3>
+<p class="text-sm text-on-surface-variant">Keep up the good work, John!</p>
+</div>
+</div>
+<div class="flex gap-6 flex-wrap justify-center sm:justify-end">
+<div class="flex flex-col items-center">
+<span class="font-figure-xl text-2xl text-deep-green">1,250</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Total Points</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30 hidden sm:block"></div>
+<div class="flex flex-col items-center">
+<span class="font-figure-xl text-2xl text-royal-gold flex items-center gap-1"><span class="material-symbols-outlined text-lg" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 400;">local_fire_department</span> 3</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Current Streak</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30 hidden sm:block"></div>
+<div class="flex flex-col items-center">
+<span class="font-figure-xl text-2xl text-deep-green">14</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Best Streak</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30 hidden sm:block"></div>
+<div class="flex flex-col items-center">
+<span class="font-figure-xl text-2xl text-deep-green">5</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Badges</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Pillars -->
+<section class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-24">
+<!-- Card 1: Learn & Play -->
+<a class="glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:shadow-xl transition-all border border-transparent hover:border-royal-gold/30 bg-surface-container-lowest overflow-hidden relative" href="#">
+<div class="absolute top-0 right-0 w-32 h-32 bg-royal-gold/10 rounded-bl-[100px] -z-10 group-hover:scale-110 transition-transform"></div>
+<div class="flex justify-between items-start mb-16">
+<div class="bg-royal-gold/20 p-4 rounded-2xl text-royal-gold group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 400;">school</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-royal-gold group-hover:translate-x-1 transition-all">arrow_forward</span>
+</div>
+<div>
+<h3 class="font-headline-md text-2xl text-deep-green mb-2">Learn &amp; Play</h3>
+<p class="text-on-surface-variant font-body-md text-body-md mb-6">Interactive quizzes, earn badges, build streaks, and climb the leaderboard.</p>
+<div class="flex gap-2">
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-semibold text-deep-green">Quiz</span>
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-semibold text-deep-green">Badges</span>
+<span class="bg-surface-container px-3 py-1 rounded-full text-xs font-semibold text-deep-green">Leaderboard</span>
+</div>
+</div>
+</a>
+<!-- Card 2: Calculator -->
+<a class="glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:shadow-xl transition-all border border-transparent hover:border-deep-green/30 bg-surface-container-low overflow-hidden relative" href="#">
+<div class="absolute bottom-0 right-0 w-40 h-40 bg-deep-green/5 rounded-tl-[100px] -z-10 group-hover:scale-110 transition-transform"></div>
+<div class="flex justify-between items-start mb-16">
+<div class="bg-deep-green/10 p-4 rounded-2xl text-deep-green group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 400;">calculate</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-deep-green group-hover:translate-x-1 transition-all">arrow_forward</span>
+</div>
+<div>
+<h3 class="font-headline-md text-2xl text-deep-green mb-2">Tax Calculator</h3>
+<p class="text-on-surface-variant font-body-md text-body-md mb-4">Figure your tax in 60 seconds.</p>
+<p class="text-[10px] text-on-surface-variant/70 italic">*Educational purposes only.</p>
+</div>
+</a>
+<!-- Card 3: Forum -->
+<a class="glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:shadow-xl transition-all border border-transparent hover:border-forest-green/30 bg-surface-container-lowest overflow-hidden relative" href="#">
+<div class="absolute top-1/2 right-0 w-24 h-24 bg-forest-green/10 rounded-l-full -translate-y-1/2 -z-10 group-hover:scale-125 transition-transform"></div>
+<div class="flex justify-between items-start mb-16">
+<div class="bg-forest-green/10 p-4 rounded-2xl text-forest-green group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 400;">chat_bubble</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-forest-green group-hover:translate-x-1 transition-all">arrow_forward</span>
+</div>
+<div>
+<h3 class="font-headline-md text-2xl text-deep-green mb-2">Community Forum</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Ask questions, share experiences, and get peer advice on navigating financial hurdles.</p>
+</div>
+</a>
+<!-- Card 4: Consultant -->
+<a class="rounded-[32px] p-8 flex flex-col justify-between group hover:shadow-xl transition-all bg-gradient-to-br from-deep-green to-forest-green text-on-primary overflow-hidden relative border border-deep-green" href="#">
+<div class="absolute -bottom-10 -right-10 w-48 h-48 bg-royal-gold/20 rounded-full blur-2xl -z-10 group-hover:scale-110 transition-transform"></div>
+<div class="flex justify-between items-start mb-16">
+<div class="bg-white/20 p-4 rounded-2xl text-on-primary group-hover:scale-110 transition-transform backdrop-blur-sm">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 400;">work</span>
+</div>
+<span class="material-symbols-outlined text-on-primary/70 group-hover:text-on-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-2">
+<h3 class="font-headline-md text-2xl text-on-primary">Talk to a Consultant</h3>
+<span class="bg-royal-gold text-ink-black px-2 py-0.5 rounded text-[10px] font-bold uppercase">Pro</span>
+</div>
+<p class="text-on-primary/80 font-body-md text-body-md">Connect with verified tax experts and financial planners to secure your prosperity.</p>
+</div>
+</a>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest full-width py-12 mt-auto border-t border-outline-variant/10"><div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"><div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12"><div class="md:col-span-5"><div class="font-headline-md text-headline-md text-deep-green mb-4">IJOBA 606</div><p class="text-body-lg text-on-surface-variant mb-8 max-w-sm">Make PAYE literacy hard to ignore.</p><div class="flex flex-wrap gap-4"><button class="bg-deep-green text-on-primary px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-forest-green transition-colors">Start a round</button><button class="border-2 border-primary text-primary px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-primary hover:text-on-primary transition-colors">Estimate PAYE</button></div></div><div class="md:col-span-2 md:col-start-7"><h4 class="font-label-sm text-label-sm text-deep-green mb-6 uppercase tracking-widest">Product</h4><ul class="space-y-4 font-body-md text-on-surface-variant"><li class=""><a class="hover:text-primary transition-colors" href="#">Quiz</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Calculator</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Glossary</a></li></ul></div><div class="md:col-span-2"><h4 class="font-label-sm text-label-sm text-deep-green mb-6 uppercase tracking-widest">Community</h4><ul class="space-y-4 font-body-md text-on-surface-variant"><li class=""><a class="hover:text-primary transition-colors" href="#">Forum</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Leaderboard</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Consultants</a></li></ul></div><div class="md:col-span-2"><h4 class="font-label-sm text-label-sm text-deep-green mb-6 uppercase tracking-widest">Legal</h4><ul class="space-y-4 font-body-md text-on-surface-variant"><li class=""><a class="hover:text-primary transition-colors" href="#">Privacy</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Terms</a></li><li class=""><a class="hover:text-primary transition-colors" href="#">Compliance</a></li></ul></div></div><div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"><p class="text-on-surface-variant/60 text-xs">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p><div class="flex flex-col items-end gap-1"><p class="text-on-surface-variant/60 text-xs italic">Educational purposes only — not legal or tax advice.</p><a class="text-on-surface-variant/60 text-xs hover:text-primary transition-colors underline" href="#">Privacy Policy</a></div></div></div></footer>
+
+
+</body></html>

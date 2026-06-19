@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -u
+cd "$(dirname "$0")"
+
+# Format: slug<TAB>html_url<TAB>img_url   (use "-" for missing html)
+download() {
+  local slug="$1" html="$2" img="$3"
+  if [ "$html" != "-" ]; then
+    echo ">> code/$slug.html"
+    curl -fsSL "$html" -o "code/$slug.html" || echo "   FAILED html: $slug"
+  fi
+  if [ "$img" != "-" ]; then
+    echo ">> images/$slug.png"
+    curl -fsSL "$img" -o "images/$slug.png" || echo "   FAILED img: $slug"
+  fi
+}
+
+download "16-active-quiz-round" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzA2NjQxMjIwNDRmNTkxNjM2MWNjNjBkEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLvxn_FcVUjgP57xgKKusfj8Bq5MMF2ukz12AyD2FlkMwEzPEHUhjEDr4Cg7qnckGOs7jurjGnglyHhfGk25yx76iVYpasUtU3WyzyoVTqr-lTNzVAv5OgHvodOb36qhUsN2q_atckGfDKZ2rTByr3xijIHbROKZaCtV5OBL9BuDm-wDJnYS0xQqieAOYDF4K4YFPCMtCFDbUt7Nk4hvbO-f-MzZXrOv00MiYee81plo3k-RahGjHkpjbg"
+
+download "13-forum-feed" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzEwZjNjY2EwNDRmNWJiMjAxMzI4OWE1EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtKB33vy2uJ1lUZXL6dgQQwxKdVy4aCTXLsnX_X1ASbnwfg5kNe6A-4PUGPW_vB8PVE6N7TBiLso6Jrs8NjI5p2mq7YyXB7f9f4OLDz5q4rp6Lm_n6JqvEpdKfQ8ZDYMLK9E6H3BrJfyzD-nvwPZvmACojZAU0uuIWSJ4jmwF050XLo9VVQFIg-Cg30CGVJ8Plh3XhU_XbkkVEZJwKXM_fNSDs_v8TGf-sDGB3mISC7e5KwqBKdxPRTAo4"
+
+download "03-quiz-lobby-new" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzE2NjA3NWMwOTY4OTE2MTIwMDFjZGU0EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLvUwu8o9WO-iSlYHeSPEgQ7PLFrLqcxhdnf6FSqmg-RpoUpkUiovdht5olyCcMrJU0A9UikwiB4AhGQNjA3j3I7e0MHaGp__W_wFoNj0EDCaMZnccLYsEdDFa_Z2zswmk8C7i6PWzpO6fWlHrsudwWdgH71z5aDtvBwaVy_isvzOFd2o2nW4X-nNPSeYxnf-0xIj0qAaAwMIL1RQwFgFLH3vNHSqvdh3Mvi7g8sQc1eNHF0YN7oiL-sqII"
+
+download "04-dashboard" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzBiZjc4MjcwM2ZiMzg5NGMzMWY2Y2IwEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLsN73bWckGMcBo2dc0eG8Mh3qU3psaqqGMSjXtkyhuOYfRS93J-43hhiri1fIK3Hk48XGaGCR3MD8ayPtPh8GOCvnfCtdCO3k-_3cSDYV-lxmmSTyNbjt_cHVwm1DPYKhzwSD5ReNzm_osaEq9wyXEjii0yCuZXtzArsyS35i9wL7RAALRnUlKe2u3KnLoVpYGIHYwB9qhwEXIHbBpauN11Z-9ldd3tjAwh6xoQxrlOItRrKUrN30C9yo4"
+
+download "05-calculator-full" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzAyMjM3MjQwNDRmNTkxNjM2MWNjNjBkEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLuUx1Kdrk7saRG5jFZEl9PNHzxti7MpUZBt_4knAYO3IYl3UOIPHLs3cEqwJJLjrV221yFOcO6mGOS4cdKkC3ucBJ7TjJmuMKqyHYvZIzWWwyo1s5XSOxFfQNjD8ktICt2mkjd-C_6omCGFvlRoBsxp_QXlbygR0jWO9t3CDCkACNm8mdzDo7pFvOpedpd9bB2BtW61eeubOEE921J4r0zSItU2SH2o1smxmRDzLnXcyJJsy9PFwGwJ3iw"
+
+download "06-tax-quiz" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGU2MjJjMzkwMjJkN2UwM2I3MzExNzQzEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtPdJFdu4XqfRwBp68JZRlV3O0N9vDyN0lza9QdGBET2NCZiifKXgGQjdrk-qw6Fm_BYdpS9XhS4nBv_tgcEgrKF8_yO0g76gdDoAAQYRXh1IpDcX6TUm3v1e_KpUAonEGWDwp9AkRRXAt9pXCO4CRIkKY0PrQ5z1LuOCKvTkYYJzddc0jVbZC_QzETTTFsVI9bwNdUyib7Tr6uj2MSwcNYgPC3m_odtGbh3DuYZzvBWQptT0bzOq4Ebys"
+
+download "07-tax-calculator" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGVlOTg3ZWYwODhlODEyODEwMjYyNzg4EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLt64K9CmQaYtekJq-jO8KJIQl3bm_zn7jLn7DLKl5honcjPHG16OFaotajgEZOrXA3Y837ABHWFps8q3BU1TTN-XFmEpo5SKxyFtb5hcQnIHFjWvEMfCI5gM-FF97oCUXExpZKL-ZZnljwyNFA5YT3zalLb5uuB0p_aMG8gE33vvugc5kMywQsFCtgo2Eg4oHsdZ47sGw7OyXe4axAjv40Z67n7H6b6QaF4JOLGOZlcf6vPr_tbKd8TWck"
+
+download "08-forum-community" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGQ0Yjg1MDYwOTY4OTE2MTIwMDFjZGU0EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLsTTjvPM6QSP2sUFB309u5O-IOTJdsWGK3cbRtfASEPSZrim1C4bs6dEF2VpctfSILbW-Iuxnku4XjwVDckjKUW00EBOYxB393BycPOzpLWFxMV5pN-PuK-b8EEjhHX31YtgH2Cibien9MZVex8Kid7drc6pv1_68o7ncySzHZcrPQGWJlYBSGV2WniNDFrsmfh43T27M8Fd0_ZHmWeyCx2MhbCyYxwV1_6I34vpYz7uOhV0syVWDFB3lA"
+
+download "15-consultants-landing" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNmZjODdjYjkwOTY4YTA4ZDdkMTIyOTcxEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLvvoJaQqrS1lci4XLLW3o87agPlPd33GdzM72hmQ7XHSGXhAi6aAta-JVw26__Yy_6_7EzlDmFqB7bE6HY4kslkFsUkp61OQl752uAfujxxtnd413ku-t2aMJaDLA-eEUdG3Q8okmXREPcxjeqvAel1SUicINm2H1oi3u6IsEmBLt77JK8sJvhRQhhEg1JI8cTuHdjepWoj3YmJEIM6IODLE4Js3ge6EBembh8QGFawDmbhm6gZqfJOmdM"
+
+download "10-browse-consultants" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGRlMmRjOWEwOTY4YTA4ZDdkMTIyOTcxEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtXmxeZXr7N1nlf5LkwLKowL-I2_teEJE08hM6WKI9SNjtHtIfRyoW6usSN3UQCfUrFWnxApEPLFZvJrg835YDfywoe-ffcD29r2B9rL5y01JaEQG8A-7gOWTDC3b9WvYkWrlJMIjDcWv75qBqoU_uADBDRs86H8G4U52bsFvI0EUosAIrNmqw6IumphAF5Dkx0u0XEefJsBIOSPigo_buLk5tlFo6yEVSR3RCy203daLKmanZwdD_2qWE"
+
+download "11-image" "-" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLuqcvhWFGzJR0HkMiubdIHuZ0y3frRW7dUGyOll3CiqUUj-PBEs1xthKe38ZnhuTcJyasgclSNfZ5HHLGrZAOliHhi6Dg2dxhWEtAh9zPX5EK94KGj_k8Hkx4NM3igXuh-_dM8nAMLUMCN5hMmtFfJ6cQdQfK0PnUBw7jB_WnG5dgaDCp3r2x4k4p1OzMGcBADG5XIL3NBBUmoxkD22foesQ9MlFbNrL3qU_bn9gk-vR0PWyhWWu-r6iqrPfaL6eEwfGvUOJ72IRA"
+
+download "12-customer-dashboard" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNzFmNzRjYmMwNDRmNTkxNjM2MWNjNjBkEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtf_MZJYfcHo66pVAadtWe7Q29jtk_-vf2b9o5vbzzbxL8CeAm69PfFg9PGUnWrQZyhGQpnD-oz4aPTE2e7OE1JfPlQeVAJYbXufqMiHe-1eWT38SRywStUl4kvqrQ0RDMNVVW2oC6gGPsuXqYk9X3Wcm6tomwgEDoSevJmJqMOEH9TcOsutvYr_9ihNoUa6ii5MLQe14VkLKyAk8ELibh0iOMtUWI-b34rrYL-8cd9l00loMOU9eZ_kCk"
+
+download "02-quiz-lobby" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGViYjRkNjYwMWE2MDExZjQxMDU3Yzg0EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLuupm5VfLmQ9G6ACZitVTQi-vLL585qPGPHaLBqpUgxQVTYSZFwhFQkd7FrWjMpUaloEGIl51SRLW2Nl6WY0VbS527z7KZ3ulS872J8_wcafolvZE8M4luRNH-72k_4VGjWIHaor-RgcUukPlRxcIe_zZ6eCIq7s73obuwN_XswkhFfw2cd_XAIIZXCaPdNt-jHXdYzMxicKefx1Dw6zeeJZMGQswWvy-EwFea9iEW3rVv6-NpElcYmY4Y"
+
+download "14-home-redesigned" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNmY2NzZhYzEwMjNiY2E5YjVlMzc5OGU1EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtRToUBhvJuvNS5NV0eq77kZpBe5hUYQ5X9RqIZk_BSHlnKzWm8cFTxU8ZQ9fuHR5g8i-NCx04V1yh9PadXs1aR7G2nLWWTUDmR7mZNJgbLDSaHmP_SQ2wUBzhUvOe1G4och6tlL8Lw_3-Qa4yh35SKa03DZzdvwnKFoU1khKHBYm6DtzwyVZw1yR-rTzhnCnVx1TeguxDtF9IXzqv6u-5LKHyCmQFGP4_dFGdiInoV5_NHTNuAb2S9gyM"
+
+download "09-home" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGRhMTQxNDUwMWE2MGUyMjllMDI1ZTMwEgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLuJVTehI2IcKtJuZrpGBcIErFXnRG2iQqA0hcY-LmjmLia8cRaJbuC_jZcCHM99i8QjKtntuxYgWfckcNlqSrI56pqkjcrMYNSS0VgbPr9YY4Br6LUyBqLFSuMyaRoUscPisDiAMG_a4cdehQvfabVojbDee8yro08XIxlw-ksLV0j7IKJDUrfff2IrDWGnDk-lok6HPNgLhU4hH00l8EVbyU_EfPW3ZxLuf4J_zNDPmhXNaSB93IfPig"
+
+download "16-marketplace" \
+  "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1NDlhNGQxNjc1MTYwMjNiZWZiZmRmMTNlZGM0EgsSBxDBsPCmhg0YAZIBIwoKcHJvamVjdF9pZBIVQhM1ODY0MTc0MDQyMDI3Mjc5MDM0&filename=&opi=89354086" \
+  "https://lh3.googleusercontent.com/aida/AP1WRLtZAvI4lXqIiwD6fH6GuoXPCt-2CBb5HXJuE4sxqa3RBaWdz0bFuJNqtSYIVdtwfblCP1YvMLLvyDWID4p_nDIqNkKy6cX2VRz7ljwDOb3IfUJ9Rn6cPtbLsNt0x40qNYKpRlqZ05-KBgBCCjkSHdODRMtkV0OBs1eT5NNqDeOZknSQx4nzTXh-wkaCGbITxN9z_mREvkFKEE-a01qY91w_ShY7qAK8g4iKZPijkwZxx6F1MA1TOPR07c"
+
+echo "ALL DONE"

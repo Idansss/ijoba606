@@ -1,0 +1,448 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IJOBA 606 - Quiz Lobby</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#002200",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "surface-bright": "#fafaed",
+                      "surface-container": "#efefe2",
+                      "deep-green": "#006400",
+                      "tertiary-container": "#cea711",
+                      "surface-container-high": "#e9e9dc",
+                      "forest-green": "#0B7A3B",
+                      "surface-variant": "#e3e3d7",
+                      "on-tertiary-fixed": "#231b00",
+                      "primary": "#004900",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#006400",
+                      "inverse-surface": "#2f3129",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#404a3b",
+                      "on-secondary-container": "#007436",
+                      "on-secondary": "#ffffff",
+                      "ink-black": "#0A0A0A",
+                      "on-background": "#1a1c15",
+                      "on-primary-container": "#86df72",
+                      "surface-container-highest": "#e3e3d7",
+                      "on-error": "#ffffff",
+                      "on-surface": "#1a1c15",
+                      "secondary-fixed": "#96f8aa",
+                      "royal-gold": "#C59F00",
+                      "background": "#fafaed",
+                      "on-primary-fixed-variant": "#005300",
+                      "primary-fixed-dim": "#82db6f",
+                      "cream-canvas": "#F5F5E8",
+                      "tertiary": "#735c00",
+                      "surface-tint": "#126e0c",
+                      "secondary-fixed-dim": "#7adb90",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed-variant": "#005225",
+                      "surface-dim": "#dbdbce",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#9df888",
+                      "tertiary-fixed": "#ffe085",
+                      "secondary": "#006d33",
+                      "outline-variant": "#bfcab7",
+                      "tertiary-fixed-dim": "#ebc233",
+                      "on-secondary-fixed": "#00210b",
+                      "outline": "#707a6a",
+                      "on-tertiary-container": "#4e3e00",
+                      "secondary-container": "#96f8aa",
+                      "inverse-on-surface": "#f1f1e5",
+                      "error": "#ba1a1a",
+                      "surface": "#fafaed",
+                      "inverse-primary": "#82db6f",
+                      "surface-container-low": "#f4f4e7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "20px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "display-lg-mobile": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "figure-md": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "figure-xl": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "figure-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "figure-xl": [
+                              "32px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.cream-canvas');
+        }
+        .bento-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            border-radius: 32px;
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+            padding: 32px;
+        }
+        @media (min-width: 768px) {
+            .bento-card {
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm border-b-0"><div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-on-primary">
+                <span class="material-symbols-outlined">sparkles</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-display-lg text-deep-green dark:text-primary-fixed tracking-tighter text-xl font-bold leading-none">IJOBA 606</span>
+                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 font-bold">Learn · Play · Calculate</span>
+            </div>
+        </div>
+    </div>
+    <nav class="hidden lg:flex items-center bg-surface-container-high/50 backdrop-blur-md rounded-full px-2 py-1.5 gap-1 border border-outline-variant/20">
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-deep-green to-royal-gold text-on-primary font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-lg">school</span> Learn &amp; Play
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">forum</span> Forum
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">calculate</span> Calculator
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">leaderboard</span> Leaderboard
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">menu_book</span> Glossary
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">support_agent</span> Consultants
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">newspaper</span> News
+        </a>
+        <a href="#" class="flex items-center gap-2 px-4 py-1.5 rounded-full hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+            <span class="material-symbols-outlined text-lg">mail</span> Contact
+        </a>
+    </nav>
+    <div class="flex items-center gap-4">
+        <button class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+            <span class="material-symbols-outlined">dark_mode</span>
+        </button>
+        <div class="relative">
+            <button class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+        </div>
+        <div class="flex items-center gap-3 bg-surface-container-low pl-1 pr-4 py-1 rounded-full border border-outline-variant/10">
+            <div class="w-8 h-8 rounded-full bg-royal-gold text-on-primary flex items-center justify-center font-bold text-xs">CO</div>
+            <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-deep-green">12,450 PTS</span>
+            </div>
+        </div>
+    </div>
+</div></header>
+<main class="flex-grow px-margin-mobile md:px-margin-desktop py-12 max-w-container-max mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-deep-green mb-2">Quiz Lobby</h1>
+<p class="font-body-lg text-on-surface-variant max-w-2xl">Sharpen your financial acumen. Select a challenge, maintain your streak, and earn rewards as you master Nigerian tax laws and wealth management.</p>
+</div>
+<button class="bg-deep-green text-on-primary font-headline-md text-headline-md py-4 px-8 rounded-full shadow-lg hover:bg-primary hover:-translate-y-1 transition-all duration-300 flex items-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                Start Daily Round
+            </button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Main Content: Level Selection (Spans 8 cols) -->
+<div class="md:col-span-8 flex flex-col gap-gutter">
+<div class="bento-card">
+<h2 class="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">map</span>
+                        Your Journey
+                    </h2>
+<div class="flex flex-col gap-4">
+<!-- Level 1 (Completed) -->
+<div class="bg-surface-container-low rounded-2xl p-6 flex items-center justify-between border-l-4 border-deep-green opacity-80 cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-tint/10 flex items-center justify-center text-deep-green">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface">Level 1: The Basics</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Fundamentals of personal finance.</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-figure-md text-figure-md text-deep-green block">100%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mastered</span>
+</div>
+</div>
+<!-- Level 2 (Active) -->
+<div class="bg-white rounded-2xl p-6 flex items-center justify-between border-l-4 border-royal-gold shadow-sm cursor-pointer hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-royal-gold/5 rounded-full -mr-16 -mt-16"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-12 h-12 rounded-full bg-royal-gold/10 flex items-center justify-center text-royal-gold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface">Level 2: Deductions &amp; Savings</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Optimize your returns.</p>
+<div class="w-48 h-2 bg-surface-variant rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-royal-gold w-3/5 rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="text-right relative z-10">
+<span class="font-figure-md text-figure-md text-royal-gold block">60%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">In Progress</span>
+</div>
+</div>
+<!-- Level 3 (Locked) -->
+<div class="bg-surface-container rounded-2xl p-6 flex items-center justify-between border-l-4 border-outline-variant opacity-50 grayscale cursor-not-allowed">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-outline-variant/20 flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface">Level 3: High Earners</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Advanced wealth strategies.</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">Locked</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Content: Stats & Leaderboard (Spans 4 cols) -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<!-- Streak & Badges -->
+<div class="bento-card bg-gradient-to-br from-white to-surface-bright">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-lg text-on-surface">Your Status</h3>
+<div class="flex items-center gap-1 bg-surface-container-high px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-royal-gold text-sm" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-figure-md text-sm text-on-surface font-bold">5 Days</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-wider">Recent Badges</p>
+<div class="flex gap-4">
+<div class="flex flex-col items-center gap-2 group cursor-help">
+<div class="w-14 h-14 rounded-full bg-surface-tint/10 flex items-center justify-center border-2 border-royal-gold/30 group-hover:border-royal-gold transition-colors">
+<span class="material-symbols-outlined text-royal-gold text-2xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<span class="font-label-sm text-xs text-on-surface text-center">Tax Ninja</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-help">
+<div class="w-14 h-14 rounded-full bg-surface-tint/10 flex items-center justify-center border-2 border-deep-green/30 group-hover:border-deep-green transition-colors">
+<span class="material-symbols-outlined text-deep-green text-2xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<span class="font-label-sm text-xs text-on-surface text-center">Saver</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-14 h-14 rounded-full bg-surface-variant flex items-center justify-center border border-dashed border-outline">
+<span class="material-symbols-outlined text-outline text-2xl">help_center</span>
+</div>
+<span class="font-label-sm text-xs text-on-surface-variant text-center">Next</span>
+</div>
+</div>
+</div>
+<!-- Leaderboard Preview -->
+<div class="bento-card">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-royal-gold" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+                            Top Players
+                        </h3>
+<a class="font-label-sm text-label-sm text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-figure-md text-figure-md text-royal-gold font-bold w-4 text-center">1</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar image showing a professional, modern profile picture of a young Nigerian professional against a bright, minimalist background. The lighting is soft and high-key, aligning with the premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzXvXfYKy4misrGh1oUB-tlpjkC4kKpxPIkwEEnLs_ud2JYnUcFZAEwMIVO5CaaGPFz6q1Ma1ky74zgHD9Nh5pX-wNu2XI2YxVtigE3XwjSUkJcdnYZF5Lc99FmqlfbmNXqBm58EI2aOqkXlTxoUlrwrlf8ts0-2UpXS6-FlCz072gg-Ztlqs9uUgGq2ixT6jOU72Pt25y8euJh41PC_o2a_OwljI6GDDrsbmwLJ8hLyr8EjubzQhW">
+</div>
+<span class="font-body-md text-sm font-semibold text-on-surface">Chidi O.</span>
+</div>
+<span class="font-figure-md text-sm text-deep-green">12,450 pts</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-figure-md text-figure-md text-outline font-bold w-4 text-center">2</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar image showing a professional, modern profile picture of a young Nigerian professional against a bright, minimalist background. The lighting is soft and high-key, aligning with the premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnoSlLNS7j914khu5n2SRfaLvEnjEJg-G0CfLRE0g7vDFZNGGWy3134-LoeWV5y0pqFD7p_25ijka1OW8M83K4Di4Rr_JJ6VvgeQ07tieRNLk8vGVjC9lD6qrKQI2oFHbLQTZPXsj-u78S8XaiJs936yZWo10W81_6nBSAreZA0bt00T39vwOAgXI5vcPkOkMAzWg2ExY6PV7M_SB9jCewybLnu4SbNvxVnkI2iOIZiT3MclNJ39HQ">
+</div>
+<span class="font-body-md text-sm font-semibold text-on-surface">Amina Y.</span>
+</div>
+<span class="font-figure-md text-sm text-deep-green">11,200 pts</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-figure-md text-figure-md text-tertiary font-bold w-4 text-center">3</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar image showing a professional, modern profile picture of a young Nigerian professional against a bright, minimalist background. The lighting is soft and high-key, aligning with the premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDraXig1NkfDlsfxebwSanISdXI7kIqQKBDohRzRG5PZ4r_vFViF_ojKH_kjU27LavqpDCYeIJBidsZg9VFVXtMt65cSooXvmadrcB-15CAnxfcTwrKH-uMJdwIt2-wz3fMXaYyJ0vBQBzy70k4aWgIlwG9AQ_W-gct86s0e0qidolv-wOuF7PRyRDX6_Z2lXviqMPg1VQf_HOzANfo86kISPeBE8KTiuwRN9a6IihrIEE31WbHUi0X">
+</div>
+<span class="font-body-md text-sm font-semibold text-on-surface">Tunde B.</span>
+</div>
+<span class="font-figure-md text-sm text-deep-green">10,800 pts</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface full-width py-12 mt-auto border-t border-outline-variant/10"><div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12">
+        <div class="md:col-span-4">
+            <div class="font-display-lg text-deep-green dark:text-primary-fixed text-2xl font-bold mb-4">IJOBA 606</div>
+            <p class="font-body-lg text-on-surface-variant mb-8">Make PAYE literacy hard to ignore.</p>
+            <div class="flex flex-wrap gap-4">
+                <button class="bg-deep-green text-on-primary px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-primary transition-colors">Start a round</button>
+                <button class="border border-deep-green text-deep-green px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-deep-green/5 transition-colors">Estimate PAYE</button>
+            </div>
+        </div>
+        <div class="md:col-span-2 md:col-start-7">
+            <h4 class="font-label-sm text-label-sm text-on-surface font-bold mb-6 uppercase tracking-widest">Product</h4>
+            <ul class="flex flex-col gap-4">
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Learn &amp; Play</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Calculator</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Glossary</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Consultants</a></li>
+            </ul>
+        </div>
+        <div class="md:col-span-2">
+            <h4 class="font-label-sm text-label-sm text-on-surface font-bold mb-6 uppercase tracking-widest">Community</h4>
+            <ul class="flex flex-col gap-4">
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Forum</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Leaderboard</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">News</a></li>
+            </ul>
+        </div>
+        <div class="md:col-span-2">
+            <h4 class="font-label-sm text-label-sm text-on-surface font-bold mb-6 uppercase tracking-widest">Legal</h4>
+            <ul class="flex flex-col gap-4">
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Privacy Policy</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Terms of Service</a></li>
+                <li class=""><a href="#" class="text-on-surface-variant hover:text-primary transition-colors text-sm">Tax Disclaimer</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-on-surface-variant opacity-60">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p>
+        <p class="text-xs text-on-surface-variant opacity-60 italic">Educational purposes only — not legal or tax advice.</p>
+    </div>
+</div></footer>
+
+
+</body></html>

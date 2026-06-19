@@ -1,0 +1,495 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IJOBA 606 - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#002200",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-secondary-container": "#007436",
+                        "primary-fixed": "#9df888",
+                        "tertiary-fixed": "#ffe085",
+                        "primary": "#004900",
+                        "secondary-fixed": "#96f8aa",
+                        "background": "#fafaed",
+                        "primary-fixed-dim": "#82db6f",
+                        "surface": "#fafaed",
+                        "secondary-fixed-dim": "#7adb90",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ebc233",
+                        "on-surface-variant": "#404a3b",
+                        "royal-gold": "#C59F00",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c15",
+                        "surface-container": "#efefe2",
+                        "deep-green": "#006400",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dbdbce",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#126e0c",
+                        "outline": "#707a6a",
+                        "tertiary-container": "#cea711",
+                        "on-tertiary-container": "#4e3e00",
+                        "primary-container": "#006400",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fafaed",
+                        "inverse-primary": "#82db6f",
+                        "on-surface": "#1a1c15",
+                        "on-primary-fixed-variant": "#005300",
+                        "on-primary-container": "#86df72",
+                        "outline-variant": "#bfcab7",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f1f1e5",
+                        "surface-container-high": "#e9e9dc",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-secondary-fixed-variant": "#005225",
+                        "surface-container-low": "#f4f4e7",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#96f8aa",
+                        "surface-container-highest": "#e3e3d7",
+                        "tertiary": "#735c00",
+                        "secondary": "#006d33",
+                        "surface-variant": "#e3e3d7",
+                        "inverse-surface": "#2f3129",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#00210b",
+                        "ink-black": "#0A0A0A",
+                        "forest-green": "#0B7A3B",
+                        "cream-canvas": "#F5F5E8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "display-lg-mobile": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "figure-md": ["JetBrains Mono"],
+                        "label-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "figure-xl": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "figure-md": ["16px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "figure-xl": ["32px", {"lineHeight": "1", "letterSpacing": "-0.04em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap');
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-400-normal.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-600-normal.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-700-normal.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        body {
+            background-color: theme('colors.cream-canvas');
+            color: theme('colors.on-background');
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+        }
+
+        .bento-card {
+            border-radius: 24px; /* Requested specific radius */
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+            background-color: theme('colors.surface-container-lowest');
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            padding: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bento-card-glass {
+            border-radius: 24px;
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            padding: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex flex-col">
+<!-- TopNavBar (JSON Generated) -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm transition-all duration-300"><div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div class="flex flex-col">
+<span class="font-display-lg text-deep-green dark:text-primary-fixed tracking-tighter leading-none">IJOBA 606</span>
+<span class="text-[10px] uppercase tracking-widest text-royal-gold font-bold">Learn · Play · Calculate</span>
+</div>
+</div>
+<nav class="hidden lg:flex items-center bg-surface-container-low rounded-full p-1 border border-outline-variant/20">
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full bg-gradient-to-r from-deep-green to-royal-gold text-white font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">school</span>
+<span class="">Learn &amp; Play</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">chat_bubble</span>
+<span class="">Forum</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">calculate</span>
+<span class="">Calculator</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">trophy</span>
+<span class="">Leaderboard</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">book</span>
+<span class="">Glossary</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">work</span>
+<span class="">Consultants</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">article</span>
+<span class="">News</span>
+</a>
+<a class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined text-sm">mail</span>
+<span class="">Contact</span>
+</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full">3</span>
+</div>
+<div class="flex items-center space-x-2 bg-surface-container-high rounded-full pl-1 pr-4 py-1">
+<div class="w-8 h-8 rounded-full bg-deep-green text-white flex items-center justify-center font-bold text-sm">CO</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-on-surface-variant leading-none">1,240 pts</span>
+</div>
+</div>
+</div>
+</div></header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-12 space-y-gutter">
+<!-- Welcome Header -->
+<section class="mb-8 flex flex-col md:flex-row md:items-end justify-between space-y-4 md:space-y-0">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-deep-green">Dashboard</h1>
+<p class="font-headline-md text-headline-md text-on-surface-variant mt-2">Manage your services and payments.</p>
+</div>
+<div class="flex items-center space-x-3">
+<button class="bg-surface-container-high text-deep-green px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">download</span>
+<span class="">Export Statement</span>
+</button>
+<button class="bg-deep-green text-white px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-primary transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="">New Request</span>
+</button>
+</div>
+</section>
+<!-- 4 Stat Tiles -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter mb-gutter">
+<div class="bento-card p-6 flex flex-col">
+<div class="w-10 h-10 rounded-full bg-forest-green/10 flex items-center justify-center mb-4 text-deep-green">
+<span class="material-symbols-outlined">work</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Total Services</p>
+<h2 class="font-figure-xl text-figure-xl text-deep-green">12</h2>
+</div>
+<div class="bento-card p-6 flex flex-col">
+<div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center mb-4 text-error">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Pending Payment</p>
+<h2 class="font-figure-xl text-figure-xl text-deep-green">3</h2>
+</div>
+<div class="bento-card p-6 flex flex-col">
+<div class="w-10 h-10 rounded-full bg-royal-gold/10 flex items-center justify-center mb-4 text-royal-gold">
+<span class="material-symbols-outlined">hourglass_empty</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">In Progress</p>
+<h2 class="font-figure-xl text-figure-xl text-deep-green">5</h2>
+</div>
+<div class="bento-card p-6 flex flex-col">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-secondary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Completed</p>
+<h2 class="font-figure-xl text-figure-xl text-deep-green">4</h2>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Invoices (Spans 8 cols) -->
+<div class="lg:col-span-8 flex flex-col space-y-gutter">
+<div class="bento-card flex-grow flex flex-col p-0">
+<!-- Header & Filters -->
+<div class="p-6 border-b border-outline-variant/20 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+<h3 class="font-headline-md text-headline-md text-deep-green">Recent Invoices</h3>
+<div class="flex overflow-x-auto scrollbar-hide space-x-2">
+<button class="px-4 py-1.5 rounded-full bg-deep-green text-white font-label-sm text-label-sm whitespace-nowrap">All</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors font-label-sm text-label-sm whitespace-nowrap">Pending Payment</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors font-label-sm text-label-sm whitespace-nowrap">In Progress</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors font-label-sm text-label-sm whitespace-nowrap">Completed</button>
+</div>
+</div>
+<!-- Invoice List -->
+<div class="flex-grow flex flex-col divide-y divide-outline-variant/10">
+<!-- Row 1: Pending Payment -->
+<div class="p-6 hover:bg-surface-container-lowest/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0 text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-md text-base text-deep-green">Annual Tax Filing 2024</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Personal income tax assessment</p>
+<div class="flex items-center space-x-3 mt-2 font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">
+<span class="">INV-2024-089</span>
+<span class="">•</span>
+<span class="">Created: Oct 12</span>
+<span class="">•</span>
+<span class="text-error font-bold">Due: Oct 30</span>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center w-full md:w-auto gap-4 md:gap-2">
+<div class="font-figure-xl text-2xl text-ink-black tracking-tight">₦150,000.00</div>
+<button class="bg-error text-white px-6 py-2 rounded-full font-label-sm text-label-sm hover:bg-error/90 transition-colors whitespace-nowrap">Pay Now</button>
+</div>
+</div>
+<!-- Row 2: In Progress -->
+<div class="p-6 hover:bg-surface-container-lowest/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-royal-gold/10 flex items-center justify-center flex-shrink-0 text-royal-gold">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-md text-base text-deep-green">Business Incorporation</h4>
+<p class="font-body-md text-sm text-on-surface-variant">CAC registration and setup</p>
+<div class="flex items-center space-x-3 mt-2 font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">
+<span class="">INV-2024-085</span>
+<span class="">•</span>
+<span class="">Created: Oct 05</span>
+<span class="">•</span>
+<span class="">Paid</span>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center w-full md:w-auto gap-4 md:gap-2">
+<div class="font-figure-xl text-2xl text-ink-black tracking-tight">₦85,000.00</div>
+<button class="border border-outline-variant text-on-surface-variant px-6 py-2 rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<!-- Row 3: Completed -->
+<div class="p-6 hover:bg-surface-container-lowest/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0 text-secondary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-md text-base text-deep-green">Q3 VAT Remittance</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Value Added Tax filing for Q3</p>
+<div class="flex items-center space-x-3 mt-2 font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">
+<span class="">INV-2024-072</span>
+<span class="">•</span>
+<span class="">Created: Sep 28</span>
+<span class="">•</span>
+<span class="">Paid</span>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center w-full md:w-auto gap-4 md:gap-2">
+<div class="font-figure-xl text-2xl text-ink-black tracking-tight">₦320,500.00</div>
+<button class="border border-outline-variant text-on-surface-variant px-6 py-2 rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+</div>
+<!-- View All Footer -->
+<div class="p-4 border-t border-outline-variant/20 text-center">
+<button class="text-forest-green font-label-sm text-label-sm hover:text-deep-green transition-colors flex items-center justify-center w-full">
+                    View all invoices <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Data Viz (Spans 4 cols) -->
+<div class="lg:col-span-4 flex flex-col space-y-gutter">
+<div class="bento-card bg-deep-green text-white flex flex-col relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-royal-gold/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+<div class="relative z-10 mb-6">
+<h3 class="font-headline-md text-headline-md text-white">Spending Overview</h3>
+<p class="font-body-md text-sm text-surface-container-highest mt-1">Year-to-date expenses</p>
+</div>
+<div class="relative z-10 mb-8">
+<div class="font-figure-xl text-4xl text-royal-gold mb-1 tracking-tight">₦1,245,500<span class="text-xl text-royal-gold/70">.00</span></div>
+<div class="flex items-center space-x-2 text-sm">
+<span class="flex items-center text-primary-fixed bg-primary-fixed/20 px-2 py-0.5 rounded-full font-label-sm text-[10px]">
+<span class="material-symbols-outlined text-[12px] mr-1">trending_up</span> +12.5%
+                    </span>
+<span class="text-surface-container-highest opacity-80">vs last year</span>
+</div>
+</div>
+<!-- CSS Bar Chart -->
+<div class="relative z-10 flex-grow flex flex-col justify-end h-40 mt-auto">
+<div class="flex items-end justify-between h-32 gap-2">
+<div class="w-full flex flex-col items-center gap-2">
+<div class="w-full bg-white/20 rounded-t-sm h-[40%] hover:bg-royal-gold transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-ink-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">₦120k</div>
+</div>
+<span class="text-[10px] text-surface-container-highest font-figure-md">Q1</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2">
+<div class="w-full bg-white/20 rounded-t-sm h-[65%] hover:bg-royal-gold transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-ink-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">₦195k</div>
+</div>
+<span class="text-[10px] text-surface-container-highest font-figure-md">Q2</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2">
+<div class="w-full bg-white/20 rounded-t-sm h-[85%] hover:bg-royal-gold transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-ink-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">₦255k</div>
+</div>
+<span class="text-[10px] text-surface-container-highest font-figure-md">Q3</span>
+</div>
+<div class="w-full flex flex-col items-center gap-2">
+<div class="w-full bg-royal-gold rounded-t-sm h-[100%] cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-ink-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">₦300k</div>
+</div>
+<span class="text-[10px] text-royal-gold font-figure-md">Q4</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bento-card flex flex-col">
+<h3 class="font-headline-md text-base text-deep-green mb-4">Service Distribution</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="text-on-surface-variant font-body-md">Tax Filing</span>
+<span class="font-figure-md text-deep-green">45%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-deep-green h-2 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="text-on-surface-variant font-body-md">Incorporation</span>
+<span class="font-figure-md text-forest-green">30%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-forest-green h-2 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="text-on-surface-variant font-body-md">Consulting</span>
+<span class="font-figure-md text-royal-gold">25%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-royal-gold h-2 rounded-full" style="width: 25%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (JSON Generated) -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant/10 full-width py-12 mt-auto"><div class="px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12">
+<div class="md:col-span-4 space-y-6">
+<div class="font-headline-md text-headline-md text-deep-green dark:text-primary-fixed">IJOBA 606</div>
+<p class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant">Make PAYE literacy hard to ignore.</p>
+<div class="flex flex-col space-y-2">
+<button class="bg-deep-green text-white px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-primary transition-colors w-full md:w-auto">Start a round</button>
+<button class="border border-deep-green text-deep-green px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-forest-green/5 transition-colors w-full md:w-auto">Estimate PAYE</button>
+</div>
+</div>
+<div class="md:col-span-2 flex flex-col space-y-4">
+<h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Product</h4>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Calculator</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Glossary</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Consultants</a>
+</div>
+<div class="md:col-span-2 flex flex-col space-y-4">
+<h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Community</h4>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Forum</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Leaderboard</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">News</a>
+</div>
+<div class="md:col-span-2 flex flex-col space-y-4">
+<h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Legal</h4>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-royal-gold transition-colors" href="#">Cookies</a>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+<p class="text-sm text-on-surface-variant opacity-60">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p>
+<p class="text-sm text-on-surface-variant opacity-60 italic">Educational purposes only — not legal or tax advice.</p>
+</div>
+</div></footer>
+
+
+</body></html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Marketplace - IJOBA 606</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#002200",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface-bright": "#fafaed",
+                    "surface-container": "#efefe2",
+                    "deep-green": "#006400",
+                    "tertiary-container": "#cea711",
+                    "surface-container-high": "#e9e9dc",
+                    "forest-green": "#0B7A3B",
+                    "surface-variant": "#e3e3d7",
+                    "on-tertiary-fixed": "#231b00",
+                    "primary": "#004900",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#006400",
+                    "inverse-surface": "#2f3129",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#404a3b",
+                    "on-secondary-container": "#007436",
+                    "on-secondary": "#ffffff",
+                    "ink-black": "#0A0A0A",
+                    "on-background": "#1a1c15",
+                    "on-primary-container": "#86df72",
+                    "surface-container-highest": "#e3e3d7",
+                    "on-error": "#ffffff",
+                    "on-surface": "#1a1c15",
+                    "secondary-fixed": "#96f8aa",
+                    "royal-gold": "#C59F00",
+                    "background": "#fafaed",
+                    "on-primary-fixed-variant": "#005300",
+                    "primary-fixed-dim": "#82db6f",
+                    "cream-canvas": "#F5F5E8",
+                    "tertiary": "#735c00",
+                    "surface-tint": "#126e0c",
+                    "secondary-fixed-dim": "#7adb90",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#005225",
+                    "surface-dim": "#dbdbce",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#9df888",
+                    "tertiary-fixed": "#ffe085",
+                    "secondary": "#006d33",
+                    "outline-variant": "#bfcab7",
+                    "tertiary-fixed-dim": "#ebc233",
+                    "on-secondary-fixed": "#00210b",
+                    "outline": "#707a6a",
+                    "on-tertiary-container": "#4e3e00",
+                    "secondary-container": "#96f8aa",
+                    "inverse-on-surface": "#f1f1e5",
+                    "error": "#ba1a1a",
+                    "surface": "#fafaed",
+                    "inverse-primary": "#82db6f",
+                    "surface-container-low": "#f4f4e7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "unit": "8px",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "20px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Geist"],
+                    "display-lg-mobile": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "figure-md": ["JetBrains Mono"],
+                    "headline-md": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "figure-xl": ["JetBrains Mono"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                    "display-lg-mobile": ["36px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                    "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "figure-md": ["16px", { "lineHeight": "1", "fontWeight": "500" }],
+                    "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "figure-xl": ["32px", { "lineHeight": "1", "letterSpacing": "-0.04em", "fontWeight": "600" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+        }
+        .bento-radius { border-radius: 32px; } /* Explicitly satisfying the 32px radius rule while bridging config gaps */
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm"><div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-on-primary">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sparkles</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="font-display-lg text-deep-green tracking-tighter leading-none">IJOBA 606</span>
+      <span class="text-[10px] uppercase tracking-widest text-royal-gold font-bold">Learn · Play · Calculate</span>
+    </div>
+  </div>
+  <nav class="hidden md:flex items-center bg-surface-container-low rounded-full px-2 py-1.5 gap-1 border border-outline-variant/30">
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">school</span> Learn &amp; Play
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">forum</span> Forum
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">calculate</span> Calculator
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">leaderboard</span> Leaderboard
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">menu_book</span> Glossary
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-deep-green to-royal-gold text-on-primary shadow-sm font-bold font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">person_search</span> Consultants
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">newspaper</span> News
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all font-label-sm text-label-sm" href="#">
+      <span class="material-symbols-outlined text-[18px]">mail</span> Contact
+    </a>
+  </nav>
+  <div class="flex items-center gap-4">
+    <button class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant">
+      <span class="material-symbols-outlined">dark_mode</span>
+    </button>
+    <div class="relative">
+      <button class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+    </div>
+    <div class="flex items-center gap-3 bg-surface-container-high pl-1 pr-4 py-1 rounded-full border border-outline-variant/30">
+      <div class="w-8 h-8 rounded-full bg-deep-green text-on-primary flex items-center justify-center font-bold text-xs">JD</div>
+      <div class="flex flex-col">
+        <span class="text-[10px] font-bold text-deep-green leading-none">1,250 pts</span>
+      </div>
+    </div>
+  </div>
+</div></header>
+<!-- Main Content: Bento Grid Layout -->
+<main class="flex-grow px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full py-12">
+<div class="grid grid-cols-4 md:grid-cols-12 gap-gutter">
+<!-- Sidebar: Filters & Wallet (Left Column) -->
+<aside class="col-span-4 md:col-span-3 flex flex-col gap-unit-3 sticky top-28 h-fit">
+<!-- Wallet Widget -->
+<div class="glass-panel bento-radius p-8 bg-surface-container-lowest">
+<div class="flex items-center gap-2 mb-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-deep-green" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<h2 class="font-headline-md text-headline-md text-deep-green">Wallet</h2>
+</div>
+<div class="font-figure-xl text-figure-xl text-ink-black mb-2">₦ 450,000.00</div>
+<p class="font-label-sm text-label-sm text-outline mb-6">Available Balance</p>
+<button class="w-full bg-surface-container-high hover:bg-surface-variant text-deep-green font-label-sm text-label-sm py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span> Top Up
+                    </button>
+</div>
+<!-- Filters -->
+<div class="glass-panel bento-radius p-8 bg-surface-container-lowest mt-6">
+<div class="flex items-center gap-2 mb-6 text-on-surface-variant border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-deep-green" data-icon="tune">tune</span>
+<h2 class="font-headline-md text-headline-md text-deep-green">Filters</h2>
+</div>
+<div class="mb-6">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-wider">Service Type</h3>
+<ul class="flex flex-col gap-3">
+<li class="flex items-center gap-3">
+<input class="rounded text-deep-green focus:ring-deep-green border-outline-variant/50 w-5 h-5 bg-surface-bright" id="filter-filing" type="checkbox">
+<label class="font-body-md text-body-md text-on-surface cursor-pointer" for="filter-filing">Tax Filing</label>
+</li>
+<li class="flex items-center gap-3">
+<input checked="" class="rounded text-deep-green focus:ring-deep-green border-outline-variant/50 w-5 h-5 bg-surface-bright" id="filter-auditing" type="checkbox">
+<label class="font-body-md text-body-md text-on-surface cursor-pointer" for="filter-auditing">Auditing</label>
+</li>
+<li class="flex items-center gap-3">
+<input class="rounded text-deep-green focus:ring-deep-green border-outline-variant/50 w-5 h-5 bg-surface-bright" id="filter-planning" type="checkbox">
+<label class="font-body-md text-body-md text-on-surface cursor-pointer" for="filter-planning">Financial Planning</label>
+</li>
+</ul>
+</div>
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-wider">Price Range</h3>
+<div class="px-2">
+<input class="w-full h-2 bg-surface-variant rounded-full appearance-none cursor-pointer accent-deep-green" max="100" min="0" type="range" value="50">
+<div class="flex justify-between mt-2 font-figure-md text-figure-md text-outline text-sm">
+<span class="">₦10k</span>
+<span class="">₦500k+</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area: Search & Consultant Grid (Right Column) -->
+<div class="col-span-4 md:col-span-9 flex flex-col">
+<!-- Search Bar -->
+<div class="mb-8 relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full bg-surface-container-lowest glass-panel bento-radius py-4 pl-12 pr-4 text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-forest-green border-none shadow-sm transition-all" placeholder="Search verified consultants, agencies, or specialties..." type="text">
+</div>
+<!-- Active Filters Chips -->
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-sm text-label-sm flex items-center gap-2">
+                        Auditing
+                        <button class="hover:text-error transition-colors"><span class="material-symbols-outlined text-[14px]" data-icon="close">close</span></button>
+</span>
+<span class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-sm text-label-sm flex items-center gap-2">
+                        Top Rated
+                        <button class="hover:text-error transition-colors"><span class="material-symbols-outlined text-[14px]" data-icon="close">close</span></button>
+</span>
+</div>
+<!-- Consultant Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-panel bento-radius p-8 flex flex-col bg-surface-container-lowest hover:-translate-y-1 transition-transform duration-300">
+<div class="flex items-start gap-4 mb-6">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-surface-container shadow-sm" data-alt="A professional headshot of a confident Nigerian financial consultant wearing a tailored dark suit. The lighting is bright and modern, set against a soft cream background. The mood is trustworthy and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-xp2v2XTmKzWYfIwvbSKjWPzpiRTWwGiAia6IQEUZWGU9ZFhqhhdiISlkSHm7OV_u_lOZze2HBxdnZv0nXcnVLdsv40TrgXCuKXXKaBkhHfOQGj7odog0ryjfvaKAKsz2vJWKlCWkUhoJZsD8beiY3lWBJ32BLpydJWoJZoOTZFLCRnHL8fFL9RrfxewLxFAU9NS1x2moip6SjAzDGQ06jlYq1HiUCpwJiXzcln9K4s8eF19VK9dy">
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-md text-headline-md text-deep-green">Adebayo &amp; Co.</h3>
+<span class="bg-royal-gold text-ink-black px-2 py-1 rounded-md font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[12px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span> Pro
+                                    </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Corporate Tax &amp; Auditing</p>
+<div class="flex items-center gap-1 text-royal-gold font-figure-md text-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px] text-surface-dim" data-icon="star_half">star_half</span>
+<span class="text-outline ml-1 text-xs">(124)</span>
+</div>
+</div>
+</div>
+<div class="mb-6 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">FIRS Compliance</span>
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">VAT Returns</span>
+</div>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-deep-green text-on-primary font-label-sm text-label-sm py-3 rounded-xl hover:bg-forest-green transition-colors text-center">Chat Now</button>
+<button class="flex-1 border border-royal-gold text-royal-gold font-label-sm text-label-sm py-3 rounded-xl hover:bg-surface-container-low transition-colors text-center">View Profile</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel bento-radius p-8 flex flex-col bg-surface-container-lowest hover:-translate-y-1 transition-transform duration-300">
+<div class="flex items-start gap-4 mb-6">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-surface-container shadow-sm" data-alt="A portrait of an approachable, professional female accountant in a modern, well-lit office setting. She is wearing a smart blouse. The aesthetic is clean, warm, and high-trust, utilizing a soft color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEt8CyhhbkfGjCcXcVeQFHJxm3HxH32VCz7PWBuIIzD4kXNjC-n_o2DOg0fjmf8qUXGBQ6rmo5wwErAQY5lHFZ6juBbOOFAKAJyvRTj4F_90_QoHY1ul0F3grm3CaYzlHZeKxJR1WZ18Aen7JLUntIkMdMTjcRA0WgYHrDgrScbDYIlH4Juy8k2XlENJO_bRyUH_vw-K0DRXDt3aHHIY03QxNzSbgMNrr2oaMVNZZIU5dnig2rOOvJ">
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-md text-headline-md text-deep-green">Ngozi Okafor</h3>
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-1 rounded-md font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[12px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span> Verified
+                                    </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Personal Wealth Planning</p>
+<div class="flex items-center gap-1 text-royal-gold font-figure-md text-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-outline ml-1 text-xs">(89)</span>
+</div>
+</div>
+</div>
+<div class="mb-6 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">Investment</span>
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">Retirement</span>
+</div>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-deep-green text-on-primary font-label-sm text-label-sm py-3 rounded-xl hover:bg-forest-green transition-colors text-center">Chat Now</button>
+<button class="flex-1 border border-royal-gold text-royal-gold font-label-sm text-label-sm py-3 rounded-xl hover:bg-surface-container-low transition-colors text-center">View Profile</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel bento-radius p-8 flex flex-col bg-surface-container-lowest hover:-translate-y-1 transition-transform duration-300">
+<div class="flex items-start gap-4 mb-6">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-surface-container shadow-sm text-deep-green">
+<span class="material-symbols-outlined" data-icon="domain" style="font-size: 32px;">domain</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-md text-headline-md text-deep-green">Lagos FinTech Group</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">SME Financial Setup</p>
+<div class="flex items-center gap-1 text-royal-gold font-figure-md text-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="star_outline">star_outline</span>
+<span class="text-outline ml-1 text-xs">(42)</span>
+</div>
+</div>
+</div>
+<div class="mb-6 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">Startup Audits</span>
+<span class="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full text-xs font-medium">Licensing</span>
+</div>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-deep-green text-on-primary font-label-sm text-label-sm py-3 rounded-xl hover:bg-forest-green transition-colors text-center">Chat Now</button>
+<button class="flex-1 border border-royal-gold text-royal-gold font-label-sm text-label-sm py-3 rounded-xl hover:bg-surface-container-low transition-colors text-center">View Profile</button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center mt-12 gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-deep-green text-on-primary font-figure-md text-figure-md shadow-sm">1</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors font-figure-md text-figure-md">2</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors font-figure-md text-figure-md">3</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant/10 full-width py-12 mt-auto flat no shadows"><div class="max-w-container-max mx-auto px-margin-desktop">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12">
+    <div class="md:col-span-4 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="font-headline-md text-headline-md text-deep-green">IJOBA 606</span>
+        <p class="text-on-surface-variant font-body-md">Make PAYE literacy hard to ignore.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button class="bg-deep-green text-on-primary px-6 py-2.5 rounded-full font-label-sm text-label-sm hover:bg-forest-green transition-colors">Start a round</button>
+        <button class="border border-deep-green text-deep-green px-6 py-2.5 rounded-full font-label-sm text-label-sm hover:bg-surface-container-low transition-colors">Estimate PAYE</button>
+      </div>
+    </div>
+    <div class="md:col-span-2 md:col-start-7 flex flex-col gap-4">
+      <h4 class="font-bold text-deep-green uppercase tracking-widest text-[10px]">Product</h4>
+      <nav class="flex flex-col gap-2">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Learn &amp; Play</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Calculator</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Consultants</a>
+      </nav>
+    </div>
+    <div class="md:col-span-2 flex flex-col gap-4">
+      <h4 class="font-bold text-deep-green uppercase tracking-widest text-[10px]">Community</h4>
+      <nav class="flex flex-col gap-2">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Forum</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Leaderboard</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">News</a>
+      </nav>
+    </div>
+    <div class="md:col-span-2 flex flex-col gap-4">
+      <h4 class="font-bold text-deep-green uppercase tracking-widest text-[10px]">Legal</h4>
+      <nav class="flex flex-col gap-2">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Terms of Service</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Glossary</a>
+      </nav>
+    </div>
+  </div>
+  <div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+    <p class="text-xs text-outline">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p>
+    <p class="text-xs text-outline italic">Educational purposes only — not legal or tax advice.</p>
+  </div>
+</div></footer>
+
+
+</body></html>

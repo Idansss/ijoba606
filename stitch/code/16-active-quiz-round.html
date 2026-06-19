@@ -1,0 +1,325 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IJOBA 606 - Gamified Tax Quiz</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Subtle continuous pulse for interactive elements */
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(0.99); }
+        }
+        .animate-subtle-pulse {
+            animation: subtle-pulse 3s ease-in-out infinite;
+        }
+
+        /* Float animation for decorative elements */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-float-delayed {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed": "#002200",
+                      "on-tertiary-fixed": "#231b00",
+                      "on-secondary-container": "#007436",
+                      "primary-fixed": "#9df888",
+                      "tertiary-fixed": "#ffe085",
+                      "primary": "#004900",
+                      "secondary-fixed": "#96f8aa",
+                      "background": "#fafaed",
+                      "primary-fixed-dim": "#82db6f",
+                      "surface": "#fafaed",
+                      "secondary-fixed-dim": "#7adb90",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#ebc233",
+                      "on-surface-variant": "#404a3b",
+                      "royal-gold": "#C59F00",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1a1c15",
+                      "surface-container": "#efefe2",
+                      "deep-green": "#006400",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dbdbce",
+                      "on-error": "#ffffff",
+                      "surface-tint": "#126e0c",
+                      "outline": "#707a6a",
+                      "tertiary-container": "#cea711",
+                      "on-tertiary-container": "#4e3e00",
+                      "primary-container": "#006400",
+                      "error": "#ba1a1a",
+                      "surface-bright": "#fafaed",
+                      "inverse-primary": "#82db6f",
+                      "on-surface": "#1a1c15",
+                      "on-primary-fixed-variant": "#005300",
+                      "on-primary-container": "#86df72",
+                      "outline-variant": "#bfcab7",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#f1f1e5",
+                      "surface-container-high": "#e9e9dc",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-secondary-fixed-variant": "#005225",
+                      "surface-container-low": "#f4f4e7",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#96f8aa",
+                      "surface-container-highest": "#e3e3d7",
+                      "tertiary": "#735c00",
+                      "secondary": "#006d33",
+                      "surface-variant": "#e3e3d7",
+                      "inverse-surface": "#2f3129",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#00210b",
+                      "ink-black": "#0A0A0A",
+                      "forest-green": "#0B7A3B",
+                      "cream-canvas": "#F5F5E8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "bento": "32px",
+                      "input": "12px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "margin-mobile": "20px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "display-lg-mobile": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "figure-md": [
+                              "JetBrains Mono"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "figure-xl": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "figure-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "figure-xl": [
+                              "32px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+</head>
+<body class="bg-cream-canvas text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<!-- Top Navigation Anchor -->
+<nav class="docked full-width top-0 sticky z-50 bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-md shadow-sm"><div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20 md:px-margin-desktop px-margin-mobile"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-on-primary"><span class="material-symbols-outlined">auto_awesome</span></div><div class="flex flex-col"><a class="font-display-lg text-deep-green tracking-tighter text-[24px] font-bold leading-none" href="#">IJOBA 606</a><span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Learn · Play · Calculate</span></div></div><div class="hidden lg:flex items-center bg-surface-container-low rounded-full px-2 py-1.5 border border-outline-variant/30 gap-1"><a class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-forest-green to-royal-gold text-on-primary font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Learn &amp; Play</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Forum</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Calculator</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Leaderboard</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Glossary</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Consultants</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> News</a><a class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" href="#"><span class="material-symbols-outlined text-[18px]">help</span> Contact</a></div><div class="flex items-center gap-4"><button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">dark_mode</span></button><div class="relative"><button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface"></span></div><div class="flex items-center gap-3 bg-surface-container-low pl-1 pr-4 py-1 rounded-full border border-outline-variant/30"><div class="w-8 h-8 rounded-full bg-forest-green flex items-center justify-center text-on-primary font-bold text-xs">JD</div><div class="flex flex-col"><span class="text-[10px] font-bold text-royal-gold">2,450 pts</span></div></div><button class="lg:hidden p-2 text-deep-green"><span class="material-symbols-outlined">menu</span></button></div></div></nav>
+<!-- Main Canvas -->
+<main class="flex-grow flex items-center justify-center py-12 px-margin-mobile md:px-margin-desktop relative overflow-hidden">
+<!-- Decorative Ambient Background Elements -->
+<div class="absolute top-10 -left-20 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl animate-float pointer-events-none"></div>
+<div class="absolute bottom-10 -right-20 w-80 h-80 bg-tertiary-fixed/20 rounded-full blur-3xl animate-float-delayed pointer-events-none"></div>
+<!-- Bento Grid Layout Container -->
+<div class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter relative z-10">
+<!-- Gamification Sidebar / Intro Box (Desktop Left) -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<!-- Streak Card -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-bento p-8 border border-deep-green/5 shadow-[0px_10px_30px_rgba(0,50,0,0.05)] flex flex-col justify-center items-center text-center relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-royal-gold/10 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110 duration-500"></div>
+<div class="w-16 h-16 rounded-full bg-tertiary-fixed/20 flex items-center justify-center mb-4 text-royal-gold">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0; font-size: 32px;">local_fire_department</span>
+</div>
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Current Streak</h3>
+<div class="font-figure-xl text-figure-xl text-deep-green flex items-baseline gap-1">
+                        12 <span class="font-body-md text-body-md text-outline">Days</span>
+</div>
+<div class="mt-6 w-full flex justify-between items-center px-4 py-2 bg-surface-container-low rounded-full">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Points</span>
+<span class="font-figure-md text-figure-md text-royal-gold font-bold">2,450</span>
+</div>
+</div>
+<!-- Edutainment Snippet Card -->
+<div class="bg-surface-container-lowest/60 backdrop-blur-md rounded-bento p-8 border border-deep-green/5 shadow-sm hidden md:flex flex-col relative overflow-hidden">
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-primary-fixed/20 pointer-events-none" style="font-variation-settings: &quot;FILL&quot; 0;">lightbulb</span>
+<h4 class="font-headline-md text-headline-md text-deep-green mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-primary-fixed/20 pointer-events-none" style="font-variation-settings: &quot;FILL&quot; 0;">lightbulb</span> Did you know?
+                    </h4>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Understanding your PAYE threshold is the first step to optimizing your personal wealth in Nigeria. Small steps build lasting prosperity.
+                    </p>
+</div>
+</div>
+<!-- Central Quiz Interface -->
+<div class="md:col-span-8">
+<div class="bg-surface-container-lowest backdrop-blur-xl rounded-bento p-8 md:p-12 border border-deep-green/10 shadow-[0px_20px_40px_rgba(0,100,0,0.08)] flex flex-col h-full relative z-20">
+<!-- Progress Header -->
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-3">
+<div class="bg-surface-container-low px-3 py-1.5 rounded-full flex items-center gap-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary text-[18px]">help</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Level 3: Personal Income</span>
+</div>
+</div>
+<div class="font-figure-md text-figure-md text-on-surface-variant opacity-60">
+                            04 / 10
+                        </div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-highest rounded-full h-2 mb-10 overflow-hidden">
+<div class="bg-royal-gold h-2 rounded-full transition-all duration-700 ease-out" style="width: 40%"></div>
+</div>
+<!-- Question Content -->
+<div class="mb-10 flex-grow">
+<span class="inline-block px-4 py-1 bg-primary-fixed/20 text-forest-green font-label-sm text-label-sm rounded-full mb-4 border border-primary-fixed/50">Tax Basics</span>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-ink-black mb-6 leading-tight">
+                            How much is the <span class="text-deep-green relative inline-block">PAYE threshold<svg class="absolute w-full h-3 -bottom-1 left-0 text-secondary-fixed/50 -z-10" preserveAspectRatio="none" viewBox="0 0 100 10"><path d="M0,5 Q50,10 100,5" fill="none" stroke="currentColor" stroke-width="8"></path></svg></span> in Nigeria?
+                        </h2>
+</div>
+<!-- Options Grid -->
+<div class="grid grid-cols-1 gap-4 mb-8">
+<!-- Option A -->
+<button class="w-full text-left bg-surface-container-lowest border-2 border-surface-container-highest hover:border-forest-green hover:bg-forest-green/5 rounded-input p-5 transition-all duration-300 flex items-center gap-4 group focus:outline-none focus:ring-2 focus:ring-forest-green/50">
+<div class="w-10 h-10 rounded-full bg-surface-container-low group-hover:bg-forest-green/10 flex items-center justify-center font-figure-md text-figure-md text-on-surface-variant group-hover:text-forest-green transition-colors flex-shrink-0">
+                                A
+                            </div>
+<span class="font-body-lg text-body-lg text-on-surface font-medium">₦30,000 monthly</span>
+</button>
+<!-- Option B (Simulated Correct Hover State) -->
+<button class="w-full text-left bg-surface-container-lowest border-2 border-forest-green bg-forest-green/5 rounded-input p-5 transition-all duration-300 flex items-center gap-4 group focus:outline-none relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-forest-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-10 h-10 rounded-full bg-forest-green flex items-center justify-center text-on-primary flex-shrink-0 z-10">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 0;">check</span>
+</div>
+<span class="font-body-lg text-body-lg text-ink-black font-semibold z-10 flex-grow">₦30,000 monthly (or Minimum Wage equivalent)</span>
+</button>
+<!-- Option C -->
+<button class="w-full text-left bg-surface-container-lowest border-2 border-surface-container-highest hover:border-forest-green hover:bg-forest-green/5 rounded-input p-5 transition-all duration-300 flex items-center gap-4 group focus:outline-none">
+<div class="w-10 h-10 rounded-full bg-surface-container-low group-hover:bg-forest-green/10 flex items-center justify-center font-figure-md text-figure-md text-on-surface-variant group-hover:text-forest-green transition-colors flex-shrink-0">
+                                C
+                            </div>
+<span class="font-body-lg text-body-lg text-on-surface font-medium">₦50,000 monthly</span>
+</button>
+<!-- Option D -->
+<button class="w-full text-left bg-surface-container-lowest border-2 border-surface-container-highest hover:border-forest-green hover:bg-forest-green/5 rounded-input p-5 transition-all duration-300 flex items-center gap-4 group focus:outline-none">
+<div class="w-10 h-10 rounded-full bg-surface-container-low group-hover:bg-forest-green/10 flex items-center justify-center font-figure-md text-figure-md text-on-surface-variant group-hover:text-forest-green transition-colors flex-shrink-0">
+                                D
+                            </div>
+<span class="font-body-lg text-body-lg text-on-surface font-medium">There is no threshold</span>
+</button>
+</div>
+<!-- Feedback Area (Simulated Visible) -->
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between animate-[subtle-pulse_3s_ease-in-out_infinite]">
+<div class="flex items-center gap-3 text-forest-green">
+<div class="w-10 h-10 rounded-full bg-forest-green/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">military_tech</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] font-bold">Correct!</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-1">Tax doesn't have to be hard.</p>
+</div>
+</div>
+<button class="bg-deep-green text-on-primary hover:bg-primary-container font-label-sm text-label-sm px-8 py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2 group">
+                            Next Question
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">military_tech</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Anchor -->
+<footer class="full-width py-12 mt-auto bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant/10 relative z-10"><div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"><div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12"><div class="md:col-span-4"><div class="font-headline-md text-deep-green dark:text-primary-fixed mb-4 font-bold text-[24px]">IJOBA 606</div><p class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant mb-8">Make PAYE literacy hard to ignore.</p><div class="flex flex-wrap gap-4"><button class="bg-deep-green text-on-primary px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-forest-green transition-colors">Start a round</button><button class="border border-deep-green text-deep-green px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-deep-green/5 transition-colors">Estimate PAYE</button></div></div><div class="md:col-span-2 flex flex-col gap-4"><span class="font-label-sm text-label-sm text-deep-green font-bold uppercase tracking-wider">Product</span><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Quiz</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Calculator</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Marketplace</a></div><div class="md:col-span-2 flex flex-col gap-4"><span class="font-label-sm text-label-sm text-deep-green font-bold uppercase tracking-wider">Community</span><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Forum</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Leaderboard</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Consultants</a></div><div class="md:col-span-2 flex flex-col gap-4"><span class="font-label-sm text-label-sm text-deep-green font-bold uppercase tracking-wider">Legal</span><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Legal Docs</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Privacy</a><a class="text-on-surface-variant hover:text-royal-gold transition-colors text-body-md" href="#">Terms</a></div></div><div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4"><p class="text-label-sm text-on-surface-variant opacity-60">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p><p class="text-label-sm text-on-surface-variant opacity-60 italic">Educational purposes only — not legal or tax advice.</p></div></div></footer>
+
+
+</body></html>

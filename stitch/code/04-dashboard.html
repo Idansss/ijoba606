@@ -1,0 +1,383 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IJOBA 606 - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#002200",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-secondary-container": "#007436",
+                        "primary-fixed": "#9df888",
+                        "tertiary-fixed": "#ffe085",
+                        "primary": "#004900",
+                        "secondary-fixed": "#96f8aa",
+                        "background": "#fafaed",
+                        "primary-fixed-dim": "#82db6f",
+                        "surface": "#fafaed",
+                        "secondary-fixed-dim": "#7adb90",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ebc233",
+                        "on-surface-variant": "#404a3b",
+                        "royal-gold": "#C59F00",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c15",
+                        "surface-container": "#efefe2",
+                        "deep-green": "#006400",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dbdbce",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#126e0c",
+                        "outline": "#707a6a",
+                        "tertiary-container": "#cea711",
+                        "on-tertiary-container": "#4e3e00",
+                        "primary-container": "#006400",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fafaed",
+                        "inverse-primary": "#82db6f",
+                        "on-surface": "#1a1c15",
+                        "on-primary-fixed-variant": "#005300",
+                        "on-primary-container": "#86df72",
+                        "outline-variant": "#bfcab7",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f1f1e5",
+                        "surface-container-high": "#e9e9dc",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-secondary-fixed-variant": "#005225",
+                        "surface-container-low": "#f4f4e7",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#96f8aa",
+                        "surface-container-highest": "#e3e3d7",
+                        "tertiary": "#735c00",
+                        "secondary": "#006d33",
+                        "surface-variant": "#e3e3d7",
+                        "inverse-surface": "#2f3129",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#00210b",
+                        "ink-black": "#0A0A0A",
+                        "forest-green": "#0B7A3B",
+                        "cream-canvas": "#F5F5E8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "display-lg-mobile": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "figure-md": ["JetBrains Mono"],
+                        "label-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "figure-xl": ["JetBrains Mono"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "figure-md": ["16px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "figure-xl": ["32px", {"lineHeight": "1", "letterSpacing": "-0.04em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap');
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-400-normal.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-600-normal.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-700-normal.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        body {
+            background-color: theme('colors.cream-canvas');
+            color: theme('colors.on-background');
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+        }
+
+        .bento-card {
+            border-radius: 24px; /* Requested specific radius */
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+            background-color: theme('colors.surface-container-lowest');
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            padding: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bento-card-glass {
+            border-radius: 24px;
+            box-shadow: 0px 10px 30px rgba(0, 50, 0, 0.05);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 100, 0, 0.05);
+            padding: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&amp;display=swap" data-snapdom="injected-import"></head>
+<body class="font-body-md text-body-md min-h-screen flex flex-col">
+<!-- TopNavBar (JSON Generated) -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm transition-all duration-300"><div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+    <div class="flex items-center space-x-4">
+        <div class="w-10 h-10 bg-deep-green rounded-lg flex items-center justify-center text-white">
+            <span class="material-symbols-outlined">auto_awesome</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="font-display-lg text-deep-green dark:text-primary-fixed tracking-tighter leading-none">IJOBA 606</span>
+            <span class="text-[10px] uppercase tracking-widest text-royal-gold font-bold">Learn · Play · Calculate</span>
+        </div>
+    </div>
+    <nav class="hidden lg:flex items-center bg-surface-container-low rounded-full p-1 border border-outline-variant/20">
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full bg-gradient-to-r from-deep-green to-royal-gold text-white font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">school</span>
+            <span class="">Learn &amp; Play</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">chat_bubble</span>
+            <span class="">Forum</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">calculate</span>
+            <span class="">Calculator</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">emoji_events</span>
+            <span class="">Leaderboard</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">book</span>
+            <span class="">Glossary</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">work</span>
+            <span class="">Consultants</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">description</span>
+            <span class="">News</span>
+        </a>
+        <a href="#" class="flex items-center space-x-1 px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            <span class="">Contact</span>
+        </a>
+    </nav>
+    <div class="flex items-center space-x-4">
+        <button class="text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">dark_mode</span>
+        </button>
+        <div class="relative">
+            <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+            <span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full">3</span>
+        </div>
+        <div class="flex items-center space-x-2 bg-surface-container-high rounded-full pl-1 pr-4 py-1">
+            <div class="w-8 h-8 rounded-full bg-deep-green text-white flex items-center justify-center font-bold text-sm">CO</div>
+            <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-on-surface-variant leading-none">1,240 pts</span>
+            </div>
+        </div>
+    </div>
+</div></header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-12 space-y-gutter">
+<!-- Welcome Header -->
+<section class="mb-12">
+<h1 class="font-display-lg-mobile md:font-display-lg text-deep-green">Welcome back, Chidi!</h1>
+<p class="font-headline-md text-headline-md text-on-surface-variant mt-2">Figure your tax wahala today.</p>
+</section>
+<!-- Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Primary Metrics & Actions (Spans 8 cols on desktop) -->
+<div class="md:col-span-8 space-y-gutter flex flex-col">
+<!-- Main Balance / Tax Saved Card -->
+<div class="bento-card bg-deep-green text-white flex-grow flex flex-col justify-between" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC2mNYB1KfSIMVFn7lvj84BMxf1QX3EBLIttSE46FX7J-OrjdNQxygJNq1JTJ0OPTyEWwuTdApdFf3z-IzqgbH0YSGLyJSbx-oQPzpXgJy5pLtzlWLQFxMyHQUuqvmku16KPA3_lpBm4WO0xXIJFzQXFznvhc4eJ4vpjL3fPyQM7aRBbV952WYCN8ApF_VNyBxDE9mVFgs6rZspr-gDbz3OoXYx7EzUPed6jPCDKPKjOESppVYQgY-81KVGZRHRcPNRZg'); background-size: cover; background-position: center;">
+<!-- Overlay for text readability if image is busy -->
+<div class="absolute inset-0 bg-gradient-to-t from-deep-green via-deep-green/80 to-transparent"></div>
+<div class="relative z-10 flex justify-between items-start mb-8">
+<div>
+<p class="font-label-sm text-label-sm text-surface-container-highest uppercase tracking-widest">Est. Tax Saved 2024</p>
+<h2 class="font-figure-xl text-figure-xl text-royal-gold mt-2">₦450,000.00</h2>
+</div>
+<div class="bg-royal-gold text-ink-black px-4 py-2 rounded-full font-label-sm text-label-sm flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm" data-icon="verified">verified</span>
+<span class="">Up to Date</span>
+</div>
+</div>
+<div class="relative z-10 grid grid-cols-2 gap-4 mt-auto">
+<div class="glass-panel rounded-xl p-4">
+<p class="font-label-sm text-label-sm text-surface-container-highest">Total Income Reported</p>
+<p class="font-figure-md text-figure-md text-white mt-1">₦3,200,000</p>
+</div>
+<div class="glass-panel rounded-xl p-4">
+<p class="font-label-sm text-label-sm text-surface-container-highest">Next Filing Due</p>
+<p class="font-figure-md text-figure-md text-white mt-1">Jan 31, 2025</p>
+</div>
+</div>
+</div>
+<!-- Quick Links Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-unit">
+<button class="bento-card-glass p-6 flex flex-col items-center justify-center text-center group hover:bg-surface-container-lowest transition-colors h-32">
+<div class="w-12 h-12 rounded-full bg-forest-green/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-deep-green" data-icon="quiz">quiz</span>
+</div>
+<span class="font-label-sm text-label-sm text-deep-green">Start Quiz</span>
+</button>
+<button class="bento-card-glass p-6 flex flex-col items-center justify-center text-center group hover:bg-surface-container-lowest transition-colors h-32">
+<div class="w-12 h-12 rounded-full bg-forest-green/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-deep-green" data-icon="calculate">calculate</span>
+</div>
+<span class="font-label-sm text-label-sm text-deep-green">Calculate PAYE</span>
+</button>
+<button class="bento-card-glass p-6 flex flex-col items-center justify-center text-center group hover:bg-surface-container-lowest transition-colors h-32">
+<div class="w-12 h-12 rounded-full bg-forest-green/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-deep-green" data-icon="support_agent">support_agent</span>
+</div>
+<span class="font-label-sm text-label-sm text-deep-green">Find Consultant</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Secondary Info (Spans 4 cols on desktop) -->
+<div class="md:col-span-4 space-y-gutter flex flex-col">
+<!-- Glossary Preview -->
+<div class="bento-card border-l-4 border-l-royal-gold">
+<div class="flex items-center space-x-2 mb-4">
+<span class="material-symbols-outlined text-royal-gold" data-icon="lightbulb">lightbulb</span>
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Tax Term of the Day</h3>
+</div>
+<h4 class="font-headline-md text-headline-md text-deep-green mb-2">Withholding Tax (WHT)</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-3">
+                        An advance payment of income tax. In Nigeria, it is deducted at source from specific transactions and remitted to the relevant tax authority.
+                    </p>
+<button class="mt-4 text-forest-green font-label-sm text-label-sm hover:text-deep-green transition-colors flex items-center">
+                        Read full definition <span class="material-symbols-outlined text-sm ml-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Tax News Feed -->
+<div class="bento-card-glass flex-grow flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-deep-green text-lg">Tax News Feed</h3>
+<button class="w-8 h-8 rounded-full bg-forest-green/10 flex items-center justify-center text-deep-green hover:bg-forest-green/20">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+</button>
+</div>
+<div class="overflow-y-auto scrollbar-hide space-y-4 flex-grow pr-2">
+<!-- News Item 1 -->
+<div class="group cursor-pointer pb-4 border-b border-forest-green/5 last:border-0">
+<span class="font-label-sm text-label-sm text-royal-gold mb-1 block">FIRS Update • 2h ago</span>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-deep-green transition-colors">
+                                New guidelines released for digital service providers operating in Nigeria.
+                            </p>
+</div>
+<!-- News Item 2 -->
+<div class="group cursor-pointer pb-4 border-b border-forest-green/5 last:border-0">
+<span class="font-label-sm text-label-sm text-royal-gold mb-1 block">LIRS Alert • 1d ago</span>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-deep-green transition-colors">
+                                Deadline approaching for filing annual returns for individual taxpayers in Lagos state.
+                            </p>
+</div>
+<!-- News Item 3 -->
+<div class="group cursor-pointer pb-4 border-b border-forest-green/5 last:border-0">
+<span class="font-label-sm text-label-sm text-royal-gold mb-1 block">Economy • 3d ago</span>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-deep-green transition-colors">
+                                Analysis: How the recent VAT adjustments impact small and medium enterprises.
+                            </p>
+</div>
+<!-- News Item 4 -->
+<div class="group cursor-pointer pb-4 border-b border-forest-green/5 last:border-0">
+<span class="font-label-sm text-label-sm text-royal-gold mb-1 block">Policy • 1w ago</span>
+<p class="font-body-md text-body-md text-on-surface group-hover:text-deep-green transition-colors">
+                                Proposed changes to personal income tax brackets currently under review.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (JSON Generated) -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant/10 full-width py-12 mt-auto"><div class="px-margin-desktop max-w-container-max mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12">
+        <div class="md:col-span-4 space-y-6">
+            <div class="font-headline-md text-headline-md text-deep-green dark:text-primary-fixed">IJOBA 606</div>
+            <p class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant">Make PAYE literacy hard to ignore.</p>
+            <div class="flex flex-col space-y-2">
+                <button class="bg-deep-green text-white px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-primary transition-colors w-full md:w-auto">Start a round</button>
+                <button class="border border-deep-green text-deep-green px-6 py-3 rounded-full font-label-sm text-label-sm hover:bg-forest-green/5 transition-colors w-full md:w-auto">Estimate PAYE</button>
+            </div>
+        </div>
+        <div class="md:col-span-2 flex flex-col space-y-4">
+            <h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Product</h4>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Calculator</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Glossary</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Consultants</a>
+        </div>
+        <div class="md:col-span-2 flex flex-col space-y-4">
+            <h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Community</h4>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Forum</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Leaderboard</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">News</a>
+        </div>
+        <div class="md:col-span-2 flex flex-col space-y-4">
+            <h4 class="font-label-sm text-label-sm text-deep-green uppercase tracking-widest">Legal</h4>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Privacy</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Terms</a>
+            <a href="#" class="text-on-surface-variant hover:text-royal-gold transition-colors">Cookies</a>
+        </div>
+    </div>
+    <div class="pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <p class="text-sm text-on-surface-variant opacity-60">© 2024 IJOBA 606. Empowering Nigerian Prosperity.</p>
+        <p class="text-sm text-on-surface-variant opacity-60 italic">Educational purposes only — not legal or tax advice.</p>
+    </div>
+</div></footer>
+
+
+</body></html>
