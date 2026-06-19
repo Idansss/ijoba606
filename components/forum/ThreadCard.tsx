@@ -27,12 +27,12 @@ export function ThreadCard({ thread, delay = 0 }: ThreadCardProps) {
     >
       <Link
         href={`/forum/thread/${thread.id}`}
-        className="group block rounded-3xl border border-slate-100 bg-white/90 p-6 shadow-sm transition hover:-translate-y-1 hover:border-purple-200 hover:shadow-xl"
+        className="group block rounded-3xl border border-slate-100 bg-white/90 p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#aecf9c] hover:shadow-xl"
       >
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
             {thread.isPinned && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-purple-600">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#e9f1e2] px-3 py-1 text-[#006400]">
                 <Bookmark className="h-3 w-3" /> Pinned
               </span>
             )}
@@ -49,7 +49,7 @@ export function ThreadCard({ thread, delay = 0 }: ThreadCardProps) {
             <span>{timeAgo}</span>
           </div>
 
-          <h3 className="text-xl font-semibold text-slate-900 transition group-hover:text-purple-600">
+          <h3 className="text-xl font-semibold text-slate-900 transition group-hover:text-[#006400]">
             {thread.title}
           </h3>
           <p className="text-sm text-slate-500 line-clamp-2">{thread.bodyMD}</p>

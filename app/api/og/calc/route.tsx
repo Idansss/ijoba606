@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+          background: 'linear-gradient(135deg, #006400 0%, #0b7a3b 100%)',
           fontFamily: 'system-ui',
         }}
       >
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             style={{
               fontSize: '72px',
               fontWeight: 'bold',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+              background: 'linear-gradient(135deg, #006400 0%, #0b7a3b 100%)',
               backgroundClip: 'text',
               color: 'transparent',
               margin: '0 0 20px 0',

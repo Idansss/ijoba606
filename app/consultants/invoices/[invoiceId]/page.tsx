@@ -157,7 +157,7 @@ export default function InvoicePage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -173,14 +173,14 @@ export default function InvoicePage() {
     } else if (invoice.status === 'overdue') {
       return <XCircle className="w-5 h-5 text-red-600" />;
     } else {
-      return <Clock className="w-5 h-5 text-yellow-600" />;
+      return <Clock className="w-5 h-5 text-[#a98700]" />;
     }
   };
 
   const getStatusColor = () => {
     if (invoice.status === 'paid') return 'text-green-600 bg-green-50';
     if (invoice.status === 'overdue') return 'text-red-600 bg-red-50';
-    if (invoice.status === 'sent') return 'text-blue-600 bg-blue-50';
+    if (invoice.status === 'sent') return 'text-[#006d33] bg-[#e6f3ec]';
     return 'text-gray-600 bg-gray-50';
   };
 
@@ -189,7 +189,7 @@ export default function InvoicePage() {
       <div className="mb-6">
         <Link
           href={isConsultant ? '/consultants/wallet' : '/dashboard'}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to {isConsultant ? 'Wallet' : 'Dashboard'}
@@ -228,8 +228,8 @@ export default function InvoicePage() {
         </div>
 
         {/* Items */}
-        <div className="mb-6">
-          <table className="w-full">
+        <div className="mb-6 overflow-x-auto">
+          <table className="w-full min-w-[480px]">
             <thead>
               <tr className="border-b">
                 <th className="text-left py-2 text-sm font-semibold text-gray-700">Description</th>
@@ -265,14 +265,14 @@ export default function InvoicePage() {
               </div>
             )}
             {invoice.paystackFee && invoice.paystackFee > 0 && (
-              <div className="flex justify-between text-sm text-orange-600">
+              <div className="flex justify-between text-sm text-[#a98700]">
                 <span>Paystack Fee (1.5% + ₦100):</span>
                 <span className="font-semibold">₦{invoice.paystackFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             )}
             <div className="flex justify-between text-lg font-bold border-t pt-2">
               <span>Total:</span>
-              <span className="text-purple-600">₦{invoice.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span className="text-[#006400]">₦{invoice.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             <div className="text-xs text-gray-500 mt-2">
               * VAT and Paystack fees are included. Customer bears all fees.
@@ -307,7 +307,7 @@ export default function InvoicePage() {
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
+                      className="px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition"
                     />
                   )}
                   {canUsePaystack && (
@@ -350,7 +350,7 @@ export default function InvoicePage() {
                       }
                       onClose={handlePaymentClose}
                       disabled={processingPayment}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
+                      className="px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition"
                     />
                   )}
                   {canUseFlutterwave && (
@@ -441,7 +441,7 @@ export default function InvoicePage() {
             </p>
             <Link
               href={`/dashboard/invoices/${invoice.id}/refund`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#a98700] text-white rounded-lg font-semibold hover:bg-[#876b00] transition"
             >
               Request Refund
             </Link>

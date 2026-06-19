@@ -73,15 +73,15 @@ export default function CalculatorPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">🧮</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Personal Income Tax Calculator
           </h1>
           <p className="text-gray-600">
             Calculate your personal income tax in 60 seconds. Monthly or annual, with clean
             breakdown.
           </p>
-          <div className="mt-4 inline-block px-4 py-2 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
-            <p className="text-sm text-yellow-800">
+          <div className="mt-4 inline-block px-4 py-2 bg-[#fcf7e6] border-2 border-[#efd98a] rounded-xl">
+            <p className="text-sm text-[#655100]">
               ⚠️ Educational purposes only. Not legal or tax advice.
             </p>
           </div>

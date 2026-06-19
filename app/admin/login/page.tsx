@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -83,12 +83,12 @@ export default function AdminLoginPage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl shadow-xl p-8 text-center"
         >
-          <Shield className="w-16 h-16 mx-auto mb-4 text-purple-600" />
+          <Shield className="w-16 h-16 mx-auto mb-4 text-[#006400]" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Access</h1>
           <p className="text-gray-600 mb-6">Please sign in to access the admin panel</p>
           <button
             onClick={() => router.push('/')}
-            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all"
+            className="w-full px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all"
           >
             Go to Homepage
           </button>
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
         className="bg-white rounded-2xl shadow-xl p-8"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Access</h1>
@@ -125,7 +125,7 @@ export default function AdminLoginPage() {
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
                 placeholder="Enter admin access code"
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
                 autoFocus
               />
@@ -138,7 +138,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading || !accessCode}
-            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
@@ -159,7 +159,7 @@ export default function AdminLoginPage() {
             Don&apos;t have admin access?{' '}
             <button
               onClick={() => router.push('/admin/register')}
-              className="text-purple-600 font-semibold hover:underline"
+              className="text-[#006400] font-semibold hover:underline"
             >
               Register as Admin
             </button>

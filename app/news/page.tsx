@@ -67,7 +67,7 @@ export default function NewsPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-10">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Tax News & Updates
         </h1>
         <p className="text-gray-600">
@@ -77,10 +77,10 @@ export default function NewsPage() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600" />
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
         </div>
       ) : articles.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-12 text-center">
           <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-800 mb-2">No articles yet</h2>
           <p className="text-gray-600 max-w-md mx-auto">
@@ -108,11 +108,11 @@ export default function NewsPage() {
                 )}
                 <div className="flex-1 min-w-0">
                   {article.category && (
-                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">
+                    <span className="text-xs font-semibold text-[#006400] uppercase tracking-wide">
                       {article.category}
                     </span>
                   )}
-                  <h2 className="text-xl font-bold text-gray-900 mt-1 group-hover:text-purple-600 transition">
+                  <h2 className="text-xl font-bold text-gray-900 mt-1 group-hover:text-[#006400] transition">
                     {article.title}
                   </h2>
                   <p className="text-gray-600 mt-2 line-clamp-2">{article.excerpt}</p>
@@ -124,7 +124,7 @@ export default function NewsPage() {
                     {article.source && (
                       <span className="text-gray-400">{article.source}</span>
                     )}
-                    <span className="flex items-center gap-1 text-purple-600 font-semibold group-hover:gap-2 transition-all">
+                    <span className="flex items-center gap-1 text-[#006400] font-semibold group-hover:gap-2 transition-all">
                       Read more
                       <ArrowRight className="w-4 h-4" />
                     </span>

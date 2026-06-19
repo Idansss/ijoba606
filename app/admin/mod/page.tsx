@@ -248,7 +248,7 @@ export default function AdminModerationPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -268,7 +268,7 @@ export default function AdminModerationPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -276,7 +276,7 @@ export default function AdminModerationPage() {
         </div>
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Moderation Dashboard
           </h1>
           <p className="text-gray-600">
@@ -290,7 +290,7 @@ export default function AdminModerationPage() {
             onClick={() => setActiveTab('reports')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'reports'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -300,7 +300,7 @@ export default function AdminModerationPage() {
             onClick={() => setActiveTab('moderated')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'moderated'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -312,7 +312,7 @@ export default function AdminModerationPage() {
         {activeTab === 'reports' && (
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">
+              <div className="text-3xl font-bold text-[#a98700] mb-2">
                 {reports.filter(r => r.status === 'open').length}
               </div>
               <div className="text-sm text-gray-600">Open Reports</div>
@@ -333,7 +333,7 @@ export default function AdminModerationPage() {
             onClick={() => setFilter('open')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               filter === 'open'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -343,7 +343,7 @@ export default function AdminModerationPage() {
             onClick={() => setFilter('actioned')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               filter === 'actioned'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -356,7 +356,7 @@ export default function AdminModerationPage() {
         {activeTab === 'reports' && (
         <>
         {reports.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
             <div className="text-6xl mb-4">✅</div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">
               {filter === 'open' ? 'No pending reports' : 'No actioned reports'}
@@ -388,14 +388,14 @@ export default function AdminModerationPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           report.targetKind === 'thread'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-purple-100 text-purple-700'
+                            ? 'bg-[#c7ecd6] text-[#005728]'
+                            : 'bg-[#d3e6c8] text-[#004f00]'
                         }`}>
                           {report.targetKind.toUpperCase()}
                         </span>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           report.status === 'open'
-                            ? 'bg-orange-100 text-orange-700'
+                            ? 'bg-[#f7edc4] text-[#876b00]'
                             : 'bg-green-100 text-green-700'
                         }`}>
                           {report.status.toUpperCase()}
@@ -418,7 +418,7 @@ export default function AdminModerationPage() {
                               ? `/forum/thread/${report.targetId}`
                               : `/forum`
                           }
-                          className="text-purple-600 hover:text-purple-700 font-semibold"
+                          className="text-[#006400] hover:text-[#004f00] font-semibold"
                         >
                           View Content →
                         </Link>
@@ -431,7 +431,7 @@ export default function AdminModerationPage() {
                     <div className="pt-4 border-t-2 border-gray-200">
                       {/* Reason input for hide/delete */}
                       {(showReasonInput[report.id || ''] || false) && (
-                        <div className="mb-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div className="mb-4 p-4 bg-[#fcf7e6] rounded-lg border border-[#efd98a]">
                           <label className="block text-sm font-semibold text-gray-700 mb-2">
                             Reason for moderation (required):
                           </label>
@@ -444,7 +444,7 @@ export default function AdminModerationPage() {
                               })
                             }
                             placeholder="Explain why this content is being moderated..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                             rows={3}
                           />
                         </div>
@@ -478,13 +478,13 @@ export default function AdminModerationPage() {
                           <>
                             <button
                               onClick={() => handleModerateAction(report, 'lock')}
-                              className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg text-sm font-semibold hover:bg-orange-200 transition-all"
+                              className="px-4 py-2 bg-[#f7edc4] text-[#876b00] rounded-lg text-sm font-semibold hover:bg-[#efd98a] transition-all"
                             >
                               Lock Thread
                             </button>
                             <button
                               onClick={() => handleModerateAction(report, 'pin')}
-                              className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-200 transition-all"
+                              className="px-4 py-2 bg-[#c7ecd6] text-[#005728] rounded-lg text-sm font-semibold hover:bg-[#97e0b4] transition-all"
                             >
                               Pin Thread
                             </button>
@@ -511,7 +511,7 @@ export default function AdminModerationPage() {
         {activeTab === 'moderated' && (
           <>
             {moderatedThreads.length === 0 && moderatedPosts.length === 0 ? (
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
                 <div className="text-6xl mb-4">✅</div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   No moderated content
@@ -551,7 +551,7 @@ export default function AdminModerationPage() {
                             <div className="flex items-start justify-between gap-4 mb-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#c7ecd6] text-[#005728]">
                                     THREAD
                                   </span>
                                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
@@ -565,11 +565,11 @@ export default function AdminModerationPage() {
                                   {thread.bodyMD}
                                 </p>
                                 {thread.moderationReason && (
-                                  <div className="mb-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <p className="text-sm font-semibold text-yellow-800 mb-1">
+                                  <div className="mb-2 p-3 bg-[#fcf7e6] border border-[#efd98a] rounded-lg">
+                                    <p className="text-sm font-semibold text-[#655100] mb-1">
                                       Moderation Reason:
                                     </p>
-                                    <p className="text-sm text-yellow-700">
+                                    <p className="text-sm text-[#876b00]">
                                       {thread.moderationReason}
                                     </p>
                                   </div>
@@ -585,7 +585,7 @@ export default function AdminModerationPage() {
                                   <span>•</span>
                                   <Link
                                     href={`/forum/thread/${thread.id}`}
-                                    className="text-purple-600 hover:text-purple-700 font-semibold"
+                                    className="text-[#006400] hover:text-[#004f00] font-semibold"
                                   >
                                     View Thread →
                                   </Link>
@@ -678,7 +678,7 @@ export default function AdminModerationPage() {
                             <div className="flex items-start justify-between gap-4 mb-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#d3e6c8] text-[#004f00]">
                                     POST
                                   </span>
                                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
@@ -689,11 +689,11 @@ export default function AdminModerationPage() {
                                   {post.bodyMD}
                                 </p>
                                 {post.moderationReason && (
-                                  <div className="mb-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <p className="text-sm font-semibold text-yellow-800 mb-1">
+                                  <div className="mb-2 p-3 bg-[#fcf7e6] border border-[#efd98a] rounded-lg">
+                                    <p className="text-sm font-semibold text-[#655100] mb-1">
                                       Moderation Reason:
                                     </p>
-                                    <p className="text-sm text-yellow-700">
+                                    <p className="text-sm text-[#876b00]">
                                       {post.moderationReason}
                                     </p>
                                   </div>
@@ -709,7 +709,7 @@ export default function AdminModerationPage() {
                                   <span>•</span>
                                   <Link
                                     href={`/forum/thread/${post.tid}`}
-                                    className="text-purple-600 hover:text-purple-700 font-semibold"
+                                    className="text-[#006400] hover:text-[#004f00] font-semibold"
                                   >
                                     View Thread →
                                   </Link>

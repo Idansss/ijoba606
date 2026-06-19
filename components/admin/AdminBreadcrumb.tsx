@@ -17,7 +17,7 @@ export function AdminBreadcrumb({ items }: AdminBreadcrumbProps) {
     <nav className="flex items-center gap-2 text-sm mb-6" aria-label="Breadcrumb">
       <Link
         href="/admin"
-        className="flex items-center gap-1 text-gray-600 hover:text-purple-600 transition-colors"
+        className="flex items-center gap-1 text-gray-600 hover:text-[#006400] transition-colors"
       >
         <Home className="w-4 h-4" />
         <span>Dashboard</span>
@@ -28,7 +28,7 @@ export function AdminBreadcrumb({ items }: AdminBreadcrumbProps) {
           {item.href ? (
             <Link
               href={item.href}
-              className="text-gray-600 hover:text-purple-600 transition-colors"
+              className="text-gray-600 hover:text-[#006400] transition-colors"
             >
               {item.label}
             </Link>

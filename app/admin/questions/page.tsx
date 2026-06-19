@@ -205,7 +205,7 @@ export default function AdminQuestionsPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -230,7 +230,7 @@ export default function AdminQuestionsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -240,7 +240,7 @@ export default function AdminQuestionsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
               Question Management
             </h1>
             <p className="text-gray-600">
@@ -250,7 +250,7 @@ export default function AdminQuestionsPage() {
           <div className="flex gap-3">
             <button
               onClick={() => handleOpenModal()}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
+              className="px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg"
             >
               + Add Question
             </button>
@@ -283,8 +283,8 @@ export default function AdminQuestionsPage() {
                         <div className="flex items-center gap-2 mb-2">
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
                             question.type === 'single'
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-purple-100 text-purple-700'
+                              ? 'bg-[#c7ecd6] text-[#005728]'
+                              : 'bg-[#d3e6c8] text-[#004f00]'
                           }`}>
                             {question.type === 'single' ? 'Single' : 'Multi'}
                           </span>
@@ -325,7 +325,7 @@ export default function AdminQuestionsPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleOpenModal(question)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-[#006d33] hover:bg-[#e6f3ec] rounded-lg transition-colors"
                         >
                           ✏️
                         </button>
@@ -380,7 +380,7 @@ export default function AdminQuestionsPage() {
                         </label>
                         <select
                           {...register('level', { valueAsNumber: true })}
-                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                         >
                           <option value={1}>Level 1 - Basics</option>
                           <option value={2}>Level 2 - Calculations</option>
@@ -393,7 +393,7 @@ export default function AdminQuestionsPage() {
                         </label>
                         <select
                           {...register('type')}
-                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                         >
                           <option value="single">Single Answer</option>
                           <option value="multi">Multiple Answers</option>
@@ -409,7 +409,7 @@ export default function AdminQuestionsPage() {
                       <textarea
                         {...register('prompt')}
                         rows={3}
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none resize-none"
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                       />
                       {errors.prompt && (
                         <p className="text-red-500 text-sm mt-1">{errors.prompt.message}</p>
@@ -427,7 +427,7 @@ export default function AdminQuestionsPage() {
                             key={idx}
                             {...register(`options.${idx}` as 'options.0' | 'options.1' | 'options.2' | 'options.3')}
                             placeholder={`Option ${String.fromCharCode(65 + idx)}`}
-                            className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                            className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                           />
                         ))}
                       </div>
@@ -444,7 +444,7 @@ export default function AdminQuestionsPage() {
                             v.split(',').map((n: string) => parseInt(n.trim())),
                         })}
                         placeholder="e.g., 0 or 0,2"
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                       />
                       {errors.correct && (
                         <p className="text-red-500 text-sm mt-1">{errors.correct.message}</p>
@@ -459,7 +459,7 @@ export default function AdminQuestionsPage() {
                       <textarea
                         {...register('explanation')}
                         rows={2}
-                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none resize-none"
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                       />
                     </div>
 
@@ -474,7 +474,7 @@ export default function AdminQuestionsPage() {
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"
+                        className="flex-1 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-semibold hover:from-[#004f00] hover:to-[#005728] transition-all"
                       >
                         {editingQuestion ? 'Update' : 'Create'}
                       </button>
@@ -516,7 +516,7 @@ export default function AdminQuestionsPage() {
                       <select
                         value={generateLevel}
                         onChange={(e) => setGenerateLevel(Number(e.target.value) as QuizLevel)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       >
                         <option value={1}>Level 1 - Basics</option>
                         <option value={2}>Level 2 - Intermediate</option>
@@ -534,7 +534,7 @@ export default function AdminQuestionsPage() {
                         max="10"
                         value={generateCount}
                         onChange={(e) => setGenerateCount(Number(e.target.value))}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       />
                     </div>
 
@@ -547,7 +547,7 @@ export default function AdminQuestionsPage() {
                         value={generateTopic}
                         onChange={(e) => setGenerateTopic(e.target.value)}
                         placeholder="e.g., pension, tax brackets, deductions"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       />
                     </div>
 
@@ -558,7 +558,7 @@ export default function AdminQuestionsPage() {
                       <select
                         value={generateProvider}
                         onChange={(e) => setGenerateProvider(e.target.value as 'openai' | 'gemini' | 'cursor' | 'template')}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                       >
                         <option value="openai">OpenAI (GPT-4o-mini) - Requires OPENAI_API_KEY</option>
                         <option value="gemini">Google Gemini (1.5 Flash) - Requires GEMINI_API_KEY</option>

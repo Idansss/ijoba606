@@ -225,7 +225,7 @@ export default function ConfirmServicePage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -240,7 +240,7 @@ export default function ConfirmServicePage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
@@ -249,17 +249,17 @@ export default function ConfirmServicePage() {
 
       <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
         <div className="text-center mb-8">
-          <CheckCircle2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+          <CheckCircle2 className="w-16 h-16 text-[#006d33] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Service Completion Confirmation</h1>
           <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-[#e6f3ec] border border-[#97e0b4] rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-[#006d33] mt-0.5" />
             <div>
-              <p className="font-semibold text-blue-800 mb-1">Consultant has marked service as complete</p>
-              <p className="text-sm text-blue-700">
+              <p className="font-semibold text-[#00421f] mb-1">Consultant has marked service as complete</p>
+              <p className="text-sm text-[#005728]">
                 Please review and confirm if the service was provided satisfactorily. 
                 If you confirm, funds will be held for 48 hours before release to the consultant. 
                 If you have any issues, you can raise a dispute.

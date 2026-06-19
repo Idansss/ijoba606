@@ -138,7 +138,7 @@ export default function ThreadDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ export default function ThreadDetailPage() {
         {/* Back Button */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-semibold"
+          className="inline-flex items-center gap-2 text-[#006400] hover:text-[#004f00] mb-6 font-semibold"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -193,7 +193,7 @@ export default function ThreadDetailPage() {
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             {thread.isPinned && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-semibold rounded-full">
+              <span className="px-3 py-1 bg-[#d3e6c8] text-[#004f00] text-sm font-semibold rounded-full">
                 📌 Pinned
               </span>
             )}
@@ -295,7 +295,7 @@ export default function ThreadDetailPage() {
               <button
                 onClick={handleReply}
                 disabled={submittingReply || replyBody.length < 10}
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submittingReply ? 'Posting...' : 'Post Reply'}
               </button>
@@ -312,7 +312,7 @@ export default function ThreadDetailPage() {
             <p className="text-gray-600 mb-4">Sign in to reply to this thread</p>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-all"
+              className="px-6 py-3 bg-[#006400] text-white rounded-xl font-semibold hover:bg-[#004f00] transition-all"
             >
               Sign In
             </button>

@@ -75,7 +75,7 @@ export default function NewsArticlePage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600" />
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
         </div>
       </div>
     );
@@ -87,7 +87,7 @@ export default function NewsArticlePage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Article not found</h1>
         <Link
           href="/news"
-          className="inline-flex items-center gap-2 text-purple-600 hover:underline font-semibold"
+          className="inline-flex items-center gap-2 text-[#006400] hover:underline font-semibold"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to news
@@ -100,7 +100,7 @@ export default function NewsArticlePage() {
     <div className="container mx-auto px-4 py-12 max-w-3xl">
       <Link
         href="/news"
-        className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700 font-semibold mb-8"
+        className="inline-flex items-center gap-2 text-sm text-[#006400] hover:text-[#004f00] font-semibold mb-8"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to news
@@ -109,7 +109,7 @@ export default function NewsArticlePage() {
       <article className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
         <div className="p-8 md:p-12">
           {article.category && (
-            <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">
+            <span className="text-xs font-semibold text-[#006400] uppercase tracking-wide">
               {article.category}
             </span>
           )}
@@ -134,7 +134,7 @@ export default function NewsArticlePage() {
                     href={article.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1 text-purple-600 hover:underline"
+                    className="flex items-center gap-1 text-[#006400] hover:underline"
                   >
                     {article.source}
                     <ExternalLink className="w-3 h-3" />
@@ -147,7 +147,7 @@ export default function NewsArticlePage() {
           </div>
 
           <div
-            className="mt-8 prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-purple-600"
+            className="mt-8 prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-[#006400]"
             dangerouslySetInnerHTML={{
               __html:
                 article.content?.startsWith('<') ?

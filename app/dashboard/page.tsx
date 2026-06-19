@@ -80,10 +80,10 @@ export default function UserDashboardPage() {
       return <CheckCircle2 className="w-5 h-5 text-green-600" />;
     }
     if (invoice.paymentStatus === 'pending' || invoice.status === 'sent') {
-      return <Clock className="w-5 h-5 text-yellow-600" />;
+      return <Clock className="w-5 h-5 text-[#a98700]" />;
     }
     if (invoice.serviceStatus === 'in_progress') {
-      return <Clock className="w-5 h-5 text-blue-600" />;
+      return <Clock className="w-5 h-5 text-[#006d33]" />;
     }
     if (invoice.status === 'cancelled' || invoice.serviceStatus === 'cancelled') {
       return <XCircle className="w-5 h-5 text-red-600" />;
@@ -96,10 +96,10 @@ export default function UserDashboardPage() {
       return 'text-green-600 bg-green-50';
     }
     if (invoice.paymentStatus === 'pending' || invoice.status === 'sent') {
-      return 'text-yellow-600 bg-yellow-50';
+      return 'text-[#a98700] bg-[#fcf7e6]';
     }
     if (invoice.serviceStatus === 'in_progress') {
-      return 'text-blue-600 bg-blue-50';
+      return 'text-[#006d33] bg-[#e6f3ec]';
     }
     if (invoice.status === 'cancelled' || invoice.serviceStatus === 'cancelled') {
       return 'text-red-600 bg-red-50';
@@ -127,7 +127,7 @@ export default function UserDashboardPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -136,7 +136,7 @@ export default function UserDashboardPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           My Dashboard
         </h1>
         <p className="text-gray-600">Manage your invoices and services</p>
@@ -150,25 +150,25 @@ export default function UserDashboardPage() {
               <p className="text-sm text-gray-600 mb-1">Total Services</p>
               <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
             </div>
-            <FileText className="w-8 h-8 text-purple-600" />
+            <FileText className="w-8 h-8 text-[#006400]" />
           </div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Pending Payment</p>
-              <p className="text-2xl font-bold text-yellow-600">{stats.pendingPayment}</p>
+              <p className="text-2xl font-bold text-[#a98700]">{stats.pendingPayment}</p>
             </div>
-            <Clock className="w-8 h-8 text-yellow-600" />
+            <Clock className="w-8 h-8 text-[#a98700]" />
           </div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">In Progress</p>
-              <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
+              <p className="text-2xl font-bold text-[#006d33]">{stats.inProgress}</p>
             </div>
-            <Clock className="w-8 h-8 text-blue-600" />
+            <Clock className="w-8 h-8 text-[#006d33]" />
           </div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
@@ -189,7 +189,7 @@ export default function UserDashboardPage() {
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === 'all'
-                ? 'bg-purple-600 text-white'
+                ? 'bg-[#006400] text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -199,7 +199,7 @@ export default function UserDashboardPage() {
             onClick={() => setFilter('pending_payment')}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === 'pending_payment'
-                ? 'bg-yellow-600 text-white'
+                ? 'bg-[#a98700] text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -209,7 +209,7 @@ export default function UserDashboardPage() {
             onClick={() => setFilter('in_progress')}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === 'in_progress'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-[#006d33] text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -231,7 +231,7 @@ export default function UserDashboardPage() {
       {/* Invoices List */}
       <div className="space-y-4">
         {filteredInvoices.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 shadow-lg border border-gray-200 text-center">
+          <div className="bg-white rounded-xl p-6 sm:p-12 shadow-lg border border-gray-200 text-center">
             <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 text-lg">No invoices found</p>
           </div>
@@ -266,13 +266,13 @@ export default function UserDashboardPage() {
                   </div>
                 </div>
                 <div className="text-right ml-4">
-                  <p className="text-2xl font-bold text-purple-600 mb-2">
+                  <p className="text-2xl font-bold text-[#006400] mb-2">
                     ₦{invoice.total.toLocaleString()}
                   </p>
                   {invoice.paymentStatus === 'pending' && (
                     <Link
                       href={`/consultants/invoices/${invoice.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition"
                     >
                       <DollarSign className="w-4 h-4" />
                       Pay Now

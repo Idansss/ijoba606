@@ -202,7 +202,7 @@ export default function ConsultantWalletPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -228,7 +228,7 @@ export default function ConsultantWalletPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Wallet
         </h1>
         <p className="text-gray-600">Manage your earnings and withdrawals</p>
@@ -236,7 +236,7 @@ export default function ConsultantWalletPage() {
 
       {/* Wallet Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 shadow-lg text-white">
+        <div className="bg-gradient-to-r from-[#006400] to-[#006d33] rounded-xl p-6 shadow-lg text-white">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm opacity-90">Available Balance</p>
             <Wallet className="w-6 h-6" />
@@ -253,14 +253,14 @@ export default function ConsultantWalletPage() {
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm text-gray-600">Total Withdrawn</p>
-            <ArrowDown className="w-6 h-6 text-blue-600" />
+            <ArrowDown className="w-6 h-6 text-[#006d33]" />
           </div>
           <p className="text-2xl font-bold text-gray-800">₦{totalWithdrawnInNaira.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm text-gray-600">Pending Release</p>
-            <Clock className="w-6 h-6 text-yellow-600" />
+            <Clock className="w-6 h-6 text-[#a98700]" />
           </div>
           <p className="text-2xl font-bold text-gray-800">₦{(pendingRelease / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           <p className="text-xs text-gray-500 mt-1">48-hour hold</p>
@@ -268,7 +268,7 @@ export default function ConsultantWalletPage() {
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm text-gray-600">In Service</p>
-            <Clock className="w-6 h-6 text-blue-600" />
+            <Clock className="w-6 h-6 text-[#006d33]" />
           </div>
           <p className="text-2xl font-bold text-gray-800">₦{(inService / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           <p className="text-xs text-gray-500 mt-1">Awaiting completion</p>
@@ -280,7 +280,7 @@ export default function ConsultantWalletPage() {
         <button
           onClick={() => setShowWithdrawModal(true)}
           disabled={balanceInNaira <= 0}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Plus className="w-5 h-5" />
           Request Withdrawal
@@ -314,7 +314,7 @@ export default function ConsultantWalletPage() {
                       <p className="text-xs mt-1">
                         <span className={`px-2 py-1 rounded ${
                           transaction.fundStatus === 'credited' ? 'bg-green-100 text-green-700' :
-                          transaction.fundStatus === 'pending_release' ? 'bg-yellow-100 text-yellow-700' :
+                          transaction.fundStatus === 'pending_release' ? 'bg-[#f7edc4] text-[#876b00]' :
                           'bg-gray-100 text-gray-700'
                         }`}>
                           {transaction.fundStatus === 'credited' ? 'Available' :
@@ -381,7 +381,7 @@ export default function ConsultantWalletPage() {
                     withdrawal.status === 'completed'
                       ? 'bg-green-100 text-green-700'
                       : withdrawal.status === 'pending' || withdrawal.status === 'processing'
-                      ? 'bg-yellow-100 text-yellow-700'
+                      ? 'bg-[#f7edc4] text-[#876b00]'
                       : withdrawal.status === 'failed'
                       ? 'bg-red-100 text-red-700'
                       : 'bg-gray-100 text-gray-700'
@@ -407,7 +407,7 @@ export default function ConsultantWalletPage() {
                   type="number"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                   placeholder="0.00"
                   min="0"
                   step="0.01"
@@ -423,7 +423,7 @@ export default function ConsultantWalletPage() {
                   <select
                     value={selectedBankAccountId}
                     onChange={(e) => setSelectedBankAccountId(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                   >
                     {savedBankAccounts.map((account) => (
                       <option key={account.id} value={account.id}>
@@ -434,19 +434,19 @@ export default function ConsultantWalletPage() {
                   </select>
                   <Link
                     href="/consultants/bank-account"
-                    className="text-sm text-purple-600 hover:underline mt-1 inline-block"
+                    className="text-sm text-[#006400] hover:underline mt-1 inline-block"
                   >
                     Manage bank accounts
                   </Link>
                 </div>
               ) : (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <p className="text-sm text-yellow-800 mb-2">
+                <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4">
+                  <p className="text-sm text-[#655100] mb-2">
                     You need to add a bank account first.
                   </p>
                   <Link
                     href="/consultants/bank-account"
-                    className="text-sm text-purple-600 hover:underline font-semibold"
+                    className="text-sm text-[#006400] hover:underline font-semibold"
                   >
                     Add Bank Account →
                   </Link>
@@ -463,7 +463,7 @@ export default function ConsultantWalletPage() {
               <button
                 onClick={handleWithdraw}
                 disabled={submitting || !selectedBankAccountId || savedBankAccounts.length === 0}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50"
               >
                 {submitting ? 'Submitting...' : 'Submit Request'}
               </button>

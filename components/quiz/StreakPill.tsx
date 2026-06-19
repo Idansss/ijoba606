@@ -11,8 +11,8 @@ interface StreakPillProps {
 
 export function StreakPill({ streakCount, bestStreak }: StreakPillProps) {
   const getGradient = () => {
-    if (streakCount >= 7) return 'from-orange-500 via-rose-500 to-pink-500';
-    if (streakCount >= 3) return 'from-amber-400 via-orange-400 to-pink-400';
+    if (streakCount >= 7) return 'from-[#c59f00] via-rose-500 to-pink-500';
+    if (streakCount >= 3) return 'from-[#d7b01f] via-[#d7b01f] to-pink-400';
     return 'from-slate-400 via-slate-500 to-slate-600';
   };
 
@@ -22,7 +22,7 @@ export function StreakPill({ streakCount, bestStreak }: StreakPillProps) {
         initial={{ opacity: 0.8, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className={cn(
-          'flex items-center gap-4 rounded-full px-6 py-4 text-white shadow-xl shadow-orange-200/40',
+          'flex items-center gap-4 rounded-full px-6 py-4 text-white shadow-xl shadow-[#efd98a]/40',
           'bg-gradient-to-r',
           getGradient()
         )}

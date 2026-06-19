@@ -46,7 +46,7 @@ export function SearchBar({
           type="submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-white"
+          className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-white"
         >
           Search
         </motion.button>

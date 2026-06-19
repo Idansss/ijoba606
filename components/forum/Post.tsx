@@ -98,7 +98,7 @@ export function Post({
           {/* Meta */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full flex items-center justify-center text-white font-bold">
                 U
               </div>
               <div>

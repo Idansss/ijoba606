@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/lib/store/auth';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 
 export default function Home() {
   const { profile } = useAuthStore();
@@ -15,13 +16,20 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-16"
       >
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-green-600 bg-clip-text text-transparent uppercase">
-          ijoba 606
+        <BrandLogo
+          className="mb-6 justify-center"
+          markClassName="h-16 w-16"
+          textClassName="text-2xl md:text-3xl"
+          taglineClassName="text-[0.72rem] md:text-xs"
+        />
+        <h1 className="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight leading-[1.05] text-[#006400]">
+          Tax literacy<br />
+          <span className="text-[#c59f00]">made simple.</span>
         </h1>
-        <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto">
+        <p className="text-xl md:text-2xl font-semibold text-[#1a1c15] mb-4 max-w-3xl mx-auto">
           Learn PAYE • Play Quizzes • Join Forum • Calculate Tax
         </p>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-[#404a3b] max-w-2xl mx-auto">
           Make tax literacy engaging with short challenges, community
           conversations, and a practical calculator. 🇳🇬
         </p>
@@ -36,19 +44,19 @@ export default function Home() {
         >
           <Link
             href="/play"
-            className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all"
+            className="group block rounded-[28px] border border-[#0064001a] bg-white/80 backdrop-blur-sm p-8 shadow-[0_10px_30px_rgba(0,50,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(0,50,0,0.10)]"
           >
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#0064001a] text-3xl transition-transform group-hover:scale-110">
               🎓
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-3">
               Learn & Play
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[#404a3b] mb-4">
               Answer 3-question rounds, earn badges, maintain streaks, and
               climb the leaderboard!
             </p>
-            <div className="inline-flex items-center gap-2 text-purple-600 font-semibold">
+            <div className="inline-flex items-center gap-2 text-[#006400] font-semibold">
               Start Learning
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -74,19 +82,19 @@ export default function Home() {
         >
           <Link
             href="/calculator"
-            className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all"
+            className="group block rounded-[28px] border border-[#0064001a] bg-white/80 backdrop-blur-sm p-8 shadow-[0_10px_30px_rgba(0,50,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(0,50,0,0.10)]"
           >
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#0064001a] text-3xl transition-transform group-hover:scale-110">
               🧮
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-3">
               Tax Calculator
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[#404a3b] mb-4">
               Figure your tax wahala in 60 seconds. Monthly or annual, with
               clean breakdown. (Educational only)
             </p>
-            <div className="inline-flex items-center gap-2 text-blue-600 font-semibold">
+            <div className="inline-flex items-center gap-2 text-[#006400] font-semibold">
               Calculate Now
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -112,19 +120,19 @@ export default function Home() {
         >
           <Link
             href="/forum"
-            className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-200 hover:border-green-400 hover:shadow-xl transition-all"
+            className="group block rounded-[28px] border border-[#0064001a] bg-white/80 backdrop-blur-sm p-8 shadow-[0_10px_30px_rgba(0,50,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(0,50,0,0.10)]"
           >
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#0064001a] text-3xl transition-transform group-hover:scale-110">
               💬
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-[#1a1c15] mb-3">
               Community Forum
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[#404a3b] mb-4">
               No gist yet? Start one make we learn. Ask questions, share
               knowledge, help others.
             </p>
-            <div className="inline-flex items-center gap-2 text-green-600 font-semibold">
+            <div className="inline-flex items-center gap-2 text-[#006400] font-semibold">
               Join Discussion
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -150,18 +158,21 @@ export default function Home() {
         >
           <Link
             href="/consultants/browse"
-            className="group block bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-orange-200 hover:border-orange-400 hover:shadow-xl transition-all"
+            className="group relative block overflow-hidden rounded-[28px] bg-[#006400] p-8 text-white shadow-[0_18px_40px_rgba(0,60,0,0.20)] transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(0,60,0,0.28)]"
           >
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+            <span className="absolute right-6 top-6 rounded-full bg-[#c59f00] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#0a0a0a]">
+              Pro
+            </span>
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-3xl transition-transform group-hover:scale-110">
               💼
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            <h2 className="text-2xl font-bold text-white mb-3">
               Talk to a Consultant
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-white/80 mb-4">
               Get 1-on-1 clarity for your own situation. Connect with verified tax experts.
             </p>
-            <div className="inline-flex items-center gap-2 text-orange-600 font-semibold">
+            <div className="inline-flex items-center gap-2 font-semibold text-[#ffe085]">
               Find a Consultant
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -187,35 +198,35 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-gray-200 mb-8"
+          className="rounded-[28px] border border-[#0064001a] bg-white/80 backdrop-blur-sm p-8 shadow-[0_10px_30px_rgba(0,50,0,0.05)] mb-8"
         >
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          <h3 className="text-2xl font-bold text-[#1a1c15] mb-6 text-center">
             Your Progress
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">
+              <div className="font-mono text-3xl font-bold text-[#006400] mb-2">
                 {profile.totalPoints}
               </div>
-              <div className="text-sm text-gray-600">Total Points</div>
+              <div className="text-sm text-[#404a3b]">Total Points</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
+              <div className="font-mono text-3xl font-bold text-[#0b7a3b] mb-2">
                 {profile.streakCount}
               </div>
-              <div className="text-sm text-gray-600">Current Streak</div>
+              <div className="text-sm text-[#404a3b]">Current Streak</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+              <div className="font-mono text-3xl font-bold text-[#006d33] mb-2">
                 {profile.bestStreak}
               </div>
-              <div className="text-sm text-gray-600">Best Streak</div>
+              <div className="text-sm text-[#404a3b]">Best Streak</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">
+              <div className="font-mono text-3xl font-bold text-[#c59f00] mb-2">
                 {profile.badges.length}
               </div>
-              <div className="text-sm text-gray-600">Badges Earned</div>
+              <div className="text-sm text-[#404a3b]">Badges Earned</div>
             </div>
           </div>
         </motion.div>
@@ -226,7 +237,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="text-center text-sm text-gray-500 max-w-2xl mx-auto"
+        className="text-center text-sm text-[#404a3b]/80 max-w-2xl mx-auto"
       >
         <p>
           🔒 Your privacy matters. We use Firebase Auth with anonymous + Google

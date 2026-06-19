@@ -194,7 +194,7 @@ export default function RequestRefundPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -209,7 +209,7 @@ export default function RequestRefundPage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
@@ -218,17 +218,17 @@ export default function RequestRefundPage() {
 
       <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
         <div className="text-center mb-8">
-          <DollarSign className="w-16 h-16 text-orange-600 mx-auto mb-4" />
+          <DollarSign className="w-16 h-16 text-[#a98700] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Request Refund</h1>
           <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+        <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-[#a98700] mt-0.5" />
             <div>
-              <p className="font-semibold text-orange-800 mb-1">Refund Policy</p>
-              <p className="text-sm text-orange-700">
+              <p className="font-semibold text-[#655100] mb-1">Refund Policy</p>
+              <p className="text-sm text-[#876b00]">
                 Refund requests will be reviewed by an admin. If approved, the refund will be processed to your bank account. 
                 Processing may take 3-5 business days.
               </p>
@@ -256,7 +256,7 @@ export default function RequestRefundPage() {
             <select
               value={refundData.reason}
               onChange={(e) => setRefundData({ ...refundData, reason: e.target.value as any })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             >
               <option value="">Select Reason</option>
               <option value="service_not_provided">Service Not Provided</option>
@@ -272,7 +272,7 @@ export default function RequestRefundPage() {
               value={refundData.reasonDetails}
               onChange={(e) => setRefundData({ ...refundData, reasonDetails: e.target.value })}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               placeholder="Please provide details about why you need a refund..."
               required
             />
@@ -284,7 +284,7 @@ export default function RequestRefundPage() {
               <select
                 value={refundData.bankAccountId}
                 onChange={(e) => setRefundData({ ...refundData, bankAccountId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               >
                 {bankAccounts.map((account) => (
                   <option key={account.id} value={account.id}>
@@ -295,19 +295,19 @@ export default function RequestRefundPage() {
               </select>
               <Link
                 href="/settings/bank-account"
-                className="text-sm text-purple-600 hover:underline mt-1 inline-block"
+                className="text-sm text-[#006400] hover:underline mt-1 inline-block"
               >
                 Manage bank accounts
               </Link>
             </div>
           ) : (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800 mb-2">
+            <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4">
+              <p className="text-sm text-[#655100] mb-2">
                 You need to add a bank account to receive refunds.
               </p>
               <Link
                 href="/settings/bank-account"
-                className="text-sm text-purple-600 hover:underline font-semibold"
+                className="text-sm text-[#006400] hover:underline font-semibold"
               >
                 Add Bank Account →
               </Link>
@@ -325,7 +325,7 @@ export default function RequestRefundPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting || !refundData.reason || !refundData.reasonDetails || !refundData.bankAccountId}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#a98700] to-[#876b00] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? 'Submitting...' : 'Submit Refund Request'}
           </button>

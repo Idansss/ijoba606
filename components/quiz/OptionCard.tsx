@@ -36,8 +36,8 @@ export function OptionCard({
       className={cn(
         'w-full rounded-2xl border px-4 py-4 text-left transition-all',
         'bg-white/85',
-        isSelected && !isRevealed && 'border-purple-400 shadow-lg shadow-purple-200',
-        !isSelected && !isRevealed && 'border-slate-100 hover:border-purple-200',
+        isSelected && !isRevealed && 'border-[#3f9a37] shadow-lg shadow-[#aecf9c]',
+        !isSelected && !isRevealed && 'border-slate-100 hover:border-[#aecf9c]',
         isRevealed && isCorrect && 'border-emerald-200 bg-emerald-50',
         isWrongSelection && 'border-rose-200 bg-rose-50',
         disabled && !isSelected && !isCorrect && 'opacity-70'
@@ -48,7 +48,7 @@ export function OptionCard({
           className={cn(
             'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl text-sm font-semibold',
             'border',
-            isSelected && !isRevealed && 'border-purple-200 bg-purple-50 text-purple-700',
+            isSelected && !isRevealed && 'border-[#aecf9c] bg-[#e9f1e2] text-[#004f00]',
             !isSelected && !isRevealed && 'border-slate-200 text-slate-500 bg-white',
             isRevealed && isCorrect && 'border-emerald-200 bg-emerald-100 text-emerald-700',
             isWrongSelection && 'border-rose-200 bg-rose-100 text-rose-700'

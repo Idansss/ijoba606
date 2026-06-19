@@ -38,7 +38,7 @@ export default function ForumPage() {
       fallback={
         <div className="container mx-auto px-4 py-12">
           <div className="text-center py-12">
-            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
           </div>
         </div>
       }
@@ -143,7 +143,7 @@ function ForumPageContent() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]"
+          className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]"
         >
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
@@ -158,7 +158,7 @@ function ForumPageContent() {
             {firebaseUser && (
               <Link
                 href="/forum/new"
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0b7a3b]/30"
               >
                 <MessageSquare className="h-4 w-4" />
                 Start a thread
@@ -180,7 +180,7 @@ function ForumPageContent() {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
                   activeTab === tab
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow'
+                    ? 'bg-gradient-to-r from-[#006400] to-[#109a48] text-white shadow'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -197,7 +197,7 @@ function ForumPageContent() {
                 Fetching latest conversations...
               </div>
             ) : threads.length === 0 ? (
-              <div className="rounded-[32px] border border-dashed border-slate-200 bg-white/70 p-12 text-center text-slate-500">
+              <div className="rounded-[32px] border border-dashed border-slate-200 bg-white/70 p-6 sm:p-12 text-center text-slate-500">
                 No threads yet. Be the first to start a conversation!
               </div>
             ) : (
@@ -219,7 +219,7 @@ function ForumPageContent() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-blue-100 bg-blue-50 p-6 text-sm text-blue-900">
+            <div className="rounded-3xl border border-[#c7ecd6] bg-[#e6f3ec] p-6 text-sm text-[#002d15]">
               <h3 className="text-lg font-semibold">House rules</h3>
               <ul className="mt-4 space-y-2 text-sm">
                 <li>• Be respectful and stay on topic (PAYE & payroll).</li>

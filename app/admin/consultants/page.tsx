@@ -240,7 +240,7 @@ export default function AdminConsultantsPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -254,7 +254,7 @@ export default function AdminConsultantsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -263,7 +263,7 @@ export default function AdminConsultantsPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
               Consultant
             </span>{' '}
             <span className="text-gray-900">Management</span>
@@ -281,7 +281,7 @@ export default function AdminConsultantsPage() {
             onClick={() => setActiveTab('applications')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'applications'
-                ? 'bg-white text-purple-600 shadow-sm'
+                ? 'bg-white text-[#006400] shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
@@ -292,7 +292,7 @@ export default function AdminConsultantsPage() {
             onClick={() => setActiveTab('consultants')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'consultants'
-                ? 'bg-white text-purple-600 shadow-sm'
+                ? 'bg-white text-[#006400] shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
@@ -303,18 +303,18 @@ export default function AdminConsultantsPage() {
 
       {loading ? (
         <div className="text-center py-12">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       ) : activeTab === 'applications' ? (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {applications.length === 0 ? (
-            <div className="p-12 text-center">
+            <div className="p-6 sm:p-12 text-center">
               <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No applications yet.</p>
             </div>
           ) : (
             <div className="overflow-x-auto p-6">
-              <table className="w-full">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Applicant</th>
@@ -344,7 +344,7 @@ export default function AdminConsultantsPage() {
                                   href={docItem.url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="text-purple-700 hover:underline"
+                                  className="text-[#004f00] hover:underline"
                                 >
                                   {docItem.name}
                                 </a>
@@ -362,7 +362,7 @@ export default function AdminConsultantsPage() {
                               ? 'bg-green-100 text-green-800'
                               : app.status === 'rejected'
                               ? 'bg-red-100 text-red-800'
-                              : 'bg-amber-100 text-amber-800'
+                              : 'bg-[#f7edc4] text-[#655100]'
                           }`}
                         >
                           {app.status}
@@ -379,7 +379,7 @@ export default function AdminConsultantsPage() {
                             <button
                               type="button"
                               onClick={() => setSelectedApplication(app)}
-                              className="text-xs font-semibold text-purple-700 hover:underline"
+                              className="text-xs font-semibold text-[#004f00] hover:underline"
                             >
                               View
                             </button>
@@ -392,7 +392,7 @@ export default function AdminConsultantsPage() {
                                 )
                               }
                               disabled={updatingId === app.id}
-                              className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                              className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
                             >
                               <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
@@ -404,7 +404,7 @@ export default function AdminConsultantsPage() {
                               type="button"
                               onClick={() => handleCreateMissingProfile(app)}
                               disabled={updatingId === app.id}
-                              className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1 hover:bg-amber-100 disabled:opacity-50"
+                              className="text-xs font-semibold text-[#876b00] bg-[#fcf7e6] border border-[#efd98a] rounded-lg px-2 py-1 hover:bg-[#f7edc4] disabled:opacity-50"
                             >
                               Create profile (missing)
                             </button>
@@ -421,14 +421,14 @@ export default function AdminConsultantsPage() {
       ) : (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {profiles.length === 0 ? (
-            <div className="p-12 text-center">
+            <div className="p-6 sm:p-12 text-center">
               <UserCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No consultant profiles yet.</p>
               <p className="text-sm text-gray-400 mt-1">Approve an application to create a profile.</p>
             </div>
           ) : (
             <div className="overflow-x-auto p-6">
-              <table className="w-full">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Consultant</th>
@@ -453,7 +453,7 @@ export default function AdminConsultantsPage() {
                             })
                           }
                           disabled={updatingId === profile.id}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
                         >
                           <option value="verified">Verified</option>
                           <option value="unverified">Unverified</option>
@@ -468,7 +468,7 @@ export default function AdminConsultantsPage() {
                             })
                           }
                           disabled={updatingId === profile.id}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50"
                         >
                           <option value="active">Active</option>
                           <option value="inactive">Inactive</option>
@@ -549,7 +549,7 @@ export default function AdminConsultantsPage() {
                     href={selectedApplication.credentialsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-purple-700 hover:underline"
+                    className="text-[#004f00] hover:underline"
                   >
                     {selectedApplication.credentialsUrl}
                   </a>
@@ -565,7 +565,7 @@ export default function AdminConsultantsPage() {
                           href={docItem.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-purple-700 hover:underline"
+                          className="text-[#004f00] hover:underline"
                         >
                           {docItem.name}
                         </a>

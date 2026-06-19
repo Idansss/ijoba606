@@ -55,8 +55,8 @@ export default function ContactPage() {
       label: 'Email',
       value: 'info@ijoba606.com',
       href: 'mailto:info@ijoba606.com',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-[#006d33]',
+      bgColor: 'bg-[#c7ecd6]',
     },
     {
       icon: Phone,
@@ -71,8 +71,8 @@ export default function ContactPage() {
       label: 'Location',
       value: 'Lagos, Nigeria',
       href: '#',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-[#006400]',
+      bgColor: 'bg-[#d3e6c8]',
     },
   ];
 
@@ -81,13 +81,13 @@ export default function ContactPage() {
       icon: Twitter,
       label: 'Twitter',
       href: 'https://twitter.com/ijoba606',
-      color: 'hover:text-blue-400',
+      color: 'hover:text-[#25b35f]',
     },
     {
       icon: Linkedin,
       label: 'LinkedIn',
       href: 'https://linkedin.com/company/ijoba606',
-      color: 'hover:text-blue-600',
+      color: 'hover:text-[#006d33]',
     },
     {
       icon: Github,
@@ -99,7 +99,7 @@ export default function ContactPage() {
       icon: Facebook,
       label: 'Facebook',
       href: 'https://facebook.com/ijoba606',
-      color: 'hover:text-blue-500',
+      color: 'hover:text-[#109a48]',
     },
     {
       icon: Instagram,
@@ -174,7 +174,7 @@ export default function ContactPage() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-purple-500 transition-all ${social.color} group`}
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-[#0b7a3b] transition-all ${social.color} group`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="text-sm font-semibold">{social.label}</span>
@@ -189,11 +189,11 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl shadow-lg p-6 text-white"
+            className="bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-2xl shadow-lg p-6 text-white"
           >
             <MessageCircle className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Quick Response</h3>
-            <p className="text-purple-100 text-sm">
+            <p className="text-[#d3e6c8] text-sm">
               We typically respond within 24-48 hours. For urgent matters, please call us directly.
             </p>
           </motion.div>
@@ -221,7 +221,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                     placeholder="John Doe"
                   />
                 </div>
@@ -236,7 +236,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -253,7 +253,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all"
                   placeholder="How can we help?"
                 />
               </div>
@@ -269,7 +269,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent transition-all resize-none"
                   placeholder="Tell us what's on your mind..."
                 />
               </div>
@@ -277,7 +277,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>
@@ -294,11 +294,11 @@ export default function ContactPage() {
 
               <p className="text-sm text-gray-500 text-center">
                 By submitting this form, you agree to our{' '}
-                <a href="/legal/privacy" className="text-purple-600 hover:underline">
+                <a href="/legal/privacy" className="text-[#006400] hover:underline">
                   Privacy Policy
                 </a>
                 {' '}and{' '}
-                <a href="/legal/terms" className="text-purple-600 hover:underline">
+                <a href="/legal/terms" className="text-[#006400] hover:underline">
                   Terms of Service
                 </a>
                 .

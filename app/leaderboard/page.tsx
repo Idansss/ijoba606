@@ -88,7 +88,7 @@ export default function LeaderboardPage() {
   if (!isEnabled) {
     return (
       <div className="container mx-auto px-4">
-        <div className="mx-auto mt-16 max-w-3xl rounded-[32px] border border-white/70 bg-white/80 p-12 text-center shadow-[0_45px_120px_rgba(87,93,170,0.2)]">
+        <div className="mx-auto mt-16 max-w-3xl rounded-[32px] border border-white/70 bg-white/80 p-6 sm:p-12 text-center shadow-[0_45px_120px_rgba(87,93,170,0.2)]">
           <Trophy className="mx-auto h-12 w-12 text-slate-400" />
           <h1 className="mt-6 text-4xl font-semibold text-slate-900">
             Leaderboard coming soon
@@ -109,7 +109,7 @@ export default function LeaderboardPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-5xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
           <div className="flex flex-col gap-3 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
               Friendly competition
@@ -129,7 +129,7 @@ export default function LeaderboardPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
                   activeTab === tab
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow'
+                    ? 'bg-gradient-to-r from-[#006400] to-[#109a48] text-white shadow'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -149,7 +149,7 @@ export default function LeaderboardPage() {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[640px]">
                   <thead>
                     <tr className="text-left text-xs uppercase tracking-[0.4em] text-slate-400">
                       <th className="px-6 py-4">Rank</th>
@@ -166,7 +166,7 @@ export default function LeaderboardPage() {
                         <tr
                           key={entry.uid}
                           className={`border-t border-slate-100 text-slate-600 transition hover:bg-slate-50 ${
-                            isCurrentUser ? 'bg-purple-50/60' : ''
+                            isCurrentUser ? 'bg-[#e9f1e2]/60' : ''
                           }`}
                         >
                           <td className="px-6 py-4 font-semibold text-slate-700">
@@ -177,20 +177,20 @@ export default function LeaderboardPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-sm font-bold text-white">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#0b7a3b] to-[#109a48] text-sm font-bold text-white">
                                 {entry.handle?.[0]?.toUpperCase() || '?'}
                               </div>
                               <div>
                                 <p
                                   className={`font-semibold ${
                                     isCurrentUser
-                                      ? 'text-purple-700'
+                                      ? 'text-[#004f00]'
                                       : 'text-slate-800'
                                   }`}
                                 >
                                   {entry.handle ? formatHandleForDisplay(entry.handle) : 'Anonymous'}
                                   {isCurrentUser && (
-                                    <span className="ml-2 rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700">
+                                    <span className="ml-2 rounded-full bg-[#d3e6c8] px-2 py-0.5 text-xs text-[#004f00]">
                                       You
                                     </span>
                                   )}
@@ -216,7 +216,7 @@ export default function LeaderboardPage() {
             )}
           </div>
 
-          <div className="mt-6 rounded-2xl border border-yellow-100 bg-yellow-50 p-4 text-sm text-yellow-800">
+          <div className="mt-6 rounded-2xl border border-[#f7edc4] bg-[#fcf7e6] p-4 text-sm text-[#655100]">
             Leaderboard resets every Monday at 00:05 Africa/Lagos time. The all-time
             board keeps every point.
           </div>

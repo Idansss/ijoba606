@@ -286,7 +286,7 @@ export default function AdminNewsPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600" />
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
         </div>
       </div>
     );
@@ -300,7 +300,7 @@ export default function AdminNewsPage() {
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-semibold">Back to Dashboard</span>
@@ -310,7 +310,7 @@ export default function AdminNewsPage() {
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">
-              <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
                 News
               </span>{' '}
               <span className="text-gray-900">Management</span>
@@ -340,7 +340,7 @@ export default function AdminNewsPage() {
             <button
               onClick={handleFetchFromAI}
               disabled={fetching}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#109a48] to-[#109a48] text-white rounded-xl font-semibold hover:from-[#006d33] hover:to-[#006d33] transition disabled:opacity-50"
             >
               <Sparkles className="w-5 h-5" />
               {fetching ? 'Fetching…' : 'Fetch from AI'}
@@ -348,14 +348,14 @@ export default function AdminNewsPage() {
             <button
               onClick={handleSeedSample}
               disabled={seeding}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 transition disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#c59f00] text-white rounded-xl font-semibold hover:bg-[#a98700] transition disabled:opacity-50"
             >
               <Plus className="w-5 h-5" />
               {seeding ? 'Seeding…' : 'Seed Sample'}
             </button>
             <button
               onClick={() => openModal()}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#006400] text-white rounded-xl font-semibold hover:bg-[#004f00] transition"
             >
               <Plus className="w-5 h-5" />
               Add Article
@@ -365,10 +365,10 @@ export default function AdminNewsPage() {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-purple-600" />
+            <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-[#006400]" />
           </div>
         ) : articles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-12 text-center">
             <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-800 mb-2">No articles yet</h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
@@ -386,7 +386,7 @@ export default function AdminNewsPage() {
               <button
                 onClick={handleSeedSample}
                 disabled={seeding}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#c59f00] text-white rounded-xl font-semibold hover:bg-[#a98700] disabled:opacity-50"
               >
                 <Plus className="w-5 h-5" />
                 {seeding ? 'Seeding…' : 'Seed Sample'}
@@ -394,7 +394,7 @@ export default function AdminNewsPage() {
               <button
                 onClick={handleFetchFromAI}
                 disabled={fetching}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#109a48] to-[#109a48] text-white rounded-xl font-semibold hover:from-[#006d33] hover:to-[#006d33] disabled:opacity-50"
               >
                 <Sparkles className="w-5 h-5" />
                 {fetching ? 'Fetching…' : 'Fetch from AI'}
@@ -402,14 +402,14 @@ export default function AdminNewsPage() {
               <button
                 onClick={handleSearchTaxLaw2026}
                 disabled={searching2026}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#c59f00] to-[#c59f00] text-white rounded-xl font-semibold hover:from-[#a98700] hover:to-[#a98700] disabled:opacity-50"
               >
                 <Sparkles className="w-5 h-5" />
                 {searching2026 ? 'Searching…' : 'Search Tax Law 2026'}
               </button>
               <button
                 onClick={() => openModal()}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#006400] text-white rounded-xl font-semibold hover:bg-[#004f00]"
               >
                 <Plus className="w-5 h-5" />
                 Add Article
@@ -419,7 +419,7 @@ export default function AdminNewsPage() {
         ) : (
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Title</th>
@@ -468,7 +468,7 @@ export default function AdminNewsPage() {
                           </a>
                           <button
                             onClick={() => openModal(article)}
-                            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition"
+                            className="p-2 text-[#006400] hover:bg-[#e9f1e2] rounded-lg transition"
                             title="Edit"
                           >
                             <Pencil className="w-4 h-4" />
@@ -514,7 +514,7 @@ export default function AdminNewsPage() {
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="Article title"
                 />
               </div>
@@ -524,7 +524,7 @@ export default function AdminNewsPage() {
                   type="text"
                   value={form.slug}
                   onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="url-friendly-slug"
                 />
               </div>
@@ -535,7 +535,7 @@ export default function AdminNewsPage() {
                   onChange={(e) => setForm((p) => ({ ...p, excerpt: e.target.value }))}
                   required
                   rows={2}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b]"
                   placeholder="Short summary"
                 />
               </div>
@@ -546,7 +546,7 @@ export default function AdminNewsPage() {
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
                   required
                   rows={8}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] font-mono text-sm"
                   placeholder="<p>Your HTML content here...</p>"
                 />
               </div>
@@ -607,7 +607,7 @@ export default function AdminNewsPage() {
               <div className="flex gap-3 pt-4">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700"
+                  className="px-4 py-2 bg-[#006400] text-white rounded-lg font-semibold hover:bg-[#004f00]"
                 >
                   {editingArticle ? 'Update' : 'Publish'}
                 </button>

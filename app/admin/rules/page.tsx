@@ -137,7 +137,7 @@ export default function AdminRulesPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -158,13 +158,13 @@ export default function AdminRulesPage() {
           <div className="flex items-center gap-4 mb-4">
             <Link
               href="/admin"
-              className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#006400] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="text-sm font-semibold">Back to Dashboard</span>
             </Link>
           </div>
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             PAYE Rules Configuration
           </h1>
           <p className="text-gray-600">
@@ -187,7 +187,7 @@ export default function AdminRulesPage() {
                     <input
                       type="number"
                       {...register('year', { valueAsNumber: true })}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
                     {errors.year && (
                       <p className="text-red-500 text-sm mt-1">{errors.year.message}</p>
@@ -215,7 +215,7 @@ export default function AdminRulesPage() {
                     <input
                       type="checkbox"
                       {...register('reliefs.pensionIsDeductible')}
-                      className="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      className="w-5 h-5 text-[#006400] border-gray-300 rounded focus:ring-[#0b7a3b]"
                     />
                     <span className="text-sm font-medium text-gray-700">
                       Pension is deductible
@@ -225,7 +225,7 @@ export default function AdminRulesPage() {
                     <input
                       type="checkbox"
                       {...register('reliefs.nhfIsDeductible')}
-                      className="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      className="w-5 h-5 text-[#006400] border-gray-300 rounded focus:ring-[#0b7a3b]"
                     />
                     <span className="text-sm font-medium text-gray-700">
                       NHF is deductible
@@ -239,7 +239,7 @@ export default function AdminRulesPage() {
                       type="number"
                       {...register('reliefs.lifeAssuranceCap', { valueAsNumber: true })}
                       placeholder="Leave blank for no cap"
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export default function AdminRulesPage() {
                           type="number"
                           {...register(`brackets.${idx}.upTo`, { valueAsNumber: true })}
                           placeholder="e.g., 300000"
-                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-sm"
+                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                         />
                       </div>
                       <div>
@@ -274,7 +274,7 @@ export default function AdminRulesPage() {
                           step="0.01"
                           {...register(`brackets.${idx}.rate`, { valueAsNumber: true })}
                           placeholder="e.g., 0.07"
-                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-sm"
+                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                         />
                       </div>
                     </div>
@@ -292,7 +292,7 @@ export default function AdminRulesPage() {
                     </label>
                     <select
                       {...register('personalAllowance.type')}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     >
                       <option value="fixed">Fixed Amount</option>
                       <option value="percentOfGross">Percent of Gross</option>
@@ -306,7 +306,7 @@ export default function AdminRulesPage() {
                     <input
                       type="number"
                       {...register('personalAllowance.value', { valueAsNumber: true })}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       For fixed: NGN amount. For percent: decimal (e.g., 0.2 = 20%)
@@ -321,14 +321,14 @@ export default function AdminRulesPage() {
                 <textarea
                   {...register('notes')}
                   rows={3}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                 />
               </div>
 
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
+                className="w-full py-4 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg"
               >
                 Save PAYE Rules
               </button>
@@ -354,7 +354,7 @@ export default function AdminRulesPage() {
                     onChange={(e) =>
                       setTestInputs({ ...testInputs, basic: Number(e.target.value) })
                     }
-                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                   />
                 </div>
                 <div>
@@ -367,7 +367,7 @@ export default function AdminRulesPage() {
                     onChange={(e) =>
                       setTestInputs({ ...testInputs, pensionPct: Number(e.target.value) })
                     }
-                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-[#0b7a3b] focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -375,7 +375,7 @@ export default function AdminRulesPage() {
               <button
                 type="button"
                 onClick={handleTestCalculation}
-                className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all mb-4"
+                className="w-full py-3 bg-[#006d33] text-white rounded-xl font-semibold hover:bg-[#005728] transition-all mb-4"
               >
                 Calculate Test
               </button>
@@ -390,7 +390,7 @@ export default function AdminRulesPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Monthly Tax:</span>
-                    <span className="font-bold text-purple-600">
+                    <span className="font-bold text-[#006400]">
                       {formatCurrency(testResults.monthlyTax)}
                     </span>
                   </div>

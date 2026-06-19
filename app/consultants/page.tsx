@@ -32,13 +32,13 @@ export default function ConsultantsPage() {
       >
         <Link
           href="/consultants/browse"
-          className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-purple-500/30 hover:brightness-110 transition text-center"
+          className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-[#0b7a3b]/30 hover:brightness-110 transition text-center"
         >
           Browse Consultants
         </Link>
         <Link
           href="/consultants/apply"
-          className="rounded-full border-2 border-purple-600 px-8 py-4 text-lg font-semibold text-purple-600 hover:bg-purple-50 transition text-center"
+          className="rounded-full border-2 border-[#006400] px-8 py-4 text-lg font-semibold text-[#006400] hover:bg-[#e9f1e2] transition text-center"
         >
           Become a Consultant
         </Link>
@@ -53,18 +53,18 @@ export default function ConsultantsPage() {
       >
         <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">How it works</h2>
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-100">
-            <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-              <UserCheck className="h-6 w-6 text-purple-600" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#d3e6c8]">
+            <div className="w-12 h-12 rounded-full bg-[#d3e6c8] flex items-center justify-center mb-4">
+              <UserCheck className="h-6 w-6 text-[#006400]" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">1. Tell us what you need</h3>
             <p className="text-gray-600">
               Share your tax question or situation. We'll understand your needs.
             </p>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-100">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <Users className="h-6 w-6 text-blue-600" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-[#c7ecd6]">
+            <div className="w-12 h-12 rounded-full bg-[#c7ecd6] flex items-center justify-center mb-4">
+              <Users className="h-6 w-6 text-[#006d33]" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">2. We match you with a verified consultant</h3>
             <p className="text-gray-600">

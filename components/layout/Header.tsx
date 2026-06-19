@@ -32,6 +32,7 @@ import { useToastStore } from '@/lib/store/toast';
 import { cn } from '@/lib/utils/cn';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { formatHandleForDisplay } from '@/lib/utils/formatHandle';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 
 const navLinks = [
   { href: '/play', label: 'Learn & Play', icon: Gamepad2 },
@@ -123,18 +124,11 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-[var(--border-soft)] bg-[color-mix(in_srgb,var(--surface)_92%,#ffffff_8%)] backdrop-blur">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white shadow">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-lg font-semibold text-[var(--foreground)] uppercase">
-                ijoba 606
-              </p>
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                Learn · Play · Calculate
-              </p>
-            </div>
+          <Link href="/" className="shrink-0" aria-label="ijoba 606 home">
+            <BrandLogo
+              textClassName="text-base sm:text-lg"
+              taglineClassName="hidden sm:block"
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 rounded-full border border-white/70 bg-white/70 px-1 py-1 shadow-inner shadow-white/40 md:flex">
@@ -148,8 +142,8 @@ export function Header() {
                   className={cn(
                     'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all',
                     isActive
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-lg'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                      ? 'bg-gradient-to-r from-[#006400] to-[#c59f00] text-white shadow-lg'
+                      : 'text-[#404a3b] hover:text-[#006400] hover:bg-white'
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -165,13 +159,13 @@ export function Header() {
               <>
                 <button
                   onClick={handleSignInAnon}
-                  className="hidden rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:border-purple-400 hover:text-slate-900 md:block"
+                  className="hidden rounded-full border border-[#bfcab7] px-4 py-2 text-sm font-semibold text-[#404a3b] hover:border-[#006400] hover:text-[#006400] md:block"
                 >
                   Try Demo
                 </button>
                 <button
                   onClick={handleSignInGoogle}
-                  className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:brightness-110"
+                  className="rounded-full bg-[#006400] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#006400]/30 hover:bg-[#0b7a3b]"
                 >
                   Sign in
                 </button>
@@ -180,7 +174,7 @@ export function Header() {
               <>
                 <Link
                   href="/profile"
-                  className="relative hidden rounded-full border border-slate-200 px-3 py-2 text-slate-500 transition hover:border-purple-400 hover:text-purple-700 md:flex md:items-center"
+                  className="relative hidden rounded-full border border-[#bfcab7] px-3 py-2 text-[#404a3b] transition hover:border-[#006400] hover:text-[#006400] md:flex md:items-center"
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5" />
@@ -194,9 +188,9 @@ export function Header() {
                 <div className="relative">
                   <button
                     onClick={() => setProfileOpen((prev) => !prev)}
-                    className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 pr-1 text-left shadow-sm transition hover:border-purple-400"
+                    className="flex items-center gap-3 rounded-full border border-[#bfcab7] bg-white/80 px-3 py-1.5 pr-1 text-left shadow-sm transition hover:border-[#006400]"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-blue-500 text-lg font-bold text-white shadow-md">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c59f00] text-lg font-bold text-[#0a0a0a] shadow-md">
                       {initials}
                     </div>
                     <div className="hidden text-sm md:block">
@@ -221,27 +215,27 @@ export function Header() {
                           href="/profile"
                           className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                          <UserRound className="h-4 w-4 text-purple-600" />
+                          <UserRound className="h-4 w-4 text-[#006400]" />
                           Profile & Stats
                         </Link>
                         <Link
                           href="/forum/me"
                           className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                          <MessageCircle className="h-4 w-4 text-blue-600" />
+                          <MessageCircle className="h-4 w-4 text-[#0b7a3b]" />
                           Forum Activity
                         </Link>
                         <Link
                           href="/dashboard"
                           className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
-                          <FileText className="h-4 w-4 text-purple-600" />
+                          <FileText className="h-4 w-4 text-[#006400]" />
                           My Dashboard
                         </Link>
                         {user?.role === 'admin' && (
                           <Link
                             href="/admin"
-                            className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                            className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-[#006400] transition hover:bg-[#0064000d]"
                           >
                             <Sparkles className="h-4 w-4" />
                             Admin Panel
@@ -263,7 +257,7 @@ export function Header() {
 
             <button
               onClick={() => setNavOpen((prev) => !prev)}
-              className="rounded-full border border-slate-200 p-2 text-slate-600 transition hover:border-purple-400 hover:text-slate-900 md:hidden"
+              className="rounded-full border border-[#bfcab7] p-2 text-[#404a3b] transition hover:border-[#006400] hover:text-[#006400] md:hidden"
               aria-label="Toggle menu"
             >
               {navOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -290,7 +284,7 @@ export function Header() {
                       className={cn(
                         'flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-semibold',
                         isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-blue-500 text-white shadow-lg'
+                          ? 'bg-gradient-to-r from-[#006400] to-[#c59f00] text-white shadow-lg'
                           : 'text-slate-600 hover:bg-slate-50'
                       )}
                       onClick={() => setNavOpen(false)}
@@ -305,7 +299,7 @@ export function Header() {
               {!firebaseUser ? (
                 <button
                   onClick={handleSignInGoogle}
-                  className="w-full rounded-2xl bg-gradient-to-r from-purple-600 to-blue-500 px-4 py-3 text-center text-base font-semibold text-white"
+                  className="w-full rounded-2xl bg-[#006400] px-4 py-3 text-center text-base font-semibold text-white"
                 >
                   Sign in with Google
                 </button>

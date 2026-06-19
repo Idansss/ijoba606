@@ -112,7 +112,7 @@ export function ReportButton({ targetKind, targetId }: ReportButtonProps) {
                     <select
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
                     >
                       <option value="">Select a reason...</option>
                       {REPORT_REASONS.map((r) => (
@@ -134,7 +134,7 @@ export function ReportButton({ targetKind, targetId }: ReportButtonProps) {
                       maxLength={500}
                       rows={3}
                       placeholder="Provide more context..."
-                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-none"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       {text.length}/500 characters

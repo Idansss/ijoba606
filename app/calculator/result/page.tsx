@@ -25,7 +25,7 @@ export default function ResultPage() {
       fallback={
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
           </div>
         </div>
       }
@@ -112,7 +112,7 @@ function ResultPageContent() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ function ResultPageContent() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-5xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
               Personal Income Tax Summary
@@ -209,7 +209,7 @@ function ResultPageContent() {
           <div className="mt-10 grid gap-4 md:grid-cols-3">
           <Link
             href="/calculator"
-              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
+              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
           >
               New calculation
           </Link>
@@ -217,14 +217,14 @@ function ResultPageContent() {
             <button
               onClick={handleSave}
               disabled={saving}
-                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900 disabled:opacity-50"
+                className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900 disabled:opacity-50"
             >
                 {saving ? 'Saving...' : 'Save to profile'}
             </button>
           )}
           <button
             onClick={() => setShareOpen(true)}
-              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+              className="rounded-full border border-slate-200 px-6 py-4 text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
           >
               Share result
           </button>
@@ -239,7 +239,7 @@ function ResultPageContent() {
           </button>
         </div>
 
-          <div className="mt-6 rounded-2xl border border-yellow-100 bg-yellow-50 p-4 text-xs text-yellow-800">
+          <div className="mt-6 rounded-2xl border border-[#f7edc4] bg-[#fcf7e6] p-4 text-xs text-[#655100]">
             Educational purposes only. Please consult a licensed tax professional
             before filing.
           </div>

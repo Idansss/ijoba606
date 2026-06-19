@@ -91,7 +91,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
         type="number"
         step={options.step}
         {...register(name, { valueAsNumber: true })}
-        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-purple-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-[#7fb56a] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
       {options.helper && (
         <p className="mt-1 text-xs text-slate-400">{options.helper}</p>
@@ -163,7 +163,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                   e.target.value = formatNumber(parsed);
                   onChange(parsed);
                 }}
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-purple-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-[#7fb56a] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 placeholder="Enter income amount"
               />
             )}
@@ -193,7 +193,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                 <button
                   type="button"
                   onClick={handleAddRelief}
-                  className="flex items-center gap-2 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700"
+                  className="flex items-center gap-2 rounded-full bg-[#006400] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f00]"
                 >
                   <Plus className="h-4 w-4" />
                   Add Relief
@@ -222,7 +222,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                           </label>
                           <select
                             {...register(`reliefs.${index}.type`)}
-                            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-purple-300 focus:outline-none"
+                            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-[#7fb56a] focus:outline-none"
                           >
                             {RELIEF_OPTIONS.map((option) => (
                               <option key={option.value} value={option.value}>
@@ -284,7 +284,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                                     onChange(parsed);
                                     handleRentReliefChange(index, parsed);
                                   }}
-                                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-purple-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-[#7fb56a] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   placeholder="Enter annual rent"
                                 />
                               )}
@@ -318,7 +318,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                                     e.target.value = formatNumber(parsed);
                                     onChange(parsed);
                                   }}
-                                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-purple-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 transition focus:border-[#7fb56a] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   placeholder="Enter amount"
                                 />
                               )}
@@ -337,7 +337,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
                         <button
                           type="button"
                           onClick={handleAddRelief}
-                          className="rounded-full p-2 text-purple-600 transition hover:bg-purple-50"
+                          className="rounded-full p-2 text-[#006400] transition hover:bg-[#e9f1e2]"
                           title="Add another relief"
                         >
                           <Plus className="h-5 w-5" />
@@ -363,7 +363,7 @@ export function CalcForm({ onSubmit, loading }: CalcFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? 'Calculating...' : 'Calculate Personal Income Tax'}
       </button>

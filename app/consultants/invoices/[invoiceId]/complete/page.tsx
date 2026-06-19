@@ -127,7 +127,7 @@ export default function CompleteServicePage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -142,7 +142,7 @@ export default function CompleteServicePage() {
       <div className="mb-6">
         <Link
           href={`/consultants/invoices/${invoice.id}`}
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#006400] transition"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Invoice
@@ -156,12 +156,12 @@ export default function CompleteServicePage() {
           <p className="text-gray-600">Invoice #{invoice.invoiceNumber}</p>
         </div>
 
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-[#a98700] mt-0.5" />
             <div>
-              <p className="font-semibold text-yellow-800 mb-1">Important Notice</p>
-              <p className="text-sm text-yellow-700">
+              <p className="font-semibold text-[#655100] mb-1">Important Notice</p>
+              <p className="text-sm text-[#876b00]">
                 Once you mark this service as complete, the customer will be notified to confirm. 
                 If they accept, there will be a 48-hour hold period before funds are released to your wallet. 
                 If they dispute, an admin will review the case.

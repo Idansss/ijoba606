@@ -91,7 +91,7 @@ export function SubscribeButton({ threadId }: SubscribeButtonProps) {
       disabled={loading}
       className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-2 disabled:opacity-50 ${
         isSubscribed
-          ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+          ? 'bg-[#d3e6c8] text-[#004f00] hover:bg-[#aecf9c]'
           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`}
     >

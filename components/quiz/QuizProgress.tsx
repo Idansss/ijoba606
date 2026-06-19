@@ -28,7 +28,7 @@ export function QuizProgress({
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
           transition={{ duration: 0.3 }}
-          className="h-full rounded-full bg-gradient-to-r from-purple-600 via-blue-500 to-emerald-400"
+          className="h-full rounded-full bg-gradient-to-r from-[#006400] via-[#109a48] to-emerald-400"
         />
       </div>
     </div>

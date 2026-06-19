@@ -88,7 +88,7 @@ export default function MyForumActivityPage() {
         {/* Back Button */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-semibold"
+          className="inline-flex items-center gap-2 text-[#006400] hover:text-[#004f00] mb-6 font-semibold"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -106,7 +106,7 @@ export default function MyForumActivityPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             My Forum Activity
           </h1>
           <p className="text-gray-600">
@@ -117,13 +117,13 @@ export default function MyForumActivityPage() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">
+            <div className="text-3xl font-bold text-[#006400] mb-2">
               {myThreads.length}
             </div>
             <div className="text-sm text-gray-600">Threads Created</div>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
+            <div className="text-3xl font-bold text-[#006d33] mb-2">
               {myPosts.length}
             </div>
             <div className="text-sm text-gray-600">Replies Posted</div>
@@ -142,7 +142,7 @@ export default function MyForumActivityPage() {
             onClick={() => setActiveTab('threads')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'threads'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -152,7 +152,7 @@ export default function MyForumActivityPage() {
             onClick={() => setActiveTab('replies')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'replies'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -162,7 +162,7 @@ export default function MyForumActivityPage() {
             onClick={() => setActiveTab('subscriptions')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'subscriptions'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -173,7 +173,7 @@ export default function MyForumActivityPage() {
         {/* Content */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
           </div>
         ) : (
           <>
@@ -181,7 +181,7 @@ export default function MyForumActivityPage() {
             {activeTab === 'threads' && (
               <div className="space-y-4">
                 {myThreads.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
                     <div className="text-6xl mb-4">📝</div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">
                       No threads yet
@@ -191,7 +191,7 @@ export default function MyForumActivityPage() {
                     </p>
                     <Link
                       href="/forum/new"
-                      className="inline-block px-6 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition-all"
+                      className="inline-block px-6 py-3 bg-[#006400] text-white rounded-xl font-bold hover:bg-[#004f00] transition-all"
                     >
                       Create Thread
                     </Link>
@@ -208,7 +208,7 @@ export default function MyForumActivityPage() {
             {activeTab === 'replies' && (
               <div className="space-y-4">
                 {myPosts.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
                     <div className="text-6xl mb-4">💬</div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">
                       No replies yet
@@ -229,7 +229,7 @@ export default function MyForumActivityPage() {
                       <Link
                         key={post.id}
                         href={`/forum/thread/${post.tid}`}
-                        className="block bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 hover:border-purple-400 hover:shadow-lg transition-all"
+                        className="block bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-200 hover:border-[#3f9a37] hover:shadow-lg transition-all"
                       >
                         <div className="text-sm text-gray-500 mb-2">
                           Replied {timeAgo}
@@ -248,7 +248,7 @@ export default function MyForumActivityPage() {
             {activeTab === 'subscriptions' && (
               <div className="space-y-4">
                 {subscribedThreads.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
                     <div className="text-6xl mb-4">🔔</div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">
                       No subscriptions

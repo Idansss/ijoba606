@@ -73,7 +73,7 @@ export default function ConsultantRequestPage() {
           <input
             type="text"
             {...register('name')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.name && (
             <p className="mt-1 text-xs text-rose-500">{errors.name.message}</p>
@@ -87,7 +87,7 @@ export default function ConsultantRequestPage() {
           <input
             type="email"
             {...register('email')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.email && (
             <p className="mt-1 text-xs text-rose-500">{errors.email.message}</p>
@@ -101,7 +101,7 @@ export default function ConsultantRequestPage() {
           <textarea
             {...register('topic')}
             rows={4}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="What do you need help with? Be as specific as possible..."
           />
           {errors.topic && (
@@ -115,7 +115,7 @@ export default function ConsultantRequestPage() {
           </label>
           <select
             {...register('category')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           >
             <option value="PAYE">PAYE</option>
             <option value="Reliefs">Reliefs</option>
@@ -134,7 +134,7 @@ export default function ConsultantRequestPage() {
           </label>
           <select
             {...register('urgency')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           >
             <option value="ASAP">ASAP</option>
             <option value="This week">This week</option>
@@ -151,7 +151,7 @@ export default function ConsultantRequestPage() {
           </label>
           <select
             {...register('budgetRange')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           >
             <option value="">Not specified</option>
             <option value="Under ₦10k">Under ₦10k</option>
@@ -164,7 +164,7 @@ export default function ConsultantRequestPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? 'Submitting...' : 'Join Waitlist'}
         </button>

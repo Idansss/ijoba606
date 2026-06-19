@@ -54,7 +54,7 @@ export default function TagPage() {
         {/* Back Button */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-semibold"
+          className="inline-flex items-center gap-2 text-[#006400] hover:text-[#004f00] mb-6 font-semibold"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -72,7 +72,7 @@ export default function TagPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Tag: {tag}
           </h1>
           <p className="text-gray-600">
@@ -83,10 +83,10 @@ export default function TagPage() {
         {/* Threads */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
           </div>
         ) : threads.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-gray-200 text-center">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-gray-200 text-center">
             <div className="text-6xl mb-4">🏷️</div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">
               No threads found
@@ -96,7 +96,7 @@ export default function TagPage() {
             </p>
             <Link
               href="/forum/new"
-              className="inline-block px-6 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition-all"
+              className="inline-block px-6 py-3 bg-[#006400] text-white rounded-xl font-bold hover:bg-[#004f00] transition-all"
             >
               Create First Thread
             </Link>

@@ -88,7 +88,7 @@ export function MarkdownEditor({
               className={cn(
                 'px-3 py-1 rounded text-sm font-medium transition-all',
                 mode === 'write'
-                  ? 'bg-white text-purple-600 shadow-sm'
+                  ? 'bg-white text-[#006400] shadow-sm'
                   : 'text-gray-600 hover:text-gray-800'
               )}
             >
@@ -100,7 +100,7 @@ export function MarkdownEditor({
               className={cn(
                 'px-3 py-1 rounded text-sm font-medium transition-all',
                 mode === 'preview'
-                  ? 'bg-white text-purple-600 shadow-sm'
+                  ? 'bg-white text-[#006400] shadow-sm'
                   : 'text-gray-600 hover:text-gray-800'
               )}
             >
@@ -179,7 +179,7 @@ export function MarkdownEditor({
                 placeholder={placeholder}
                 style={{ minHeight }}
                 className={cn(
-                  'w-full px-4 py-3 border-2 rounded-xl focus:border-purple-500 focus:outline-none resize-y font-mono text-sm',
+                  'w-full px-4 py-3 border-2 rounded-xl focus:border-[#0b7a3b] focus:outline-none resize-y font-mono text-sm',
                   error ? 'border-red-500' : 'border-gray-300'
                 )}
               />
@@ -189,7 +189,7 @@ export function MarkdownEditor({
                     <button
                       key={user}
                       type="button"
-                      className="block w-full px-4 py-2 text-left hover:bg-purple-50 transition-colors"
+                      className="block w-full px-4 py-2 text-left hover:bg-[#e9f1e2] transition-colors"
                       onClick={() => {
                         onChange(value + user + ' ');
                         setMentionSuggestions([]);

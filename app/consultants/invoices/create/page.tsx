@@ -16,7 +16,7 @@ export default function CreateInvoicePage() {
       fallback={
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
           </div>
         </div>
       }
@@ -306,7 +306,7 @@ function CreateInvoicePageContent() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Create Invoice
         </h1>
         <p className="text-gray-600">Create and send an invoice to your client</p>
@@ -324,7 +324,7 @@ function CreateInvoicePageContent() {
               onChange={(e) => setCustomerSearch(e.target.value)}
               onFocus={() => customerSuggestions.length > 0 && setShowSuggestions(true)}
               placeholder="Search by name or user ID..."
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
             {selectedCustomer && (
               <button
@@ -350,8 +350,8 @@ function CreateInvoicePageContent() {
             </div>
           )}
           {selectedCustomer && (
-            <div className="mt-2 p-2 bg-purple-50 rounded-lg">
-              <span className="text-sm text-purple-700">
+            <div className="mt-2 p-2 bg-[#e9f1e2] rounded-lg">
+              <span className="text-sm text-[#004f00]">
                 Selected: <strong>{formatHandleForDisplay(selectedCustomer.handle)}</strong>
               </span>
             </div>
@@ -365,7 +365,7 @@ function CreateInvoicePageContent() {
             type="text"
             value={invoice.title || ''}
             onChange={(e) => setInvoice(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="e.g., Tax Consultation Services"
             required
           />
@@ -377,7 +377,7 @@ function CreateInvoicePageContent() {
             value={invoice.description || ''}
             onChange={(e) => setInvoice(prev => ({ ...prev, description: e.target.value }))}
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="Describe the services provided..."
             required
           />
@@ -389,15 +389,15 @@ function CreateInvoicePageContent() {
             <label className="block text-sm font-medium text-gray-700">Items *</label>
             <button
               onClick={addItem}
-              className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+              className="flex items-center gap-1 px-3 py-1 bg-[#006400] text-white rounded-lg text-sm hover:bg-[#004f00]"
             >
               <Plus className="w-4 h-4" /> Add Item
             </button>
           </div>
           <div className="space-y-2">
             {invoice.items?.map((item, index) => (
-              <div key={index} className="grid grid-cols-12 gap-2 items-end">
-                <div className="col-span-5">
+              <div key={index} className="grid grid-cols-2 sm:grid-cols-12 gap-2 items-end">
+                <div className="col-span-2 sm:col-span-5">
                   <input
                     type="text"
                     placeholder="Description"
@@ -406,7 +406,7 @@ function CreateInvoicePageContent() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <input
                     type="number"
                     placeholder="Qty"
@@ -416,7 +416,7 @@ function CreateInvoicePageContent() {
                     min="1"
                   />
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-1 sm:col-span-3">
                   <input
                     type="number"
                     placeholder="Unit Price (₦)"
@@ -427,10 +427,10 @@ function CreateInvoicePageContent() {
                     step="0.01"
                   />
                 </div>
-                <div className="col-span-1 text-right font-semibold">
+                <div className="col-span-1 sm:col-span-1 text-right font-semibold">
                   ₦{item.total.toLocaleString()}
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-1 sm:col-span-1">
                   <button
                     onClick={() => removeItem(index)}
                     className="w-full px-2 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200"
@@ -446,7 +446,7 @@ function CreateInvoicePageContent() {
         {/* Totals */}
         <div className="border-t pt-4">
           <div className="flex justify-end">
-            <div className="w-80 space-y-2">
+            <div className="w-full sm:w-80 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal:</span>
                 <span className="font-semibold">₦{invoice.subtotal?.toLocaleString() || '0'}</span>
@@ -459,13 +459,13 @@ function CreateInvoicePageContent() {
                 <span className="text-gray-600">Subtotal + VAT:</span>
                 <span className="font-semibold">₦{((invoice.subtotal || 0) + (invoice.vat || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
-              <div className="flex justify-between text-sm text-orange-600">
+              <div className="flex justify-between text-sm text-[#a98700]">
                 <span>Paystack Fee (1.5% + ₦100):</span>
                 <span className="font-semibold">₦{invoice.paystackFee?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t pt-2">
                 <span>Total (Customer Pays):</span>
-                <span className="text-purple-600">₦{invoice.total?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
+                <span className="text-[#006400]">₦{invoice.total?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</span>
               </div>
               <div className="text-xs text-gray-500 mt-2">
                 * VAT and Paystack fees are automatically calculated. Customer bears all fees.
@@ -487,7 +487,7 @@ function CreateInvoicePageContent() {
           <button
             onClick={() => handleSave(true)}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50"
           >
             <Send className="w-5 h-5" />
             Create & Send

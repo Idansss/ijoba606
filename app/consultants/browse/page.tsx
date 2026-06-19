@@ -127,7 +127,7 @@ export default function BrowseConsultantsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Find a Consultant
         </h1>
         <p className="text-gray-600">Connect with verified tax experts for personalized advice</p>
@@ -143,13 +143,13 @@ export default function BrowseConsultantsPage() {
               placeholder="Search by name, specialty, or expertise..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
           </div>
           <select
             value={selectedSpecialty}
             onChange={(e) => setSelectedSpecialty(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
           >
             {specialties.map(spec => (
               <option key={spec} value={spec}>
@@ -160,7 +160,7 @@ export default function BrowseConsultantsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
           >
             <option value="rating">Sort by Rating</option>
             <option value="experience">Sort by Experience</option>
@@ -172,7 +172,7 @@ export default function BrowseConsultantsPage() {
       {/* Consultants Grid */}
       {loading ? (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       ) : filteredConsultants.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-lg border border-gray-200">
@@ -187,14 +187,14 @@ export default function BrowseConsultantsPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#006400] to-[#006d33] flex items-center justify-center text-white text-2xl font-bold">
                     {consultant.name?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                       {consultant.name}
                       {(consultant.verificationStatus === 'verified' || consultant.isVerified) && (
-                        <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                        <CheckCircle2 className="w-5 h-5 text-[#006d33]" />
                       )}
                     </h3>
                     {consultant.locationState && (
@@ -215,7 +215,7 @@ export default function BrowseConsultantsPage() {
                 {consultant.specialties?.slice(0, 3).map((spec, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold"
+                    className="px-3 py-1 bg-[#d3e6c8] text-[#004f00] rounded-full text-xs font-semibold"
                   >
                     {spec}
                   </span>
@@ -229,7 +229,7 @@ export default function BrowseConsultantsPage() {
 
               <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  <Star className="w-4 h-4 text-[#c59f00] fill-[#c59f00]" />
                   <span className="font-semibold">
                     {consultant.averageRating?.toFixed(1) || 'N/A'}
                   </span>
@@ -248,7 +248,7 @@ export default function BrowseConsultantsPage() {
 
               {consultant.hourlyRate && (
                 <div className="mb-4">
-                  <span className="text-lg font-bold text-purple-600">
+                  <span className="text-lg font-bold text-[#006400]">
                     ₦{consultant.hourlyRate.toLocaleString()}/hr
                   </span>
                 </div>
@@ -264,7 +264,7 @@ export default function BrowseConsultantsPage() {
                 {firebaseUser && (
                   <Link
                     href={`/consultants/chat/${consultant.id}`}
-                    className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition flex items-center justify-center gap-2"
+                    className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Chat

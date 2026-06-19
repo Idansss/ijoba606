@@ -23,7 +23,7 @@ function ConsultantThanksPageContent() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-green-200"
+        className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-green-200"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -42,14 +42,14 @@ function ConsultantThanksPageContent() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/consultants"
-            className="inline-flex items-center gap-2 rounded-full border-2 border-purple-600 px-6 py-3 text-lg font-semibold text-purple-600 hover:bg-purple-50 transition"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-[#006400] px-6 py-3 text-lg font-semibold text-[#006400] hover:bg-[#e9f1e2] transition"
           >
             <ArrowLeft className="h-5 w-5" />
             Back to Consultants
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-3 text-lg font-semibold text-white shadow-lg hover:brightness-110 transition"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-3 text-lg font-semibold text-white shadow-lg hover:brightness-110 transition"
           >
             Go Home
           </Link>
@@ -63,7 +63,7 @@ export default function ConsultantThanksPage() {
   return (
     <Suspense fallback={
       <div className="container mx-auto px-4 py-12 max-w-2xl">
-        <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-12 border-2 border-green-200">
+        <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-12 border-2 border-green-200">
           <div className="animate-pulse">
             <div className="w-20 h-20 rounded-full bg-green-100 mx-auto mb-6"></div>
             <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>

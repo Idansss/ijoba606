@@ -169,7 +169,7 @@ export default function GlossaryPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#0b7a3b] to-[#109a48] rounded-full mb-4">
           <BookOpen className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -196,7 +196,7 @@ export default function GlossaryPage() {
               placeholder="Search by term, code, or keyword..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
           </div>
 
@@ -205,7 +205,7 @@ export default function GlossaryPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -216,7 +216,7 @@ export default function GlossaryPage() {
 
         {/* Results Count */}
         <div className="mt-4 text-sm text-gray-600">
-          Found <span className="font-semibold text-purple-600">{filteredTerms.length}</span> term{filteredTerms.length !== 1 ? 's' : ''}
+          Found <span className="font-semibold text-[#006400]">{filteredTerms.length}</span> term{filteredTerms.length !== 1 ? 's' : ''}
         </div>
       </motion.div>
 
@@ -249,14 +249,14 @@ export default function GlossaryPage() {
                   <div className="flex items-start gap-3 mb-2">
                     <h3 className="text-xl font-bold text-gray-900">{term.term}</h3>
                     {term.code && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#d3e6c8] text-[#004f00] rounded-full text-sm font-semibold">
                         <Hash className="w-4 h-4" />
                         {term.code}
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-semibold">
+                    <span className="px-3 py-1 bg-[#c7ecd6] text-[#005728] rounded-full font-semibold">
                       {term.category}
                     </span>
                     {term.effectiveDate && (
@@ -312,7 +312,7 @@ export default function GlossaryPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="mt-12 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 text-center"
+        className="mt-12 bg-gradient-to-br from-[#e9f1e2] to-[#e6f3ec] rounded-2xl p-6 text-center"
       >
         <p className="text-gray-700 mb-2">
           <strong>Note:</strong> This glossary is for educational purposes only and should not be considered as legal or tax advice.

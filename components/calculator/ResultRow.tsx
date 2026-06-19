@@ -24,7 +24,7 @@ export function ResultRow({
       className={cn(
         'flex items-center justify-between rounded-2xl border px-4 py-3 text-sm',
         highlight
-          ? 'border-purple-200 bg-purple-50 text-purple-800'
+          ? 'border-[#aecf9c] bg-[#e9f1e2] text-[#003c00]'
           : 'border-slate-100 bg-white text-slate-700'
       )}
     >

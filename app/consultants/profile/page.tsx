@@ -221,7 +221,7 @@ export default function ConsultantProfilePage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -230,7 +230,7 @@ export default function ConsultantProfilePage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Consultant Profile
         </h1>
         <p className="text-gray-600">Build your professional profile to attract clients</p>
@@ -247,7 +247,7 @@ export default function ConsultantProfilePage() {
                 type="text"
                 value={profile.name || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
@@ -257,7 +257,7 @@ export default function ConsultantProfilePage() {
                 type="email"
                 value={profile.email || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
@@ -267,7 +267,7 @@ export default function ConsultantProfilePage() {
                 type="tel"
                 value={profile.phone || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 required
               />
             </div>
@@ -277,7 +277,7 @@ export default function ConsultantProfilePage() {
                 type="tel"
                 value={profile.whatsapp || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, whatsapp: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               />
             </div>
             <div className="md:col-span-2">
@@ -286,7 +286,7 @@ export default function ConsultantProfilePage() {
                 type="text"
                 value={profile.locationState || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, locationState: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="e.g., Lagos, Abuja"
               />
             </div>
@@ -300,7 +300,7 @@ export default function ConsultantProfilePage() {
             value={profile.bio || ''}
             onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
             rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             placeholder="Tell clients about your expertise, approach, and what makes you unique..."
             required
           />
@@ -323,7 +323,7 @@ export default function ConsultantProfilePage() {
                 }}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
                   profile.specialties?.includes(spec)
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-[#006400] text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -344,7 +344,7 @@ export default function ConsultantProfilePage() {
               >
                 + Years
               </button>
-              <span className="px-3 py-1 bg-purple-100 rounded-lg text-sm font-semibold">
+              <span className="px-3 py-1 bg-[#d3e6c8] rounded-lg text-sm font-semibold">
                 {profile.experienceYears || 0} years
               </span>
             </div>
@@ -356,7 +356,7 @@ export default function ConsultantProfilePage() {
               <h3 className="text-lg font-semibold">Qualifications</h3>
               <button
                 onClick={addQualification}
-                className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+                className="flex items-center gap-1 px-3 py-1 bg-[#006400] text-white rounded-lg text-sm hover:bg-[#004f00]"
               >
                 <Plus className="w-4 h-4" /> Add
               </button>
@@ -400,7 +400,7 @@ export default function ConsultantProfilePage() {
               <h3 className="text-lg font-semibold">Certifications</h3>
               <button
                 onClick={addCertification}
-                className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+                className="flex items-center gap-1 px-3 py-1 bg-[#006400] text-white rounded-lg text-sm hover:bg-[#004f00]"
               >
                 <Plus className="w-4 h-4" /> Add
               </button>
@@ -437,7 +437,7 @@ export default function ConsultantProfilePage() {
               <h3 className="text-lg font-semibold">Work Experience</h3>
               <button
                 onClick={addWorkExperience}
-                className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+                className="flex items-center gap-1 px-3 py-1 bg-[#006400] text-white rounded-lg text-sm hover:bg-[#004f00]"
               >
                 <Plus className="w-4 h-4" /> Add
               </button>
@@ -490,7 +490,7 @@ export default function ConsultantProfilePage() {
                 type="number"
                 value={profile.hourlyRate || ''}
                 onChange={(e) => setProfile(prev => ({ ...prev, hourlyRate: e.target.value ? parseInt(e.target.value) : undefined }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="e.g., 5000"
               />
             </div>
@@ -499,7 +499,7 @@ export default function ConsultantProfilePage() {
               <select
                 value={profile.availabilityStatus || 'available'}
                 onChange={(e) => setProfile(prev => ({ ...prev, availabilityStatus: e.target.value as any }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
               >
                 <option value="available">Available</option>
                 <option value="busy">Busy</option>
@@ -514,7 +514,7 @@ export default function ConsultantProfilePage() {
           <button
             onClick={handleSave}
             disabled={saving || !profile.name || !profile.email || !profile.phone || !profile.bio}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-5 h-5" />
             {saving ? 'Saving...' : 'Save Profile'}

@@ -104,8 +104,8 @@ export function VoteBar({
         className={cn(
           'p-2 rounded-lg transition-all disabled:opacity-50',
           userVote === 1
-            ? 'bg-orange-500 text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-orange-100 hover:text-orange-600'
+            ? 'bg-[#c59f00] text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-[#f7edc4] hover:text-[#a98700]'
         )}
       >
         <svg
@@ -126,9 +126,9 @@ export function VoteBar({
         className={cn(
           'font-bold text-lg',
           votes > 0
-            ? 'text-orange-600'
+            ? 'text-[#a98700]'
             : votes < 0
-            ? 'text-blue-600'
+            ? 'text-[#006d33]'
             : 'text-gray-700'
         )}
       >
@@ -144,8 +144,8 @@ export function VoteBar({
         className={cn(
           'p-2 rounded-lg transition-all disabled:opacity-50',
           userVote === -1
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+            ? 'bg-[#109a48] text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-[#c7ecd6] hover:text-[#006d33]'
         )}
       >
         <svg

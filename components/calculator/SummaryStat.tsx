@@ -13,10 +13,10 @@ interface SummaryStatProps {
 }
 
 const colorClasses = {
-  purple: 'from-purple-500 to-purple-600',
-  blue: 'from-blue-500 to-blue-600',
+  purple: 'from-[#0b7a3b] to-[#006400]',
+  blue: 'from-[#109a48] to-[#006d33]',
   green: 'from-emerald-500 to-emerald-600',
-  orange: 'from-amber-500 to-orange-500',
+  orange: 'from-[#c59f00] to-[#c59f00]',
 };
 
 export function SummaryStat({

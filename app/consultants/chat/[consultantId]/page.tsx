@@ -215,7 +215,7 @@ export default function ChatPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -236,7 +236,7 @@ export default function ChatPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center text-white text-xl font-bold">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#006400] to-[#006d33] flex items-center justify-center text-white text-xl font-bold">
             {consultant.name?.[0]?.toUpperCase() || '?'}
           </div>
           <div>
@@ -264,7 +264,7 @@ export default function ChatPage() {
                   <div
                     className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                       isOwn
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                        ? 'bg-gradient-to-r from-[#006400] to-[#006d33] text-white'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
@@ -308,13 +308,13 @@ export default function ChatPage() {
               }
             }}
             placeholder="Type your message..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             disabled={sending}
           />
           <button
             onClick={sendMessage}
             disabled={sending || !messageText.trim()}
-            className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-2 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <Send className="w-5 h-5" />
             Send

@@ -30,13 +30,13 @@ const LEVEL_INFO: Record<
   2: {
     title: 'Level 2 · Calculations',
     description: 'Accurate maths for reliefs & NHF',
-    accent: 'from-sky-400 via-blue-500 to-indigo-500',
+    accent: 'from-[#25b35f] via-[#109a48] to-[#109a48]',
     emoji: '🧮',
   },
   3: {
     title: 'Level 3 · Scenarios',
     description: 'Advanced real-life payroll edge cases',
-    accent: 'from-purple-500 via-fuchsia-500 to-rose-500',
+    accent: 'from-[#0b7a3b] via-[#0b7a3b] to-rose-500',
     emoji: '🚀',
   },
 };

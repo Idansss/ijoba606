@@ -12,12 +12,12 @@ export function AssumptionNote({ note }: AssumptionNoteProps) {
     <motion.div
       initial={{ opacity: 0.8 }}
       animate={{ opacity: 1 }}
-      className="rounded-3xl border border-yellow-100 bg-yellow-50 p-5 text-sm text-yellow-900"
+      className="rounded-3xl border border-[#f7edc4] bg-[#fcf7e6] p-5 text-sm text-[#463800]"
     >
       <div className="flex items-start gap-3">
         <Shield className="h-5 w-5" />
         <div>
-          <p className="font-semibold uppercase tracking-[0.3em] text-yellow-600">
+          <p className="font-semibold uppercase tracking-[0.3em] text-[#a98700]">
             Important assumption
           </p>
           <p className="mt-1">{note}</p>

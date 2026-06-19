@@ -136,13 +136,13 @@ export default function PlayPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={handleSignInAndPlay}
-              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-purple-500/30"
+              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-8 py-3 text-base font-semibold text-white shadow-lg shadow-[#0b7a3b]/30"
             >
               Try a demo round
             </button>
             <Link
               href="/calculator"
-              className="rounded-full border border-slate-200 px-8 py-3 text-base font-semibold text-slate-700 hover:border-purple-300 hover:text-slate-900"
+              className="rounded-full border border-slate-200 px-8 py-3 text-base font-semibold text-slate-700 hover:border-[#7fb56a] hover:text-slate-900"
             >
               Explore calculator
             </Link>
@@ -174,7 +174,7 @@ export default function PlayPage() {
             </div>
             <Link
               href="/leaderboard"
-              className="rounded-full border border-purple-200 px-6 py-2 text-sm font-semibold text-purple-700 hover:bg-purple-50"
+              className="rounded-full border border-[#aecf9c] px-6 py-2 text-sm font-semibold text-[#004f00] hover:bg-[#e9f1e2]"
             >
               View leaderboard
             </Link>
@@ -198,7 +198,7 @@ export default function PlayPage() {
           )}
 
           {lastScore !== null && (
-            <div className="mt-6 rounded-3xl border border-blue-100 bg-blue-50 p-4 text-center text-blue-900">
+            <div className="mt-6 rounded-3xl border border-[#c7ecd6] bg-[#e6f3ec] p-4 text-center text-[#002d15]">
               Last round score: <span className="font-semibold">{lastScore}/30</span>
             </div>
           )}
@@ -228,7 +228,7 @@ export default function PlayPage() {
             whileTap={{ scale: 0.99 }}
             onClick={handleStartRound}
             disabled={loading || !isLevelUnlocked(selectedLevel)}
-            className="mt-8 w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl shadow-purple-500/30 transition disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-8 w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl shadow-[#0b7a3b]/30 transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Loading round...' : 'Start round'}
           </motion.button>

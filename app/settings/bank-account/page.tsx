@@ -190,7 +190,7 @@ export default function UserBankAccountPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -199,7 +199,7 @@ export default function UserBankAccountPage() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
           Bank Account Management
         </h1>
         <p className="text-gray-600">Manage your bank accounts for refunds</p>
@@ -222,7 +222,7 @@ export default function UserBankAccountPage() {
                   accountName: '',
                 });
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             >
               <option value="">Select Bank</option>
               {banks.map((bank) => (
@@ -246,14 +246,14 @@ export default function UserBankAccountPage() {
                     accountName: '',
                   });
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
                 placeholder="0000000000"
                 maxLength={10}
               />
               <button
                 onClick={resolveAccountName}
                 disabled={resolving || !formData.accountNumber || !formData.bankCode}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2 bg-[#006400] text-white rounded-lg font-semibold hover:bg-[#004f00] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {resolving ? (
                   <>
@@ -287,7 +287,7 @@ export default function UserBankAccountPage() {
           <button
             onClick={handleSave}
             disabled={saving || !formData.accountName}
-            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-lg font-semibold hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <Save className="w-5 h-5" />
             {saving ? 'Saving...' : 'Save Bank Account'}
@@ -311,7 +311,7 @@ export default function UserBankAccountPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <p className="font-semibold text-gray-800">{account.accountName}</p>
                     {account.isDefault && (
-                      <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-semibold">
+                      <span className="px-2 py-1 bg-[#d3e6c8] text-[#004f00] rounded text-xs font-semibold">
                         Default
                       </span>
                     )}

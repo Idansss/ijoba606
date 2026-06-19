@@ -81,7 +81,7 @@ export default function AdminRegisterPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -95,12 +95,12 @@ export default function AdminRegisterPage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl shadow-xl p-8 text-center"
         >
-          <Shield className="w-16 h-16 mx-auto mb-4 text-purple-600" />
+          <Shield className="w-16 h-16 mx-auto mb-4 text-[#006400]" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Registration</h1>
           <p className="text-gray-600 mb-6">Please sign in to register as admin</p>
           <button
             onClick={() => router.push('/')}
-            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all"
+            className="w-full px-6 py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all"
           >
             Go to Homepage
           </button>
@@ -147,8 +147,8 @@ export default function AdminRegisterPage() {
             </p>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-            <p className="text-sm text-yellow-800">
+          <div className="bg-[#fcf7e6] border border-[#efd98a] rounded-xl p-4">
+            <p className="text-sm text-[#655100]">
               <strong>Note:</strong> After registration, you will have full admin access including the ability to manage users, questions, and system settings.
             </p>
           </div>

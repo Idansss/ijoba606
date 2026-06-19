@@ -95,7 +95,7 @@ export default function NewThreadPage() {
           </p>
           <button
             onClick={() => router.push('/')}
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg"
+            className="px-8 py-4 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-semibold text-lg hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg"
           >
             Go to Home
           </button>
@@ -113,7 +113,7 @@ export default function NewThreadPage() {
       >
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Create New Thread
           </h1>
           <p className="text-gray-600">
@@ -132,7 +132,7 @@ export default function NewThreadPage() {
               type="text"
               {...register('title')}
               placeholder="What's your question or topic?"
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#0b7a3b] focus:outline-none"
             />
             {errors.title && (
               <p className="text-red-500 text-sm mt-2">{errors.title.message}</p>
@@ -178,8 +178,8 @@ export default function NewThreadPage() {
                     onClick={() => toggleTag(tag)}
                     className={`px-4 py-2 rounded-full font-semibold border-2 transition-all ${
                       isSelected
-                        ? 'bg-purple-600 text-white border-purple-600'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-purple-400'
+                        ? 'bg-[#006400] text-white border-[#006400]'
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-[#3f9a37]'
                     }`}
                   >
                     {tag}
@@ -196,14 +196,14 @@ export default function NewThreadPage() {
           </div>
 
           {/* Guidelines */}
-          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4">
+          <div className="bg-[#fcf7e6] border-2 border-[#efd98a] rounded-xl p-4">
             <div className="flex items-start gap-3">
               <span className="text-2xl">💡</span>
               <div>
-                <h4 className="font-bold text-yellow-900 mb-1">
+                <h4 className="font-bold text-[#463800] mb-1">
                   Before you post
                 </h4>
-                <ul className="text-sm text-yellow-800 space-y-1">
+                <ul className="text-sm text-[#655100] space-y-1">
                   <li>• Search if your question has been answered</li>
                   <li>• Be respectful and courteous</li>
                   <li>• Provide context and details</li>
@@ -225,7 +225,7 @@ export default function NewThreadPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-4 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-bold hover:from-[#004f00] hover:to-[#005728] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Creating...' : 'Create Thread'}
             </button>

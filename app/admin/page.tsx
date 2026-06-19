@@ -143,7 +143,7 @@ export default function AdminDashboard() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -162,14 +162,14 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl p-6 shadow-lg border-2 border-blue-200"
+          className="bg-white rounded-xl p-6 shadow-lg border-2 border-[#97e0b4]"
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Users</p>
               <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <Users className="w-12 h-12 text-blue-500" />
+            <Users className="w-12 h-12 text-[#109a48]" />
           </div>
         </motion.div>
 
@@ -177,14 +177,14 @@ export default function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl p-6 shadow-lg border-2 border-purple-200"
+          className="bg-white rounded-xl p-6 shadow-lg border-2 border-[#aecf9c]"
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Admins</p>
               <p className="text-3xl font-bold text-gray-900">{stats.admins}</p>
             </div>
-            <Crown className="w-12 h-12 text-purple-500" />
+            <Crown className="w-12 h-12 text-[#0b7a3b]" />
           </div>
         </motion.div>
 
@@ -192,14 +192,14 @@ export default function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl p-6 shadow-lg border-2 border-orange-200"
+          className="bg-white rounded-xl p-6 shadow-lg border-2 border-[#efd98a]"
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Moderators</p>
               <p className="text-3xl font-bold text-gray-900">{stats.moderators}</p>
             </div>
-            <Shield className="w-12 h-12 text-orange-500" />
+            <Shield className="w-12 h-12 text-[#c59f00]" />
           </div>
         </motion.div>
 
@@ -220,9 +220,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Test Email */}
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-2 border-amber-200">
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-2 border-[#efd98a]">
         <div className="flex items-center gap-2 mb-4">
-          <Mail className="w-6 h-6 text-amber-600" />
+          <Mail className="w-6 h-6 text-[#a98700]" />
           <h2 className="text-xl font-bold text-gray-900">Test Welcome Email</h2>
         </div>
         <p className="text-gray-600 mb-4">Send a test welcome email to verify your email configuration.</p>
@@ -232,12 +232,12 @@ export default function AdminDashboard() {
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
             placeholder="email@example.com"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
           />
           <button
             onClick={handleSendTestEmail}
             disabled={sendingTest}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-[#006400] text-white rounded-lg font-semibold hover:bg-[#004f00] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {sendingTest ? 'Sending...' : 'Send Test Email'}
           </button>
@@ -249,11 +249,11 @@ export default function AdminDashboard() {
         <Link href="/admin/questions">
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+            className="bg-gradient-to-br from-[#0b7a3b] to-[#109a48] text-white rounded-xl p-6 shadow-lg cursor-pointer"
           >
             <FileQuestion className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Question Management</h3>
-            <p className="text-purple-100">Create, edit, and manage quiz questions</p>
+            <p className="text-[#d3e6c8]">Create, edit, and manage quiz questions</p>
           </motion.div>
         </Link>
 
@@ -271,11 +271,11 @@ export default function AdminDashboard() {
         <Link href="/admin/mod">
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+            className="bg-gradient-to-br from-[#c59f00] to-red-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
           >
             <AlertTriangle className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Moderation</h3>
-            <p className="text-orange-100">Review reports and moderate content</p>
+            <p className="text-[#f7edc4]">Review reports and moderate content</p>
           </motion.div>
         </Link>
 
@@ -292,21 +292,21 @@ export default function AdminDashboard() {
         <Link href="/admin/consultants">
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+            className="bg-gradient-to-br from-[#109a48] to-[#0b7a3b] text-white rounded-xl p-6 shadow-lg cursor-pointer"
           >
             <Briefcase className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">Consultants</h3>
-            <p className="text-indigo-100">Approve applications and manage status</p>
+            <p className="text-[#c7ecd6]">Approve applications and manage status</p>
           </motion.div>
         </Link>
         <Link href="/admin/news">
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-xl p-6 shadow-lg cursor-pointer"
+            className="bg-gradient-to-br from-[#109a48] to-[#109a48] text-white rounded-xl p-6 shadow-lg cursor-pointer"
           >
             <Newspaper className="w-8 h-8 mb-3" />
             <h3 className="text-xl font-bold mb-2">News</h3>
-            <p className="text-cyan-100">Manage tax news and blog articles</p>
+            <p className="text-[#c7ecd6]">Manage tax news and blog articles</p>
           </motion.div>
         </Link>
       </div>
@@ -326,13 +326,13 @@ export default function AdminDashboard() {
               placeholder="Search by handle or UID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
             />
           </div>
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value as typeof roleFilter)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] focus:border-transparent"
           >
             <option value="all">All Roles</option>
             <option value="admin">Admins</option>
@@ -344,7 +344,7 @@ export default function AdminDashboard() {
         {/* Users Table */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-[#006400]"></div>
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
@@ -353,7 +353,7 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">User</th>
@@ -375,9 +375,9 @@ export default function AdminDashboard() {
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
                           u.role === 'admin'
-                            ? 'bg-purple-100 text-purple-800'
+                            ? 'bg-[#d3e6c8] text-[#003c00]'
                             : u.role === 'moderator'
-                            ? 'bg-orange-100 text-orange-800'
+                            ? 'bg-[#f7edc4] text-[#655100]'
                             : 'bg-gray-100 text-gray-800'
                         }`}
                       >
@@ -399,7 +399,7 @@ export default function AdminDashboard() {
                             handleUpdateRole(u.uid, e.target.value as 'user' | 'moderator' | 'admin')
                           }
                           disabled={updatingRole === u.uid || u.uid === user?.uid}
-                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0b7a3b] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <option value="user">User</option>
                           <option value="moderator">Moderator</option>

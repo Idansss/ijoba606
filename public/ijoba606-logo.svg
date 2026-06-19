@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">ijoba 606 logo</title>
+  <desc id="desc">A green and gold shield mark with 606 and ledger lines.</desc>
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="#083F2D"/>
+  <path d="M32 10.5 48.5 17v13.2c0 11.6-6.6 19.6-16.5 23.3-9.9-3.7-16.5-11.7-16.5-23.3V17L32 10.5Z" fill="#0B663F" stroke="#D5B24A" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M22.5 24.5h19M22.5 31.5h19M22.5 43h19" stroke="#F3D879" stroke-width="2.1" stroke-linecap="round" opacity="0.95"/>
+  <text x="32" y="39.2" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14.8" font-weight="800">606</text>
+  <path d="M46 13.5 52 9.8M50 19.5l6.5-1.7M18 50.5l-6 3.7" stroke="#D5B24A" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+</svg>

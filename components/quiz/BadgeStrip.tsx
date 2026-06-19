@@ -31,7 +31,7 @@ export function BadgeStrip({ badges }: BadgeStripProps) {
             transition={{ delay: index * 0.05 }}
             className="group relative"
           >
-            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/85 px-4 py-2 pr-6 shadow-sm transition hover:border-purple-300">
+            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/85 px-4 py-2 pr-6 shadow-sm transition hover:border-[#7fb56a]">
               <span className="text-2xl">{badge.emoji}</span>
               <div>
                 <p className="text-sm font-semibold text-slate-900">

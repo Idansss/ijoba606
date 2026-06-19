@@ -178,7 +178,7 @@ export default function ConsultantApplyPage() {
           <input
             type="text"
             {...register('name')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.name && (
             <p className="mt-1 text-xs text-rose-500">{errors.name.message}</p>
@@ -192,7 +192,7 @@ export default function ConsultantApplyPage() {
           <input
             type="email"
             {...register('email')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.email && (
             <p className="mt-1 text-xs text-rose-500">{errors.email.message}</p>
@@ -206,7 +206,7 @@ export default function ConsultantApplyPage() {
           <input
             type="tel"
             {...register('phone')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="e.g., +234 801 234 5678"
           />
           {errors.phone && (
@@ -221,7 +221,7 @@ export default function ConsultantApplyPage() {
           <input
             type="tel"
             {...register('whatsapp')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
           {errors.whatsapp && (
             <p className="mt-1 text-xs text-rose-500">{errors.whatsapp.message}</p>
@@ -235,7 +235,7 @@ export default function ConsultantApplyPage() {
           <input
             type="text"
             {...register('locationState')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
           />
         </div>
 
@@ -246,7 +246,7 @@ export default function ConsultantApplyPage() {
           <input
             type="number"
             {...register('experienceYears', { valueAsNumber: true })}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
             min="0"
             max="50"
           />
@@ -273,8 +273,8 @@ export default function ConsultantApplyPage() {
                   }}
                   className={`rounded-xl border-2 px-4 py-2 text-sm font-semibold transition ${
                     isSelected
-                      ? 'border-purple-600 bg-purple-50 text-purple-700'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-purple-300'
+                      ? 'border-[#006400] bg-[#e9f1e2] text-[#004f00]'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#7fb56a]'
                   }`}
                 >
                   {specialty}
@@ -295,7 +295,7 @@ export default function ConsultantApplyPage() {
           <textarea
             {...register('bio')}
             rows={6}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="Tell us about your experience, qualifications, and expertise..."
           />
           {errors.bio && (
@@ -310,7 +310,7 @@ export default function ConsultantApplyPage() {
           <input
             type="url"
             {...register('credentialsUrl')}
-            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-purple-300 focus:outline-none"
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 transition focus:border-[#7fb56a] focus:outline-none"
             placeholder="https://..."
           />
           {errors.credentialsUrl && (
@@ -324,9 +324,9 @@ export default function ConsultantApplyPage() {
           </label>
           <label
             htmlFor="consultant-documents"
-            className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-purple-200 bg-purple-50/40 px-6 py-8 text-center transition hover:border-purple-400 hover:bg-purple-50"
+            className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#aecf9c] bg-[#e9f1e2]/40 px-6 py-8 text-center transition hover:border-[#3f9a37] hover:bg-[#e9f1e2]"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-purple-600 shadow-sm">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#006400] shadow-sm">
               <CloudUpload className="h-6 w-6" />
             </span>
             <span className="text-sm font-semibold text-gray-700">
@@ -368,7 +368,7 @@ export default function ConsultantApplyPage() {
         <button
           type="submit"
           disabled={submitting || uploadingDocs}
-          className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploadingDocs ? 'Uploading documents...' : submitting ? 'Submitting...' : 'Submit Application'}
         </button>

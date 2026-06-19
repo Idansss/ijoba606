@@ -1706,10 +1706,10 @@ export const onChatMessageCreated = onDocumentCreated(
           subject: `New message from ${senderName} on IJOBA 606`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #7c3aed;">New Chat Message</h2>
+              <h2 style="color: #006400;">New Chat Message</h2>
               <p><strong>${senderName}</strong> sent you a message:</p>
               <p style="background: #f3f4f6; padding: 12px; border-radius: 6px;">${content || "..."}</p>
-              <a href="${chatUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+              <a href="${chatUrl}" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
                 Reply to chat
               </a>
               <p style="color: #6b7280; font-size: 12px;">You're receiving this because you have an active chat on IJOBA 606.</p>
@@ -1837,8 +1837,8 @@ async function sendPaymentEmailsAndPush(
 
     const baseHtml = (title: string, body: string) => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #7c3aed;">${title}</h2>${body}
-        <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">View Invoice</a>
+        <h2 style="color: #006400;">${title}</h2>${body}
+        <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">View Invoice</a>
         <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
       </div>`;
 
@@ -1898,7 +1898,7 @@ export const onUserCreated = onDocumentCreated(
         subject: "Welcome to IJOBA 606 – Learn PAYE, Play Quizzes & Connect with Tax Experts",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7c3aed;">Welcome to IJOBA 606, ${displayName}!</h2>
+            <h2 style="color: #006400;">Welcome to IJOBA 606, ${displayName}!</h2>
             <p>Thanks for joining. We're here to help you understand Nigerian PAYE tax in a simple, engaging way.</p>
             <p><strong>What you can do:</strong></p>
             <ul>
@@ -1908,7 +1908,7 @@ export const onUserCreated = onDocumentCreated(
               <li>Connect with verified tax consultants</li>
               <li>Stay updated with tax news</li>
             </ul>
-            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
               Get Started
             </a>
             <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
@@ -1958,7 +1958,7 @@ export const sendTestWelcomeEmail = onCall(
         subject: "Welcome to IJOBA 606 – Learn PAYE, Play Quizzes & Connect with Tax Experts",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7c3aed;">Welcome to IJOBA 606!</h2>
+            <h2 style="color: #006400;">Welcome to IJOBA 606!</h2>
             <p>Thanks for joining. We're here to help you understand Nigerian PAYE tax in a simple, engaging way.</p>
             <p><strong>What you can do:</strong></p>
             <ul>
@@ -1968,7 +1968,7 @@ export const sendTestWelcomeEmail = onCall(
               <li>Connect with verified tax consultants</li>
               <li>Stay updated with tax news</li>
             </ul>
-            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+            <a href="https://ijoba606.com" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
               Get Started
             </a>
             <p style="color: #6b7280; font-size: 12px;">IJOBA 606 – Nigerian Tax Education</p>
@@ -2029,7 +2029,7 @@ export const submitContactForm = onCall(
         subject: `[Contact] ${subject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px;">
-            <h2 style="color: #7c3aed;">New contact form submission</h2>
+            <h2 style="color: #006400;">New contact form submission</h2>
             <p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
             <p><strong>Subject:</strong> ${subject}</p>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
@@ -2093,12 +2093,12 @@ export const onInvoiceCreated = onDocumentCreated(
         subject: `Invoice ${invoiceNumber} from ${consultantName} – IJOBA 606`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7c3aed;">Invoice ${invoiceNumber}</h2>
+            <h2 style="color: #006400;">Invoice ${invoiceNumber}</h2>
             <p>Dear Customer,</p>
             <p>You have received an invoice from <strong>${consultantName}</strong> on IJOBA 606.</p>
             <p><strong>Total Amount:</strong> ₦${Number(total).toLocaleString()}</p>
             <p>Please click the link below to view and pay your invoice:</p>
-            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
               View & Pay Invoice
             </a>
             <p>If you have any questions, please contact your consultant via chat.</p>
@@ -2132,12 +2132,12 @@ export const sendInvoiceEmail = onCall(
         subject: `Invoice ${invoiceNumber} from ${consultantName}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7c3aed;">Invoice ${invoiceNumber}</h2>
+            <h2 style="color: #006400;">Invoice ${invoiceNumber}</h2>
             <p>Dear Customer,</p>
             <p>You have received an invoice from <strong>${consultantName}</strong>.</p>
             <p><strong>Total Amount:</strong> ₦${total.toLocaleString()}</p>
             <p>Please click the link below to view and pay your invoice:</p>
-            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
+            <a href="${invoiceUrl}" style="display: inline-block; padding: 12px 24px; background: #006400; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0;">
               View Invoice
             </a>
             <p>If you have any questions, please contact your consultant.</p>

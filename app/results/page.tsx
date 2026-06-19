@@ -101,7 +101,7 @@ export default function ResultsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-4xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
           <h1 className="text-center text-4xl font-semibold text-slate-900">
             Round complete
           </h1>
@@ -125,17 +125,17 @@ export default function ResultsPage() {
               </p>
               <p className="text-sm text-emerald-800">Correct answers</p>
             </div>
-            <div className="rounded-2xl border border-sky-100 bg-sky-50 p-4 text-center">
-              <p className="text-3xl font-semibold text-sky-700">
+            <div className="rounded-2xl border border-[#c7ecd6] bg-[#e6f3ec] p-4 text-center">
+              <p className="text-3xl font-semibold text-[#005728]">
                 {answers.length}
               </p>
-              <p className="text-sm text-sky-800">Attempted</p>
+              <p className="text-sm text-[#00421f]">Attempted</p>
             </div>
-            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-4 text-center">
-              <p className="text-3xl font-semibold text-purple-700">
+            <div className="rounded-2xl border border-[#d3e6c8] bg-[#e9f1e2] p-4 text-center">
+              <p className="text-3xl font-semibold text-[#004f00]">
                 {totalScore}
               </p>
-              <p className="text-sm text-purple-800">Total points</p>
+              <p className="text-sm text-[#003c00]">Total points</p>
             </div>
           </div>
 
@@ -143,9 +143,9 @@ export default function ResultsPage() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-8 rounded-3xl border border-purple-100 bg-gradient-to-r from-purple-50 via-blue-50 to-white p-6"
+              className="mt-8 rounded-3xl border border-[#d3e6c8] bg-gradient-to-r from-[#e9f1e2] via-[#e6f3ec] to-white p-6"
             >
-              <p className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-purple-500">
+              <p className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-[#0b7a3b]">
                 New badges unlocked
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -167,7 +167,7 @@ export default function ResultsPage() {
           )}
 
           {submitted && streakCount > 0 && (
-            <div className="mt-8 rounded-2xl border border-orange-100 bg-orange-50 p-4 text-center text-orange-900">
+            <div className="mt-8 rounded-2xl border border-[#f7edc4] bg-[#fcf7e6] p-4 text-center text-[#463800]">
               🔥 Streak updated: {streakCount} day
               {streakCount !== 1 ? 's' : ''} strong.
             </div>
@@ -176,20 +176,20 @@ export default function ResultsPage() {
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             <button
               onClick={handlePlayAgain}
-              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl"
+              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl"
             >
               Play another round
             </button>
             <button
               onClick={() => setShareOpen(true)}
-              className="rounded-full border border-slate-200 px-6 py-4 text-lg font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+              className="rounded-full border border-slate-200 px-6 py-4 text-lg font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
             >
               Share my score
             </button>
           </div>
           <p className="mt-4 text-center text-xs text-slate-400">
             Need a breather? Jump to the{' '}
-            <Link href="/forum" className="text-purple-600 underline">
+            <Link href="/forum" className="text-[#006400] underline">
               community forum
             </Link>{' '}
             for explanations.

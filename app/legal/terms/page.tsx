@@ -28,18 +28,18 @@ export default function TermsPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">3. Educational Purpose Disclaimer</h2>
-            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-4">
-              <p className="text-yellow-900 font-bold mb-2">⚠️ IMPORTANT DISCLAIMER</p>
-              <p className="text-yellow-800 mb-2">
+            <div className="bg-[#fcf7e6] border-2 border-[#e6c552] rounded-xl p-6 mb-4">
+              <p className="text-[#463800] font-bold mb-2">⚠️ IMPORTANT DISCLAIMER</p>
+              <p className="text-[#655100] mb-2">
                 This Service is provided for <strong>educational and informational purposes only</strong>. It is NOT:
               </p>
-              <ul className="list-disc list-inside text-yellow-800 space-y-1 ml-4">
+              <ul className="list-disc list-inside text-[#655100] space-y-1 ml-4">
                 <li>Legal advice</li>
                 <li>Tax advice</li>
                 <li>Financial advice</li>
                 <li>Professional consultation</li>
               </ul>
-              <p className="text-yellow-800 mt-4">
+              <p className="text-[#655100] mt-4">
                 The tax calculator provides estimates based on general rules and may not reflect your specific situation. Always consult with a qualified tax professional or the relevant tax authority for advice specific to your circumstances.
               </p>
             </div>
@@ -164,9 +164,9 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mt-8">
-            <p className="text-blue-900 font-semibold mb-2">By using ijoba 606, you acknowledge that:</p>
-            <ul className="list-disc list-inside text-blue-800 space-y-1 ml-4">
+          <div className="bg-[#e6f3ec] border-2 border-[#97e0b4] rounded-xl p-6 mt-8">
+            <p className="text-[#002d15] font-semibold mb-2">By using ijoba 606, you acknowledge that:</p>
+            <ul className="list-disc list-inside text-[#00421f] space-y-1 ml-4">
               <li>You have read and understood these Terms</li>
               <li>You agree to be bound by these Terms</li>
               <li>The Service is for educational purposes only</li>

@@ -87,7 +87,7 @@ export function ShareSheet({ isOpen, onClose, shareData }: ShareSheetProps) {
               {typeof navigator !== 'undefined' && 'share' in navigator && (
                 <button
                   onClick={handleShare}
-                  className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all"
+                  className="w-full py-3 bg-gradient-to-r from-[#006400] to-[#006d33] text-white rounded-xl font-semibold hover:from-[#004f00] hover:to-[#005728] transition-all"
                 >
                   Share via...
                 </button>

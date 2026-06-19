@@ -113,7 +113,7 @@ export default function RoundPage() {
             className="mt-8 rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-[0_35px_110px_rgba(15,23,42,0.12)]"
           >
             {isMultiSelect && (
-              <span className="inline-flex items-center rounded-full border border-purple-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-purple-600">
+              <span className="inline-flex items-center rounded-full border border-[#aecf9c] px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#006400]">
                 Multi select
               </span>
             )}
@@ -143,9 +143,9 @@ export default function RoundPage() {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-2xl border border-blue-100 bg-blue-50 p-4"
+                className="mt-6 rounded-2xl border border-[#c7ecd6] bg-[#e6f3ec] p-4"
               >
-                <p className="text-sm text-blue-900">
+                <p className="text-sm text-[#002d15]">
                   {currentQuestion.explanation}
                 </p>
               </motion.div>
@@ -156,14 +156,14 @@ export default function RoundPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={selectedOptions.length === 0}
-                  className="w-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Submit answer
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  className="w-full rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-xl"
+                  className="w-full rounded-full bg-gradient-to-r from-emerald-500 to-[#109a48] px-6 py-4 text-lg font-semibold text-white shadow-xl"
                 >
                   {isLastQuestion ? 'View results' : 'Next question'}
                 </button>

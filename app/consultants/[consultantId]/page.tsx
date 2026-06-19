@@ -57,7 +57,7 @@ export default function ConsultantProfileViewPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-purple-600" />
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#006400]" />
         </div>
       </div>
     );
@@ -72,7 +72,7 @@ export default function ConsultantProfileViewPage() {
         </p>
         <Link
           href="/consultants/browse"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#006400] text-white rounded-lg font-semibold hover:bg-[#004f00]"
         >
           Browse consultants
         </Link>
@@ -86,14 +86,14 @@ export default function ConsultantProfileViewPage() {
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <Link
         href="/consultants/browse"
-        className="inline-flex text-sm text-purple-600 hover:text-purple-700 font-semibold mb-6"
+        className="inline-flex text-sm text-[#006400] hover:text-[#004f00] font-semibold mb-6"
       >
         ← Back to consultants
       </Link>
 
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-500 px-8 py-10">
+        <div className="bg-gradient-to-r from-[#006400] to-[#109a48] px-8 py-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-white text-4xl font-bold">
               {consultant.name?.[0]?.toUpperCase() || '?'}
@@ -111,7 +111,7 @@ export default function ConsultantProfileViewPage() {
               )}
               <div className="flex flex-wrap gap-4 mt-4 text-white/90 text-sm">
                 <span className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+                  <Star className="w-4 h-4 text-[#e6c552] fill-[#e6c552]" />
                   {consultant.averageRating?.toFixed(1) ?? 'N/A'} ({consultant.reviewsCount ?? 0} reviews)
                 </span>
                 <span className="flex items-center gap-1">
@@ -124,7 +124,7 @@ export default function ConsultantProfileViewPage() {
             {firebaseUser && (
               <Link
                 href={`/consultants/chat/${consultant.id}`}
-                className="flex items-center gap-2 px-6 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:bg-gray-100 transition"
+                className="flex items-center gap-2 px-6 py-3 bg-white text-[#006400] rounded-xl font-semibold hover:bg-gray-100 transition"
               >
                 <MessageCircle className="w-5 h-5" />
                 Chat
@@ -148,7 +148,7 @@ export default function ConsultantProfileViewPage() {
                 {consultant.specialties.map((spec, idx) => (
                   <span
                     key={idx}
-                    className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold"
+                    className="px-4 py-2 bg-[#d3e6c8] text-[#004f00] rounded-full text-sm font-semibold"
                   >
                     {spec}
                   </span>
@@ -163,7 +163,7 @@ export default function ConsultantProfileViewPage() {
               <h2 className="text-lg font-bold text-gray-900 mb-2">Rates</h2>
               <div className="flex flex-wrap gap-4">
                 {consultant.hourlyRate && (
-                  <span className="text-xl font-bold text-purple-600">
+                  <span className="text-xl font-bold text-[#006400]">
                     ₦{consultant.hourlyRate.toLocaleString()}/hr
                   </span>
                 )}
@@ -207,7 +207,7 @@ export default function ConsultantProfileViewPage() {
               <ul className="space-y-2">
                 {consultant.certifications.map((c, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#006d33] shrink-0 mt-0.5" />
                     <div>
                       <span className="font-semibold text-gray-900">{c.name}</span>
                       {c.issuingBody && (
@@ -226,7 +226,7 @@ export default function ConsultantProfileViewPage() {
               <h2 className="text-lg font-bold text-gray-900 mb-2">Experience</h2>
               <ul className="space-y-4">
                 {consultant.workExperience.map((w, idx) => (
-                  <li key={idx} className="border-l-2 border-purple-200 pl-4">
+                  <li key={idx} className="border-l-2 border-[#aecf9c] pl-4">
                     <p className="font-semibold text-gray-900">{w.title}</p>
                     <p className="text-gray-600">{w.company}</p>
                     {w.startDate?.toDate && (

@@ -11,9 +11,9 @@ interface TagChipProps {
 
 const palette: Record<string, string> = {
   pension: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  reliefs: 'bg-purple-50 text-purple-700 border-purple-100',
-  beginners: 'bg-amber-50 text-amber-700 border-amber-100',
-  calculations: 'bg-sky-50 text-sky-700 border-sky-100',
+  reliefs: 'bg-[#e9f1e2] text-[#004f00] border-[#d3e6c8]',
+  beginners: 'bg-[#fcf7e6] text-[#876b00] border-[#f7edc4]',
+  calculations: 'bg-[#e6f3ec] text-[#005728] border-[#c7ecd6]',
   'self-employed': 'bg-pink-50 text-pink-700 border-pink-100',
   default: 'bg-slate-50 text-slate-600 border-slate-200',
 };

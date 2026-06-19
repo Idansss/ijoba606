@@ -193,7 +193,7 @@ export default function AdminTransactionsPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#006400]"></div>
         </div>
       </div>
     );
@@ -209,7 +209,7 @@ export default function AdminTransactionsPage() {
         <AdminBreadcrumb items={[{ label: 'Transactions' }]} />
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#006400] to-[#006d33] bg-clip-text text-transparent">
             Transaction Monitoring
           </h1>
           <p className="text-gray-600">Monitor payments, refunds, and disputes</p>
@@ -221,7 +221,7 @@ export default function AdminTransactionsPage() {
             onClick={() => setActiveTab('transactions')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'transactions'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -231,7 +231,7 @@ export default function AdminTransactionsPage() {
             onClick={() => setActiveTab('refunds')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'refunds'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -241,7 +241,7 @@ export default function AdminTransactionsPage() {
             onClick={() => setActiveTab('disputes')}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               activeTab === 'disputes'
-                ? 'bg-white text-purple-600 shadow-md'
+                ? 'bg-white text-[#006400] shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -268,7 +268,7 @@ export default function AdminTransactionsPage() {
                         <span className="font-semibold">₦{(transaction.amount / 100).toLocaleString()}</span>
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
                           transaction.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                          transaction.status === 'pending' ? 'bg-[#f7edc4] text-[#876b00]' :
                           'bg-red-100 text-red-700'
                         }`}>
                           {transaction.status}
@@ -309,12 +309,12 @@ export default function AdminTransactionsPage() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <DollarSign className="w-5 h-5 text-orange-600" />
+                          <DollarSign className="w-5 h-5 text-[#a98700]" />
                           <span className="font-semibold">₦{(refund.amount / 100).toLocaleString()}</span>
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
                             refund.status === 'completed' ? 'bg-green-100 text-green-700' :
-                            refund.status === 'processing' ? 'bg-blue-100 text-blue-700' :
-                            refund.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            refund.status === 'processing' ? 'bg-[#c7ecd6] text-[#005728]' :
+                            refund.status === 'pending' ? 'bg-[#f7edc4] text-[#876b00]' :
                             'bg-red-100 text-red-700'
                           }`}>
                             {refund.status}
@@ -385,7 +385,7 @@ export default function AdminTransactionsPage() {
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
                             dispute.status === 'resolved' ? 'bg-green-100 text-green-700' :
                             dispute.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                            'bg-yellow-100 text-yellow-700'
+                            'bg-[#f7edc4] text-[#876b00]'
                           }`}>
                             {dispute.status}
                           </span>

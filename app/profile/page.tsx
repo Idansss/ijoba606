@@ -87,9 +87,9 @@ export default function ProfilePage() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-5xl"
       >
-        <div className="rounded-[32px] border border-white/80 bg-white/90 p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
+        <div className="rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_40px_120px_rgba(15,23,42,0.15)]">
           <div className="text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-600 to-blue-500 text-3xl font-semibold text-white shadow-lg">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#006400] to-[#109a48] text-3xl font-semibold text-white shadow-lg">
               {user.handle[0]?.toUpperCase() || '?'}
             </div>
             <h1 className="mt-4 text-3xl font-semibold text-slate-900">
@@ -113,7 +113,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleUpgrade}
                 disabled={upgrading}
-                className="mt-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg disabled:opacity-50"
+                className="mt-4 rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-3 text-sm font-semibold text-white shadow-lg disabled:opacity-50"
               >
                 {upgrading ? 'Upgrading...' : 'Upgrade to Google'}
               </button>
@@ -167,7 +167,7 @@ export default function ProfilePage() {
                   <Link
                     key={run.id}
                     href={`/calculator/result?id=${run.id}`}
-                    className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm text-slate-600 transition hover:border-purple-200 hover:text-slate-900"
+                    className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm text-slate-600 transition hover:border-[#aecf9c] hover:text-slate-900"
                   >
                     <div>
                       <p className="font-semibold text-slate-900">
@@ -190,13 +190,13 @@ export default function ProfilePage() {
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <Link
               href="/play"
-              className="rounded-full bg-gradient-to-r from-purple-600 to-blue-500 px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
+              className="rounded-full bg-gradient-to-r from-[#006400] to-[#109a48] px-6 py-4 text-center text-sm font-semibold text-white shadow-xl"
             >
               Play quiz
             </Link>
             <Link
               href="/calculator"
-              className="rounded-full border border-slate-200 px-6 py-4 text-center text-sm font-semibold text-slate-700 hover:border-purple-200 hover:text-slate-900"
+              className="rounded-full border border-slate-200 px-6 py-4 text-center text-sm font-semibold text-slate-700 hover:border-[#aecf9c] hover:text-slate-900"
             >
               Calculate Tax
             </Link>

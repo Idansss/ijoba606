@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 
 const productLinks = [
   { href: '/play', label: 'Learn & Play' },
@@ -37,9 +38,11 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-10 lg:grid-cols-4">
           <div className="lg:col-span-2">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] opacity-70">
-              ijoba 606
-            </p>
+            <BrandLogo
+              markClassName="h-12 w-12"
+              textClassName="text-xl"
+              taglineClassName="text-[0.7rem] opacity-80"
+            />
             <h3 className="mt-4 text-3xl font-semibold">
               Make PAYE literacy hard to ignore.
             </h3>
@@ -50,13 +53,13 @@ export function Footer() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/play"
-                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-slate-900 shadow-lg shadow-indigo-500/30"
+                className="rounded-full bg-[#006400] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#006400]/25 transition hover:bg-[#0b7a3b]"
               >
                 Start a round
               </Link>
               <Link
                 href="/calculator"
-                className="rounded-full border border-white/40 px-5 py-2 text-sm font-semibold text-[var(--foreground)]/90 hover:text-[var(--foreground)]"
+                className="rounded-full border-2 border-[#006400] px-5 py-2 text-sm font-semibold text-[#006400] transition hover:bg-[#006400] hover:text-white"
               >
                 Estimate PAYE
               </Link>
@@ -113,7 +116,7 @@ export function Footer() {
             ))}
           </div>
           <p className="text-right md:text-left">
-            © {year} ijoba 606. Educational purposes only — not legal or tax
+            (c) {year} ijoba 606. Educational purposes only - not legal or tax
             advice.
           </p>
         </div>
