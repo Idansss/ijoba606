@@ -31,7 +31,7 @@ function FooterColumn({
   links: { href: string; label: string }[];
 }) {
   return (
-    <div className="md:col-span-2 flex flex-col gap-4">
+    <div className="md:col-span-2 flex flex-col gap-2.5">
       <h4 className="font-label-sm text-label-sm uppercase tracking-widest text-deep-green">
         {title}
       </h4>
@@ -52,10 +52,10 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto w-full border-t border-outline-variant/10 bg-surface-container-lowest py-12">
+    <footer className="mt-auto w-full border-t border-outline-variant/10 bg-surface-container-lowest py-8">
       <div className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop">
-        <div className="mb-12 grid grid-cols-1 gap-gutter md:grid-cols-12">
-          <div className="space-y-6 md:col-span-4">
+        <div className="mb-8 grid grid-cols-1 gap-gutter md:grid-cols-12">
+          <div className="space-y-4 md:col-span-4">
             <BrandLogo
               markClassName="h-14 w-14"
               textClassName="text-xl text-deep-green"
@@ -85,7 +85,7 @@ export function Footer() {
           <FooterColumn title="Legal" links={legalLinks} />
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-4 border-t border-outline-variant/10 pt-8 md:flex-row md:items-center">
+        <div className="flex flex-col items-start justify-between gap-4 border-t border-outline-variant/10 pt-6 md:flex-row md:items-center">
           <p className="text-label-sm text-on-surface-variant opacity-60">
             © {year} IJOBA 606. Empowering Nigerian Prosperity.
           </p>

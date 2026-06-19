@@ -125,10 +125,10 @@ export default function Home() {
         <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="md:col-span-6">
           <Link
             href="/consultants/browse"
-            className="group flex h-full flex-col justify-between rounded-bento bg-deep-green p-8 text-on-primary shadow-[0px_18px_40px_rgba(0,60,0,0.20)] transition-all hover:-translate-y-1 md:p-10"
+            className="group flex h-full flex-col justify-between rounded-bento bg-brand-fill p-8 text-on-brand-fill shadow-[0px_18px_40px_rgba(0,60,0,0.20)] transition-all hover:-translate-y-1 md:p-10"
           >
             <div className="mb-8 flex items-start justify-between">
-              <div className="rounded-full bg-white/20 p-4 text-on-primary">
+              <div className="rounded-full bg-white/20 p-4 text-on-brand-fill">
                 <Icon name="storefront" className="text-3xl" />
               </div>
               <span className="rounded-full bg-royal-gold px-3 py-1 font-label-sm text-label-sm text-ink-black">
@@ -136,10 +136,10 @@ export default function Home() {
               </span>
             </div>
             <div>
-              <h3 className="mb-3 font-headline-md text-headline-md text-on-primary">
+              <h3 className="mb-3 font-headline-md text-headline-md text-on-brand-fill">
                 Expert Marketplace
               </h3>
-              <p className="font-body-md text-body-md text-on-primary/80">
+              <p className="font-body-md text-body-md text-on-brand-fill/80">
                 Connect with verified tax consultants and financial planners to
                 secure your prosperity.
               </p>

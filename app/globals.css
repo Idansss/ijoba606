@@ -255,6 +255,12 @@ select,
   --color-cream-canvas: #f5f5e8;
   --color-ink-black: #0a0a0a;
 
+  /* Large solid brand fills (e.g. the marketplace card). Distinct from the
+     deep-green text alias so dark mode can use a calm deep green instead of
+     the bright text-green. Light mode matches the legacy deep-green look. */
+  --color-brand-fill: #006400;
+  --color-on-brand-fill: #ffffff;
+
   /* Spacing tokens (enable p-/m-/gap-/px- utilities) */
   --spacing-unit: 8px;
   --spacing-gutter: 24px;
@@ -375,6 +381,11 @@ select,
   --color-royal-gold: #eec33a;
   --color-cream-canvas: #11150f;
   --color-ink-black: #e3e3d6;
+
+  /* Large solid brand fills: a calm deep green with light-green text instead
+     of the bright neon fill, so big filled cards aren't overwhelming. */
+  --color-brand-fill: #00531c;
+  --color-on-brand-fill: #9ff88a;
 }
 
 /* Material Symbols (icon font used across the Stitch designs) */
